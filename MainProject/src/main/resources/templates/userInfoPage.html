@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Info</title>
+</head>
+<body>
+<th:block th:include="/_menu"></th:block>
+<h2>User Info Page</h2>
+<b>This is protected user page!</b>
+<h3>Welcome, <span th:utext="${#request.userPrincipal.name}"></span></h3>
+<br/><br/>
+<div th:if="${userInfo != null}" th:utext="${userInfo}"></div>
+<div th:if="${userInfo != null}">
+    <a th:if="${#request.userPrincipal != null}" th:href="@{/changePassword}">Change password page</a>
+    <a th:if="${#request.userPrincipal != null}" th:href="@{/setAvatar}">Set avatar</a>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Change password</title>
+</head>
+<body>
+<th:block th:include="/_menu"></th:block>
+<div th:if="${userInfo != null}">
+
+    <span th:utext="${#request.userPrincipal.name}"></span>
+
+    <h2>Change avatar</h2>
+    <form  th:multiple = "true" th:action="@{/setAvatar}"  th:object="${registrationForm}" method="POST">
+        <table>
+            <tr>
+                <td>You name is:  </td>
+                <td><input type="hidden" th:utext="${#request.userPrincipal.name}"
+                           th:name="name" th:value="*{#request.userPrincipal.name}"/></td>
+            </tr>
+            <tr>
+                <td>New avatar: </td>
+                <td><input type="file" th:field="*{avatar}" id="avatar" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" value="Загрузить"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <h6>записывается, но не извлекается</h6>
+
+</div>
+</body>
+
+</html>

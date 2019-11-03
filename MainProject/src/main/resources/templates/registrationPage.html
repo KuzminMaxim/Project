@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Registration</title>
+    <script type="text/javascript">
+        function checkFields() {
+            var fName = document.getElementById("name").value;
+            var fPassword = document.getElementById("pass").value;
+            if (fName == 0){
+                alert("Enter name!");
+                return false;
+            }
+            if (fPassword == 0){
+                alert("Enter password!");
+                return false;
+            }
+            if (fName != 0 && fPassword != 0){
+                alert('Name: '+fName+" ,Password: "+fPassword);
+                return true;
+            }
+        }
+    </script>
+</head>
+
+<body>
+<!-- Include _menu.html -->
+<th:block th:include="/_menu"></th:block>
+
+<h2>Register</h2>
+
+<form  th:action="@{/createUser}" th:object="${registrationForm}" onsubmit="checkFields()" method="POST">
+    <table>
+        <tr>
+            <td>Name</td>
+            <td><input type="text" th:field="*{name}" id="name" /></td>
+        </tr>
+        <tr>
+            <td>Password</td>
+            <td><input type="text" th:field="*{password}" id="pass" /></td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td>
+                <input type="submit" value="Register"/>
+                <input type="reset" value="Clear">
+            </td>
+        </tr>
+    </table>
+
+</form>
+</body>
+</html>
