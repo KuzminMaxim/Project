@@ -79,13 +79,15 @@ public class UserMapperNewDB implements RowMapper<UserInfo>  {
             "and value_text = ?)) as password\n" +
             "from params\n";
 
-    public static final String SELECT_NAME_SQL = "" +
-            "            select distinct params.value_text as name from params\n" +
-            "            join attributes on attributes.id = params.attribute_id\n" +
-            "            join object on params.object_id = object.id\n" +
-            "            where attributes.Attribute = 'user_name'\n" +
-            "            and object.id = \n" +
-            "            (select distinct params.object_id from params where value_text = ?)";
+    public static final String SELECT_NAME_SQL = "select distinct params.value_text as name from params\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "join object on params.object_id = object.id\n" +
+            "where attributes.Attribute = 'user_name'\n" +
+            "and object.id = \n" +
+            "(select distinct params.object_id from params where \n" +
+            "value_text = ?\n" +
+            "and params.attribute_id = (select distinct attributes.id from attributes\n" +
+            "where attributes.Attribute = 'user_name'))";
 
     public static final String SELECT_EMAIL_SQL = "" +
             "            select params.value_text as email from params\n" +
