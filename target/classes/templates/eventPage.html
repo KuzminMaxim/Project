@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>All Events</title>
+
+    <style>
+        th, td {
+            padding: 5px;
+        }
+    </style>
+
+</head>
+
+<body>
+<!-- Include _menu.html -->
+<th:block th:include="/_menu"></th:block>
+
+<h2>Accounts</h2>
+
+<table border="1">
+    <tr>
+        <th>Date</th>
+        <th>Name</th>
+        <th>CreatorName</th>
+    </tr>
+    <tr th:each="eventInfo : ${eventInfo}">
+        <td th:utext="${eventInfo.eventDateOfCreation}">..</td>
+        <td th:utext="${eventInfo.nameOfEvent}">..</td>
+        <td th:utext="${eventInfo.nameOfEventCreator}">..</td>
+    </tr>
+
+</table>
+</body>
+</html>

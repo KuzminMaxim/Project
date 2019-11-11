@@ -1,0 +1,30 @@
+<div xmlns:th="http://www.thymeleaf.org"
+     style="border: 1px solid #ccc;padding:5px;margin-bottom:20px;">
+
+    <a th:if="${#request.userPrincipal == null}" th:href="@{/welcome}">Welcome page</a>
+
+    &nbsp;
+
+    <a th:if="${#request.userPrincipal == null}" th:href="@{/createUser}">Registration</a>
+
+    &nbsp;
+
+    <a th:if="${#request.userPrincipal == null}" th:href="@{/login}">Login</a>
+
+    &nbsp;
+
+    <a th:if="${#request.userPrincipal != null}" th:href="@{/userInfo}">My home page</a>
+
+    &nbsp;
+
+    <a th:if="${#request.isUserInRole('ROLE_ADMIN')}"  th:href="@{/admin}">Admin page</a>
+
+    &nbsp;
+
+    <a th:if="${#request.userPrincipal != null}" th:href="@{/createEvent}">Map</a>
+
+    &nbsp;
+
+    <a th:if="${#request.userPrincipal != null}" th:href="@{/logout}">Logout</a>
+
+</div>
