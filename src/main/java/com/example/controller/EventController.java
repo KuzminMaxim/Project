@@ -22,7 +22,7 @@ public class EventController {
 
 
     @RequestMapping(value = "/viewAllEvents", method = RequestMethod.GET)
-    public String showEvents(Model model, Principal principal) {
+    public String showEvents(Model model) {
         List<EventInfo> list = eventDAO.getAllEvents();
         model.addAttribute("eventInfo", list);
         return "eventPage";
@@ -39,6 +39,7 @@ public class EventController {
     public String CreateUser(Model model,
                              EventForm eventForm, Principal principal) {
             eventDAO.createEvent(eventForm);
+            //EventInfo.class.getDeclaredFields()[1].getAnnotations()[0];
         return "userInfoPage";
     }
 

@@ -138,7 +138,7 @@ public class UserMapperNewDB implements RowMapper<UserInfo>  {
             "(select distinct params.object_id from params where value_text = ?)";
 
     public static final String CREATE_OBJECT_SQL ="insert into object(object_type_id, name) values\n" +
-            "            ((select object_types.id from object_types where object_types.Object_Type = 'users'),md5(Rand()));";
+            "            ((select object_types.id from object_types where object_types.Object_Type = 'users'),'OBJECT_USER');";
 
     public static final String INSERT_EMAIL_SQL = "insert into params(object_id, attribute_id, value_text)\n" +
             "            values ((select id from object order by id desc\n" +
@@ -164,8 +164,12 @@ public class UserMapperNewDB implements RowMapper<UserInfo>  {
             "            values ((select id from object order by id desc\n" +
             "            limit 1),\n" +
             "            (select attributes.id from attributes where attributes.Attribute = 'user_avatar'), '111');";
-    //public static final String SET_SQL = "INSERT INTO user_role (user_role.ROLE_ID) value (?)";// created upper
-    ////////////**********************************//////////////////////////////
+    public static final String CREATE_OBJECT_REFERENCES = "update params\n" +
+            "Set params.object_references = (select id from object order by id desc\n" +
+            "limit 1)\n" +
+            "where params.object_id = (select id from object order by id desc\n" +
+            "limit 1)";
+
     public static final String SET_PASSWORD_SQL = "UPDATE params, \n" +
             "(select distinct params.object_id from params\n" +
             "join object on params.object_id = object.id\n" +

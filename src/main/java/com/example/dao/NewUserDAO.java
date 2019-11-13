@@ -114,6 +114,7 @@ public class NewUserDAO extends JdbcDaoSupport implements UserDAO{
         getJdbcTemplate().update(UserMapperNewDB.INSERT_PASSWORD_SQL, new Object[]{registrationForm.getPassword()});
         getJdbcTemplate().update(UserMapperNewDB.INSERT_ROLE_SQL, new Object[]{registrationForm.getRole()});
         getJdbcTemplate().update(UserMapperNewDB.INSERT_AVATAR_SQL);
+        getJdbcTemplate().update(UserMapperNewDB.CREATE_OBJECT_REFERENCES);
         new UserInfo();
     }
 

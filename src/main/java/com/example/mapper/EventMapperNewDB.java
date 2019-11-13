@@ -55,7 +55,7 @@ public class EventMapperNewDB implements RowMapper<EventInfo> {
         "            from params";
 
     public static final String CREATE_OBJECT_EVENT_SQL ="insert into object(object_type_id, name) values\n" +
-            "            ((select object_types.id from object_types where object_types.Object_Type = 'event'),md5(Rand()));";
+            "            ((select object_types.id from object_types where object_types.Object_Type = 'event'),'OBJECT_EVENT');";
 
     public static final String INSERT_DATE_OF_CREATION_SQL = "insert into params(object_id, attribute_id, value_date)\n" +
             "values ((select id from object order by id desc\n" +
@@ -81,6 +81,12 @@ public class EventMapperNewDB implements RowMapper<EventInfo> {
             "values ((select id from object order by id desc\n" +
             "limit 1),\n" +
             "(select attributes.id from attributes where attributes.Attribute = 'event_lng'), ?);";
+
+    public static final String CREATE_EVENT_OBJECT_REFERENCES = "update params\n" +
+            "Set params.object_references = (select id from object order by id desc\n" +
+            "limit 1)\n" +
+            "where params.object_id = (select id from object order by id desc\n" +
+            "limit 1)";
 
 
 
