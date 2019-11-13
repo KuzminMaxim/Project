@@ -38,6 +38,7 @@ public class NewEventDAO extends JdbcDaoSupport{
         getJdbcTemplate().update(EventMapperNewDB.INSERT_NAME_OF_CREATOR_SQL, new Object[]{eventForm.getNameOfEventCreator()});
         getJdbcTemplate().update(EventMapperNewDB.INSERT_LATITUDE_OF_EVENT_SQL, new Object[]{eventForm.getLatitude()});
         getJdbcTemplate().update(EventMapperNewDB.INSERT_LONGITUDE_OF_EVENT_SQL, new Object[]{eventForm.getLongitude()});
+        getJdbcTemplate().update(EventMapperNewDB.INSERT_DESCRIPTION_OF_EVENT_SQL, new Object[]{eventForm.getDescriptionOfEvent()});
         getJdbcTemplate().update(EventMapperNewDB.INSERT_DATE_OF_CREATION_SQL);
         getJdbcTemplate().update(EventMapperNewDB.CREATE_EVENT_OBJECT_REFERENCES);
         return new EventInfo();

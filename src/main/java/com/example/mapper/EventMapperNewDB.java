@@ -82,6 +82,11 @@ public class EventMapperNewDB implements RowMapper<EventInfo> {
             "limit 1),\n" +
             "(select attributes.id from attributes where attributes.Attribute = 'event_lng'), ?);";
 
+    public static final String INSERT_DESCRIPTION_OF_EVENT_SQL = "insert into params(object_id, attribute_id, value_text)\n" +
+            "values ((select id from object order by id desc\n" +
+            "limit 1),\n" +
+            "(select attributes.id from attributes where attributes.Attribute = 'event_description'), ?);";
+
     public static final String CREATE_EVENT_OBJECT_REFERENCES = "update params\n" +
             "Set params.object_references = (select id from object order by id desc\n" +
             "limit 1)\n" +

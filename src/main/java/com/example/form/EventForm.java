@@ -4,6 +4,7 @@ public class EventForm {
 
     private String nameOfEvent;
     private String nameOfEventCreator;
+    private String descriptionOfEvent;
     private String latitude;
     private String longitude;
 
@@ -14,11 +15,20 @@ public class EventForm {
         this.nameOfEventCreator = nameOfEventCreator;
     }
 
-    public EventForm(String nameOfEvent, String nameOfEventCreator, String latitude, String longitude) {
+    public EventForm(String nameOfEvent, String nameOfEventCreator, String descriptionOfEvent, String latitude, String longitude) {
         this.nameOfEvent = nameOfEvent;
         this.nameOfEventCreator = nameOfEventCreator;
+        this.descriptionOfEvent = descriptionOfEvent;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public String getDescriptionOfEvent() {
+        return descriptionOfEvent;
+    }
+
+    public void setDescriptionOfEvent(String descriptionOfEvent) {
+        this.descriptionOfEvent = descriptionOfEvent;
     }
 
     public String getLatitude() {

@@ -36,8 +36,7 @@ public class EventController {
     }
 
     @RequestMapping(value = "/createEvent", method = RequestMethod.POST)
-    public String CreateUser(Model model,
-                             EventForm eventForm, Principal principal) {
+    public String CreateUser(EventForm eventForm) {
             eventDAO.createEvent(eventForm);
             //EventInfo.class.getDeclaredFields()[1].getAnnotations()[0];
         return "userInfoPage";

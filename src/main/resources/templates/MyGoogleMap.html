@@ -31,12 +31,37 @@
         document.getElementById('lat').value = myLatlng.lat;
         document.getElementById('lng').value = myLatlng.lng;
 
+        var locations = [
+            ['Bondi Beach', 56.26578281720928, 44.09444465297406, 4],
+            ['Coogee Beach', 56.332646412214196, 43.910080334126405, 5],
+            ['Cronulla Beach', 56.249380843298155, 43.849884888769566, 3],
+            ['Manly Beach', 56.27211107676863, 43.9782875987305, 2],
+            ['Maroubra Beach', 56.291550367229576, 43.9834374400391, 1]
+        ];
+
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: 12,
             disableDoubleClickZoom: true,
             center: myLatlng
         });
+
         infoWindow = new google.maps.InfoWindow;
+
+        var oldMarker, i;
+
+        for (i = 0; i < locations.length; i++) {
+            oldMarker = new google.maps.Marker({
+                position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                map: map
+            });
+            google.maps.event.addListener(oldMarker, 'click', (function(oldMarker, i) {
+                return function() {
+                    infoWindow.setContent(locations[i][0]);
+                    infoWindow.open(map, oldMarker);
+                }
+            })(oldMarker, i));
+        }
+
 
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
@@ -90,15 +115,21 @@
         </tr>
         <tr>
             <td>Name of event</td>
-            <td><input type="text" th:field="*{nameOfEvent}" /> </td>
+            <td><label>
+                <input type="text" th:field="*{nameOfEvent}" />
+            </label></td>
         </tr>
         <tr>
-            <td>latitude</td>
-            <td><input type="text" th:field="*{latitude}" id="lat"/></td>
+            <td>Description of event</td>
+            <td><label>
+                <input type="text" th:field="*{descriptionOfEvent}" />
+            </label></td>
         </tr>
         <tr>
-            <td>longitude</td>
-            <td><input type="text" th:field="*{longitude}" id="lng"/></td>
+            <td><input type="hidden" th:field="*{latitude}" id="lat"/></td>
+        </tr>
+        <tr>
+            <td><input type="hidden" th:field="*{longitude}" id="lng"/></td>
         </tr>
         <tr>
             <td>&nbsp;</td>
