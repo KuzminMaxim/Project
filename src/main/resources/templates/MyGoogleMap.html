@@ -8,6 +8,84 @@
             height: 600px;
             width: 1400px;
         }
+        <!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Roboto, Helvetica, sans-serif;
+        }
+        /* Fix the button on the left side of the page */
+        .open-btn {
+            display: flex;
+            justify-content: left;
+        }
+        /* Style and fix the button on the page */
+        .open-button {
+            background-color: #1c87c9;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            opacity: 0.8;
+            position: fixed;
+        }
+        /* Position the Popup form */
+        .login-popup {
+            position: relative;
+            text-align: center;
+            width: 100%;
+        }
+        /* Hide the Popup form */
+        .form-popup {
+            display: none;
+            position: fixed;
+            left: 45%;
+            top:5%;
+            transform: translate(-45%,5%);
+            border: 2px solid #666;
+            z-index: 9;
+        }
+        /* Styles for the form container */
+        .form-container {
+            max-width: 300px;
+            padding: 20px;
+            background-color: #fff;
+        }
+        /* Full-width for input fields */
+        .form-container input[type=text], .form-container input[type=password] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 22px 0;
+            border: none;
+            background: #eee;
+        }
+        /* When the inputs get focus, do something */
+        .form-container input[type=text]:focus, .form-container input[type=password]:focus {
+            background-color: #ddd;
+            outline: none;
+        }
+        /* Style submit/login button */
+        .form-container .btn {
+            background-color: #8ebf42;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom:10px;
+            opacity: 0.8;
+        }
+        /* Style cancel button */
+        .form-container .cancel {
+            background-color: #cc0000;
+        }
+        /* Hover effects for buttons */
+        .form-container .btn:hover, .open-button:hover {
+            opacity: 1;
+        }
+        <!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--
     </style>
 </head>
 <body>
@@ -96,6 +174,10 @@
             marker.setPosition(e.latLng);
             updateCoordinates(e.latLng.lat(), e.latLng.lng())
         });
+
+        marker.addListener('click', function (e) {
+            openForm();
+        })
     }
     function handleLocationError(browserHasGeolocation, infoWindow, pos) {
         infoWindow.setPosition(pos);
@@ -104,41 +186,41 @@
             'Error: Your browser doesn\'t support geolocation.');
         infoWindow.open(map);
     }
+    function myFunction() {
+        document.getElementById("contactPopup").style.display = "block";
+    }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfOlryc_A5QyGcHyOSE54lO6PVQVd1P0U&callback=initMap"
         async defer></script>
+<div class="login-popup">
+    <div class="form-popup" id="popupForm">
+        <form th:action="@{/createEvent}" th:object="${eventForm}" method="POST" class="form-container">
+            <h2>Please enter the name and description of event</h2>
+            <label for="nameOfEvent">
+                <strong>Name of event</strong>
+            </label>
+            <input type="hidden" placeholder="Name of creator" th:name="nameOfEventCreator" th:value="*{#request.userPrincipal.name}"/>
+            <input type="hidden" placeholder="latitude" th:field="*{latitude}" id="lat"/>
+            <input type="hidden" placeholder="longitude" th:field="*{longitude}" id="lng"/>
+            <input type="text" id="nameOfEvent" placeholder="Name of event" th:name="nameOfEvent" required>
+            <label for="descriptionOfEvent">
+                <strong>Description of event</strong>
+            </label>
+            <input type="text" id="descriptionOfEvent" placeholder="Description of event" name="descriptionOfEvent" required>
+            <button type="submit" class="btn">Create event</button>
+            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+        </form>
+    </div>
+</div>
+<script>
+    function openForm() {
+        document.getElementById("popupForm").style.display="block";
+    }
 
-<form th:action="@{/createEvent}" th:object="${eventForm}" method="POST">
-    <table>
-        <tr>
-            <td><input type="hidden" th:name="nameOfEventCreator" th:value="*{#request.userPrincipal.name}"/></td>
-        </tr>
-        <tr>
-            <td>Name of event</td>
-            <td><label>
-                <input type="text" th:field="*{nameOfEvent}" />
-            </label></td>
-        </tr>
-        <tr>
-            <td>Description of event</td>
-            <td><label>
-                <input type="text" th:field="*{descriptionOfEvent}" />
-            </label></td>
-        </tr>
-        <tr>
-            <td><input type="hidden" th:field="*{latitude}" id="lat"/></td>
-        </tr>
-        <tr>
-            <td><input type="hidden" th:field="*{longitude}" id="lng"/></td>
-        </tr>
-        <tr>
-            <td>&nbsp;</td>
-            <td>
-                <input type="submit" value="Create" />
-            </td>
-            <td>&nbsp;</td>
-        </tr>
-    </table>
-</form>
+    function closeForm() {
+        document.getElementById("popupForm").style.display="none";
+    }
+</script>
+
     </body>
 </html>
