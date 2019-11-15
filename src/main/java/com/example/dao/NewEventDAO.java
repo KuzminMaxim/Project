@@ -19,6 +19,7 @@ import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @Transactional
@@ -49,6 +50,18 @@ public class NewEventDAO extends JdbcDaoSupport{
         Object[] params = new Object[] {};
         EventMapperNewDB mapper = new EventMapperNewDB();
         return this.getJdbcTemplate().query(sql, params, mapper);
+    }
+
+    public List<EventInfo> getAllEventMarkers() throws NullPointerException{
+        String sql = EventMapperNewDB.SELECT_ALL_EVENT_MARKERS;
+        Object[] params = new Object[] {};
+        return this.getJdbcTemplate().query(sql, params, (resultSet, i) -> {
+            String eventName = resultSet.getString("event_name");
+            String eventLat = resultSet.getString("event_lat");
+            String eventLng = resultSet.getString("event_lng");
+            String eventDescription = resultSet.getString("event_description");
+            return new EventInfo(eventName, eventLat, eventLng, eventDescription);
+        });
     }
 
 }

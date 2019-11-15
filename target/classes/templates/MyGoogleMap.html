@@ -5,14 +5,92 @@
     <meta charset="utf-8">
     <style>
         #map {
-            height: 600px;
-            width: 1400px;
+            height: 100%;
+            width: 100%;
         }
+        <!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Roboto, Helvetica, sans-serif;
+        }
+        /* Fix the button on the left side of the page */
+        .open-btn {
+            display: flex;
+            justify-content: left;
+        }
+        /* Style and fix the button on the page */
+        .open-button {
+            background-color: #1c87c9;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            opacity: 0.8;
+            position: fixed;
+        }
+        /* Position the Popup form */
+        .login-popup {
+            position: relative;
+            text-align: center;
+            width: 100%;
+        }
+        /* Hide the Popup form */
+        .form-popup {
+            display: none;
+            position: fixed;
+            left: 45%;
+            top:5%;
+            transform: translate(-45%,5%);
+            border: 2px solid #666;
+            z-index: 9;
+        }
+        /* Styles for the form container */
+        .form-container {
+            max-width: 300px;
+            padding: 20px;
+            background-color: #fff;
+        }
+        /* Full-width for input fields */
+        .form-container input[type=text], .form-container input[type=password] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 22px 0;
+            border: none;
+            background: #eee;
+        }
+        /* When the inputs get focus, do something */
+        .form-container input[type=text]:focus, .form-container input[type=password]:focus {
+            background-color: #ddd;
+            outline: none;
+        }
+        /* Style submit/login button */
+        .form-container .btn {
+            background-color: #8ebf42;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom:10px;
+            opacity: 0.8;
+        }
+        /* Style cancel button */
+        .form-container .cancel {
+            background-color: #cc0000;
+        }
+        /* Hover effects for buttons */
+        .form-container .btn:hover, .open-button:hover {
+            opacity: 1;
+        }
+        <!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--
     </style>
 </head>
 <body>
 <th:block th:include="/_menu"></th:block>
-<div style="padding:10px">
+<div style="padding:0px">
     <div id="map"></div>
 </div>
 
@@ -31,12 +109,37 @@
         document.getElementById('lat').value = myLatlng.lat;
         document.getElementById('lng').value = myLatlng.lng;
 
+        var locations = [
+            ['Bondi Beach', 56.26578281720928, 44.09444465297406, 4],
+            ['Coogee Beach', 56.332646412214196, 43.910080334126405, 5],
+            ['Cronulla Beach', 56.249380843298155, 43.849884888769566, 3],
+            ['Manly Beach', 56.27211107676863, 43.9782875987305, 2],
+            ['Maroubra Beach', 56.291550367229576, 43.9834374400391, 1]
+        ];
+
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: 12,
             disableDoubleClickZoom: true,
             center: myLatlng
         });
+
         infoWindow = new google.maps.InfoWindow;
+
+        var oldMarker, i;
+
+        for (i = 0; i < locations.length; i++) {
+            oldMarker = new google.maps.Marker({
+                position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                map: map
+            });
+            google.maps.event.addListener(oldMarker, 'click', (function(oldMarker, i) {
+                return function() {
+                    infoWindow.setContent(locations[i][0]);
+                    infoWindow.open(map, oldMarker);
+                }
+            })(oldMarker, i));
+        }
+
 
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
@@ -71,6 +174,10 @@
             marker.setPosition(e.latLng);
             updateCoordinates(e.latLng.lat(), e.latLng.lng())
         });
+
+        marker.addListener('click', function (e) {
+            openForm();
+        })
     }
     function handleLocationError(browserHasGeolocation, infoWindow, pos) {
         infoWindow.setPosition(pos);
@@ -82,32 +189,35 @@
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfOlryc_A5QyGcHyOSE54lO6PVQVd1P0U&callback=initMap"
         async defer></script>
+<div class="login-popup">
+    <div class="form-popup" id="popupForm">
+        <form th:action="@{/createEvent}" th:object="${eventForm}" method="POST" class="form-container">
+            <h2>Please enter the name and description of event</h2>
+            <label for="nameOfEvent">
+                <strong>Name of event</strong>
+            </label>
+            <input type="hidden" placeholder="Name of creator" th:name="nameOfEventCreator" th:value="*{#request.userPrincipal.name}"/>
+            <input type="hidden" placeholder="latitude" th:field="*{latitude}" id="lat"/>
+            <input type="hidden" placeholder="longitude" th:field="*{longitude}" id="lng"/>
+            <input type="text" id="nameOfEvent" placeholder="Name of event" th:name="nameOfEvent" required>
+            <label for="descriptionOfEvent">
+                <strong>Description of event</strong>
+            </label>
+            <input type="text" id="descriptionOfEvent" placeholder="Description of event" name="descriptionOfEvent" required>
+            <button type="submit" class="btn">Create event</button>
+            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+        </form>
+    </div>
+</div>
+<script>
+    function openForm() {
+        document.getElementById("popupForm").style.display="block";
+    }
 
-<form th:action="@{/createEvent}" th:object="${eventForm}" method="POST">
-    <table>
-        <tr>
-            <td><input type="hidden" th:name="nameOfEventCreator" th:value="*{#request.userPrincipal.name}"/></td>
-        </tr>
-        <tr>
-            <td>Name of event</td>
-            <td><input type="text" th:field="*{nameOfEvent}" /> </td>
-        </tr>
-        <tr>
-            <td>latitude</td>
-            <td><input type="text" th:field="*{latitude}" id="lat"/></td>
-        </tr>
-        <tr>
-            <td>longitude</td>
-            <td><input type="text" th:field="*{longitude}" id="lng"/></td>
-        </tr>
-        <tr>
-            <td>&nbsp;</td>
-            <td>
-                <input type="submit" value="Create" />
-            </td>
-            <td>&nbsp;</td>
-        </tr>
-    </table>
-</form>
+    function closeForm() {
+        document.getElementById("popupForm").style.display="none";
+    }
+</script>
+
     </body>
 </html>

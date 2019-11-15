@@ -1,9 +1,8 @@
 package com.example.controller;
 
-import com.example.dao.NewEventDAO;
+import com.example.annotations.MyClass;
 import com.example.dao.NewUserDAO;
 import com.example.form.RegistrationForm;
-import com.example.model.EventInfo;
 import com.example.model.UserInfo;
 import com.example.utils.WebUtils;
 import com.example.validation.UserValidator;
@@ -79,6 +78,7 @@ public class RegistrationController {
         }
         try {
             registerDAO.insertUser(registrationForm);
+            //MyClass.checkFields();
             try {
                 request.login(registrationForm.getName(),registrationForm.getDecryptedPassword());
                 return "userInfoPage";

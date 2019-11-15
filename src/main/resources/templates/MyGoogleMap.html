@@ -5,8 +5,8 @@
     <meta charset="utf-8">
     <style>
         #map {
-            height: 600px;
-            width: 1400px;
+            height: 100%;
+            width: 100%;
         }
         <!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--
         * {
@@ -90,7 +90,7 @@
 </head>
 <body>
 <th:block th:include="/_menu"></th:block>
-<div style="padding:10px">
+<div style="padding:0px">
     <div id="map"></div>
 </div>
 
@@ -185,9 +185,6 @@
             'Error: The Geolocation service failed.' :
             'Error: Your browser doesn\'t support geolocation.');
         infoWindow.open(map);
-    }
-    function myFunction() {
-        document.getElementById("contactPopup").style.display = "block";
     }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfOlryc_A5QyGcHyOSE54lO6PVQVd1P0U&callback=initMap"

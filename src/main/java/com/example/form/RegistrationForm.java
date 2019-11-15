@@ -1,11 +1,22 @@
 package com.example.form;
 
+import com.example.annotations.Annotation;
+import com.example.annotations.MyEntity;
+import com.example.annotations.MyGeneratedValue;
+import com.example.annotations.MyId;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+import javax.persistence.GenerationType;
+
+//@MyEntity(name = "params")
 public class RegistrationForm {
 
+    //@MyId
+    //@MyGeneratedValue(strategy= GenerationType.AUTO)
     private long id;
+    @Annotation
     private String name;
+
     private String password;
     private String avatar;
     private String email;

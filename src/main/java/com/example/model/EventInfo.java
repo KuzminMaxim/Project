@@ -5,8 +5,9 @@ public class EventInfo {
     private String eventDateOfCreation;
     private String nameOfEvent;
     private String nameOfEventCreator;
-    private String eventLatitude;
-    private String eventLongitude;
+    private String eventDescription;
+    private Double eventLatitude;
+    private Double eventLongitude;
 
     public EventInfo(){}
 
@@ -25,12 +26,36 @@ public class EventInfo {
         this.nameOfEventCreator = eventNameOfCreator;
         this.nameOfEvent = eventName;
         this.eventDateOfCreation = eventDateOfCreation;
-        this.eventLatitude = eventLatitude;
-        this.eventLongitude = eventLongitude;
+        //this.eventLatitude = eventLatitude;
+        //this.eventLongitude = eventLongitude;
     }
+
+
+        public EventInfo(String eventName, String eventLat, String eventLng, String eventDescription) {
+            this.nameOfEvent = eventName;
+            this.eventLatitude =  Double.parseDouble(eventLat);
+            this.eventLongitude = Double.parseDouble(eventLng);
+            this.eventDescription = eventDescription;
+        }
 
     public String getEventDateOfCreation() {
         return eventDateOfCreation;
+    }
+
+    public Double getEventLatitude() {
+        return eventLatitude;
+    }
+
+    public void setEventLatitude(Double eventLatitude) {
+        this.eventLatitude = eventLatitude;
+    }
+
+    public Double getEventLongitude() {
+        return eventLongitude;
+    }
+
+    public void setEventLongitude(Double eventLongitude) {
+        this.eventLongitude = eventLongitude;
     }
 
     public void setEventDateOfCreation(String eventDateOfCreation) {
@@ -53,4 +78,11 @@ public class EventInfo {
         this.nameOfEventCreator = nameOfEventCreator;
     }
 
+    public String getEventDescription() {
+        return eventDescription;
+    }
+
+    public void setEventDescription(String eventDescription) {
+        this.eventDescription = eventDescription;
+    }
 }

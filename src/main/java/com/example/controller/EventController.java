@@ -4,6 +4,7 @@ import com.example.dao.NewEventDAO;
 import com.example.form.EventForm;
 import com.example.model.EventInfo;
 import com.example.model.UserInfo;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +28,17 @@ public class EventController {
         model.addAttribute("eventInfo", list);
         return "eventPage";
     }
+
+    @RequestMapping(value = "/viewAllEventMarkers", method = RequestMethod.GET)
+    public String showEventMarkers(Model model) {
+        //EventInfo[] arrOfMarkers= eventDAO.getAllEventMarkers().toArray(new EventInfo[0]);
+        //System.out.println(Arrays.toString(arrOfMarkers));
+        List<EventInfo> list = eventDAO.getAllEventMarkers();
+        System.out.println(list);
+        model.addAttribute("oldMarkers", list);
+        return "viewEvents";
+    }
+
 
     @RequestMapping(value = "/createEvent", method = RequestMethod.GET)
     public String createEvent(Model model) {
