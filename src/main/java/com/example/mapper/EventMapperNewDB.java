@@ -33,10 +33,34 @@ public class EventMapperNewDB implements RowMapper<EventInfo> {
             "            and A.object_id = B.object_id \n" +
             "            and A.object_id = C.object_id";
 
-    public static final String SELECT_ALL_EVENT_MARKERS = "select distinct A.value_text as event_name,\n" +
-            "B.value_text as event_lat,\n" +
-            "C.value_text as event_lng, event_description.value_text as event_description\n" +
-            "from params as A, params as B, params as C, \n" +
+    public static final String SELECT_ALL_EVENT_MARKERS = "select distinct \n" +
+            "event_name.value_text as event_name,\n" +
+            "event_lat.value_text as event_lat,\n" +
+            "event_lng.value_text as event_lng, \n" +
+            "event_description.value_text as event_description\n" +
+            "from \n" +
+            "(select distinct params.value_text, params.object_id \n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_name')\n" +
+            "and object.id IN \n" +
+            "(select distinct params.object_id from params)) as event_name, \n" +
+            "(select distinct params.value_text, params.object_id \n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_lat')\n" +
+            "and object.id IN \n" +
+            "(select distinct params.object_id from params))  as event_lat, \n" +
+            "(select distinct params.value_text, params.object_id \n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_lng')\n" +
+            "and object.id IN \n" +
+            "(select distinct params.object_id from params)) \n" +
+            "as event_lng, \n" +
             "(select distinct params.value_text, params.object_id \n" +
             "from params\n" +
             "join object on params.object_id = object.id\n" +
@@ -45,27 +69,9 @@ public class EventMapperNewDB implements RowMapper<EventInfo> {
             "and object.id IN \n" +
             "(select distinct params.object_id from params))\n" +
             "as event_description\n" +
-            "where A.value_text in (select params.value_text as event_name from params\n" +
-            "join object on params.object_id = object.id\n" +
-            "join attributes on attributes.id = params.attribute_id\n" +
-            "where attributes.Attribute = 'event_name'\n" +
-            "and object.id IN \n" +
-            "(select distinct params.object_id from params))\n" +
-            "and B.value_text in (select params.value_text as event_lat from params\n" +
-            "join object on params.object_id = object.id\n" +
-            "join attributes on attributes.id = params.attribute_id\n" +
-            "where attributes.Attribute = 'event_lat'\n" +
-            "and object.id IN \n" +
-            "(select distinct params.object_id from params))\n" +
-            "and C.value_text in (select params.value_text as event_lng from params\n" +
-            "join object on params.object_id = object.id\n" +
-            "join attributes on attributes.id = params.attribute_id\n" +
-            "where attributes.Attribute = 'event_lng'\n" +
-            "and object.id IN \n" +
-            "(select distinct params.object_id from params))\n" +
-            "and A.object_id = B.object_id \n" +
-            "and B.object_id = C.object_id \n" +
-            "and C.object_id = event_description.object_id ;";
+            "where event_name.object_id = event_lat.object_id \n" +
+            "and event_name.object_id = event_lng.object_id \n" +
+            "and event_name.object_id = event_description.object_id ;";
 
     /*public static final String SELECT_ALL_EVENT_DESCRIPTION = "select D.value_text as event_description\n" +
             "from params as D\n" +
