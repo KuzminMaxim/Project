@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.ServletException;
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -31,9 +32,9 @@ public class EventController {
 
     @RequestMapping(value = "/viewAllEventMarkers", method = RequestMethod.GET)
     public String showEventMarkers(Model model) {
-        //EventInfo[] arrOfMarkers= eventDAO.getAllEventMarkers().toArray(new EventInfo[0]);
-        //System.out.println(Arrays.toString(arrOfMarkers));
         List<EventInfo> list = eventDAO.getAllEventMarkers();
+        List<EventInfo> testList = eventDAO.getAllEventMarkers();
+        System.out.println(testList.get(0).getNameOfEvent());
         System.out.println(list);
         model.addAttribute("oldMarkers", list);
         return "viewEvents";
@@ -44,6 +45,23 @@ public class EventController {
     public String createEvent(Model model) {
         EventForm form = new EventForm();
         model.addAttribute("eventForm", form);
+        List<EventInfo> testList = eventDAO.getAllEventMarkers();
+        /////////////////////////////////
+        String[] eventName = new String[testList.toArray().length];
+        Double[] eventLat = new Double[testList.toArray().length];
+        Double[] eventLng = new Double[testList.toArray().length];
+        for (int i = 0; i<testList.toArray().length; i++){
+            eventName[i] = testList.get(i).getNameOfEvent();
+            eventLat[i] = testList.get(i).getEventLatitude();
+            eventLng[i] = testList.get(i).getEventLongitude();
+            model.addAttribute("eventName", eventName[i]);
+            model.addAttribute("eventLat", eventLat[i]);
+            model.addAttribute("eventLng", eventLng[i]);
+        }
+        /*System.out.println(eventName[1]);
+        System.out.println(Arrays.toString(eventLat));
+        System.out.println(Arrays.toString(eventLng));*/
+        /////////////////////////////////
         return "MyGoogleMap";
     }
 

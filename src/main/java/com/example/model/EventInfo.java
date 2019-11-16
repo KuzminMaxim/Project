@@ -22,12 +22,14 @@ public class EventInfo {
         this.nameOfEventCreator = nameOfEventCreator;
     }
 
-    public EventInfo(String eventDateOfCreation, String eventName, String eventNameOfCreator, String eventLatitude, String eventLongitude) {
-        this.nameOfEventCreator = eventNameOfCreator;
-        this.nameOfEvent = eventName;
+    public EventInfo(String eventDateOfCreation, String nameOfEvent, String nameOfEventCreator,
+                     String eventDescription, String eventLatitude, String eventLongitude) {
         this.eventDateOfCreation = eventDateOfCreation;
-        //this.eventLatitude = eventLatitude;
-        //this.eventLongitude = eventLongitude;
+        this.nameOfEvent = nameOfEvent;
+        this.nameOfEventCreator = nameOfEventCreator;
+        this.eventDescription = eventDescription;
+        this.eventLatitude = Double.parseDouble(eventLatitude);
+        this.eventLongitude = Double.parseDouble(eventLongitude);
     }
 
 

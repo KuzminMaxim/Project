@@ -109,13 +109,18 @@
         document.getElementById('lat').value = myLatlng.lat;
         document.getElementById('lng').value = myLatlng.lng;
 
+
         var locations = [
-            ['Bondi Beach', 56.26578281720928, 44.09444465297406, 4],
+            [getName(),getLat(),getLng()]
+        ];
+
+        /*var locations = [
+            [getName(), getLat(), getLng()],
             ['Coogee Beach', 56.332646412214196, 43.910080334126405, 5],
             ['Cronulla Beach', 56.249380843298155, 43.849884888769566, 3],
             ['Manly Beach', 56.27211107676863, 43.9782875987305, 2],
             ['Maroubra Beach', 56.291550367229576, 43.9834374400391, 1]
-        ];
+        ];*/
 
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: 12,
@@ -209,6 +214,45 @@
         </form>
     </div>
 </div>
+
+<div id="allMarkers">
+<table border="1">
+    <tr>
+        <th>Name</th>
+    <tr th:each="eventName : ${eventName}">
+        <td  th:utext="${eventName}" id="name">..</td>
+    </tr>
+        <th>Lat</th>
+    <tr th:each="eventLat : ${eventLat}">
+        <td  th:utext="${eventLat}" id ="latitudess" >..</td>
+    </tr>
+        <th>Lng</th>
+    <tr th:each="eventLng : ${eventLng}">
+        <td th:utext="${eventLng}" id="longitude">..</td>
+    </tr>
+    </tr>
+
+</table>
+</div>
+<script>
+    function getName() {
+       return document.getElementById("name");
+    }
+
+    function getLat() {
+        return  (document.getElementById("latitudess").innerText);
+    }
+
+    function getLng() {
+        return (document.getElementById("longitude").innerText);
+    }
+    /*function getArrays() {
+        for (var i = 0; i<document.getElementById("name"); i++){
+            var arr = [getName(), getLat(), getLng(), i]
+        }
+        return arr;
+    }*/
+</script>
 <script>
     function openForm() {
         document.getElementById("popupForm").style.display="block";

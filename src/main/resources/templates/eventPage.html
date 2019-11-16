@@ -22,11 +22,17 @@
         <th>Date</th>
         <th>Name</th>
         <th>CreatorName</th>
+        <th>Description</th>
+        <th>Latitude</th>
+        <th>Longitude</th>
     </tr>
     <tr th:each="eventInfo : ${eventInfo}">
         <td th:utext="${eventInfo.eventDateOfCreation}">..</td>
         <td th:utext="${eventInfo.nameOfEvent}">..</td>
         <td th:utext="${eventInfo.nameOfEventCreator}">..</td>
+        <td th:utext="${eventInfo.eventDescription}">..</td>
+        <td th:utext="${eventInfo.eventLatitude}">..</td>
+        <td th:utext="${eventInfo.eventLongitude}">..</td>
     </tr>
 
 </table>

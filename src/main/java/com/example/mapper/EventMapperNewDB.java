@@ -8,30 +8,63 @@ import java.sql.SQLException;
 
 public class EventMapperNewDB implements RowMapper<EventInfo> {
 
-    public static final String SELECT_ALL_EVENTS = "select distinct A.value_date as event_date_of_creation,\n" +
-            "            B.value_text as event_name,\n" +
-            "            C.value_text as event_name_of_creator \n" +
-            "            from params as A, params as B, params as C\n" +
-            "            where A.value_date in (select params.value_date as event_date_of_creation from params\n" +
-            "            join object on params.object_id = object.id\n" +
-            "            join attributes on attributes.id = params.attribute_id\n" +
-            "            where attributes.Attribute = 'event_date_of_creation'\n" +
-            "            and object.id IN \n" +
-            "            (select distinct params.object_id from params))\n" +
-            "            and B.value_text in (select params.value_text as event_name from params\n" +
-            "            join object on params.object_id = object.id\n" +
-            "            join attributes on attributes.id = params.attribute_id\n" +
-            "            where attributes.Attribute = 'event_name'\n" +
-            "            and object.id IN \n" +
-            "            (select distinct params.object_id from params))\n" +
-            "            and C.value_text in (select params.value_text as event_name_of_creator from params\n" +
-            "            join object on params.object_id = object.id\n" +
-            "            join attributes on attributes.id = params.attribute_id\n" +
-            "            where attributes.Attribute = 'event_name_of_creator'\n" +
-            "            and object.id IN \n" +
-            "            (select distinct params.object_id from params))\n" +
-            "            and A.object_id = B.object_id \n" +
-            "            and A.object_id = C.object_id";
+    public static final String SELECT_ALL_EVENTS = "select \n" +
+            "event_name.value_text as event_name,\n" +
+            "event_name_of_creator.value_text as event_name_of_creator,\n" +
+            "event_description.value_text as event_description,\n" +
+            "event_date_of_creation.value_date as event_date_of_creation,\n" +
+            "event_lat.value_text as event_lat,\n" +
+            "event_lng.value_text as event_lng\n" +
+            "from \n" +
+            "(select distinct params.value_text, params.object_id \n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_name')\n" +
+            "and object.id IN \n" +
+            "(select distinct params.object_id from params)) as event_name,\n" +
+            "(select distinct params.value_date, params.object_id \n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_date_of_creation')\n" +
+            "and object.id IN \n" +
+            "(select distinct params.object_id from params)) as event_date_of_creation,\n" +
+            "(select distinct params.value_text, params.object_id \n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_name_of_creator')\n" +
+            "and object.id IN \n" +
+            "(select distinct params.object_id from params)) as event_name_of_creator, \n" +
+            "(select distinct params.value_text, params.object_id \n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_lat')\n" +
+            "and object.id IN \n" +
+            "(select distinct params.object_id from params))  as event_lat, \n" +
+            "(select distinct params.value_text, params.object_id \n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_lng')\n" +
+            "and object.id IN \n" +
+            "(select distinct params.object_id from params)) \n" +
+            "as event_lng, \n" +
+            "(select distinct params.value_text, params.object_id \n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on params.attribute_id = attributes.id \n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_description')\n" +
+            "and object.id IN \n" +
+            "(select distinct params.object_id from params))\n" +
+            "as event_description\n" +
+            "where event_name.object_id = event_lat.object_id \n" +
+            "and event_name.object_id = event_lng.object_id \n" +
+            "and event_name.object_id = event_description.object_id\n" +
+            "and event_name.object_id = event_date_of_creation.object_id\n" +
+            "and event_name.object_id = event_name_of_creator.object_id;";
 
     public static final String SELECT_ALL_EVENT_MARKERS = "select distinct \n" +
             "event_name.value_text as event_name,\n" +
@@ -148,11 +181,13 @@ public class EventMapperNewDB implements RowMapper<EventInfo> {
     public EventInfo mapRow(ResultSet resultSet, int i) throws SQLException {
 
         String eventDateOfCreation = resultSet.getString("event_date_of_creation");
-        String eventName = resultSet.getString("event_name");
-        String eventNameOfCreator = resultSet.getString("event_name_of_creator");
-        //String eventLatitude = resultSet.getString("eventLatitude");
-        //String eventLongitude = resultSet.getString("eventLongitude");
+        String nameOfEvent = resultSet.getString("event_name");
+        String nameOfEventCreator = resultSet.getString("event_name_of_creator");
+        String eventDescription = resultSet.getString("event_description");
+        String eventLatitude = resultSet.getString("event_lat");
+        String eventLongitude = resultSet.getString("event_lng");
 
-        return new EventInfo(eventDateOfCreation, eventName, eventNameOfCreator);
+        return new EventInfo(eventDateOfCreation, nameOfEvent, nameOfEventCreator,
+                eventDescription, eventLatitude, eventLongitude);
     }
 }
