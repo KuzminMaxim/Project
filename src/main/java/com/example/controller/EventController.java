@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.ServletException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,22 +47,21 @@ public class EventController {
         EventForm form = new EventForm();
         model.addAttribute("eventForm", form);
         List<EventInfo> testList = eventDAO.getAllEventMarkers();
-        /////////////////////////////////
         String[] eventName = new String[testList.toArray().length];
         Double[] eventLat = new Double[testList.toArray().length];
         Double[] eventLng = new Double[testList.toArray().length];
-        for (int i = 0; i<testList.toArray().length; i++){
-            eventName[i] = testList.get(i).getNameOfEvent();
-            eventLat[i] = testList.get(i).getEventLatitude();
-            eventLng[i] = testList.get(i).getEventLongitude();
-            model.addAttribute("eventName", eventName[i]);
-            model.addAttribute("eventLat", eventLat[i]);
-            model.addAttribute("eventLng", eventLng[i]);
+        String[] eventDescription = new String[testList.toArray().length];
+        int n = 0;
+        for (int i = 0; i<testList.toArray().length; i++, n++){
+            eventName[n] = testList.get(i).getNameOfEvent();
+            eventLat[n] = testList.get(i).getEventLatitude();
+            eventLng[n] = testList.get(i).getEventLongitude();
+            eventDescription[n] = testList.get(i).getEventDescription();
         }
-        /*System.out.println(eventName[1]);
-        System.out.println(Arrays.toString(eventLat));
-        System.out.println(Arrays.toString(eventLng));*/
-        /////////////////////////////////
+        model.addAttribute("eventName", eventName);
+        model.addAttribute("eventLat", eventLat);
+        model.addAttribute("eventLng", eventLng);
+        model.addAttribute("eventDescript", eventDescription);
         return "MyGoogleMap";
     }
 
