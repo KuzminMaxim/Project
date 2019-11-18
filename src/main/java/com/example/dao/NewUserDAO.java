@@ -11,21 +11,23 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.io.InputStream;
-import java.sql.Blob;
+import java.security.Principal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 
 @Repository
 @Transactional
-public class NewUserDAO extends JdbcDaoSupport implements UserDAO{
+public class NewUserDAO extends JdbcDaoSupport{
 
     @Autowired
     public NewUserDAO(DataSource dataSource) {
         this.setDataSource(dataSource);
     }
+
+    public NewUserDAO(){}
 
     public List<UserInfo> getAccountsEmail() {
         String sql = UserMapperNewDB.SELECT_ALL_EMAIL;
@@ -90,15 +92,16 @@ public class NewUserDAO extends JdbcDaoSupport implements UserDAO{
         }
     }
 
-    public InputStream findImageByName(String name) throws Exception {
-        Blob blob_photo;
+/*
+    public byte[] findImageByName(String name) {
+        Byte[] blob_photo;
         String sql = UserMapperNewDB.SELECT_IMAGE_SQL;
-        blob_photo = getJdbcTemplate().queryForObject(sql, new Object[] {name}, Blob.class);
-        if(blob_photo!=null)
-            return blob_photo.getBinaryStream();
+        blob_photo = getJdbcTemplate().queryForObject(sql, new Object[] {name}, Byte[].class);
+        if(blob_photo != null)
+            return new byte[Integer.parseInt(Arrays.toString(blob_photo))];
         else
-            return null;
-    }
+            return new byte[1];
+    }*/
 
 
     public List<String> getUserRole(String name) {
@@ -123,9 +126,15 @@ public class NewUserDAO extends JdbcDaoSupport implements UserDAO{
                 registrationForm.getPassword()});
     }
 
-    public void setAvatar(RegistrationForm registrationForm) throws NullPointerException{
-        getJdbcTemplate().update(UserMapperNewDB.SET_AVATAR_SQL, new Object[]{registrationForm.getAvatar(),
-                registrationForm.getName()});
+    public void setAvatar(String link, String loginedUser) {
+        try {
+            System.out.println("Name in setAvatar: " + loginedUser);
+            System.out.println("link in setAvatar: " + link);
+            getJdbcTemplate().update(UserMapperNewDB.SET_AVATAR_SQL, new Object[]{loginedUser, link});
+        } catch (NullPointerException npe) {
+            System.out.println("NullPointerException in setAvatar!!!");
+            npe.printStackTrace();
+        }
     }
 
     public List<String> getAvatar(String name) {

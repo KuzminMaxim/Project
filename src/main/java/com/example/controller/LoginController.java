@@ -1,5 +1,7 @@
 package com.example.controller;
 
+import com.example.dao.NewUserDAO;
+import com.example.form.RegistrationForm;
 import com.example.utils.WebUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
@@ -8,7 +10,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.nio.ByteBuffer;
 import java.security.Principal;
+import java.util.Base64;
 
 @Controller
 public class LoginController {
@@ -44,12 +48,14 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/userInfo", method = RequestMethod.GET)
-    public String userInfo(Model model, Principal principal) {
+    public String userInfo(Model model, Principal principal) throws Exception {
         String userName = principal.getName();
         System.out.println("Username: " + userName);
         User loginedUser = (User) ((Authentication) principal).getPrincipal();
         String userInfo = WebUtils.toString(loginedUser);
         model.addAttribute("userInfo", userInfo);
+        //NewUserDAO userDAO = new NewUserDAO();
+        //Base64.getDecoder().decode(userDAO.findImageByName(userName));
         return "userInfoPage";
     }
 

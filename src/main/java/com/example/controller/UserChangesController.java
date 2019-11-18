@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import java.io.InputStream;
 import java.security.Principal;
 
 import com.example.dao.NewUserDAO;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.servlet.http.Part;
 
 
 @Controller
@@ -51,23 +54,20 @@ public class UserChangesController {
     @RequestMapping(value = "/setAvatar", method = RequestMethod.GET)
     public String viewSetAvatarPage(Model model, Principal principal) {
         User loginedUser = (User) ((Authentication) principal).getPrincipal();
-
         String userInfo = WebUtils.toString(loginedUser);
         model.addAttribute("userInfo", userInfo);
-
         RegistrationForm form = new RegistrationForm();
-
         model.addAttribute("registrationForm", form);
-
         return "changeAvatarPage";
     }
 
-
+/*
     @RequestMapping (value = "/setAvatar", method = RequestMethod.POST)
     public String setAvatar(RegistrationForm registrationForm){
             registerDAO.setAvatar(registrationForm);
-            System.out.println("Password for user: '"+ registrationForm.getName() +"' was changed.");
+            System.out.println("Avatar for user: '"+ registrationForm.getName() +"' was changed.");
         return "redirect:/userInfo";
-    }
+    }*/
+
 
 }

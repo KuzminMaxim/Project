@@ -10,7 +10,7 @@
     <span th:utext="${#request.userPrincipal.name}"></span>
 
     <h2>Change avatar</h2>
-    <form  th:multiple = "true" th:action="@{/setAvatar}"  th:object="${registrationForm}" method="POST">
+    <form  th:multiple = "true" th:action="@{/setAvatar}"  th:object="${registrationForm}" enctype="multipart/form-data" method="POST">
         <table>
             <tr>
                 <td>You name is:  </td>
@@ -19,17 +19,15 @@
             </tr>
             <tr>
                 <td>New avatar: </td>
-                <td><input type="file" th:field="*{avatar}" id="avatar" /></td>
+                <td><input type="file" th:field="*{avatar}" id="avatar"  alt="dsd"/></td>
             </tr>
             <tr>
                 <td>
-                    <input type="submit" value="Загрузить"/>
+                    <input type="submit" value="Не нажимать!"/>
                 </td>
             </tr>
         </table>
     </form>
-    <h6>записывается, но не извлекается</h6>
-
 </div>
 </body>
 

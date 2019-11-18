@@ -1,5 +1,6 @@
 package com.example.dao;
 
+import com.example.annotations.Annotation;
 import com.example.form.EventForm;
 import com.example.form.RegistrationForm;
 import com.example.mapper.EventMapperNewDB;
@@ -29,7 +30,6 @@ public class NewEventDAO extends JdbcDaoSupport{
     public NewEventDAO(DataSource dataSource) {
         this.setDataSource(dataSource);
     }
-
 
     public EventInfo createEvent(EventForm eventForm) throws NullPointerException{
         assert getJdbcTemplate() != null;

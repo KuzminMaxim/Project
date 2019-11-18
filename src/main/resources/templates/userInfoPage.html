@@ -13,6 +13,7 @@
 <div th:if="${userInfo != null}" th:utext="${userInfo}"></div>
     <a th:if="${#request.userPrincipal != null}" th:href="@{/changePassword}">Change password page</a>
     <a th:if="${#request.userPrincipal != null}" th:href="@{/setAvatar}">Set avatar</a>
+<a th:if="${#request.userPrincipal != null}" th:href="@{/uploadOneFile}">uploadOneFile</a>
 </div>
 </body>
 

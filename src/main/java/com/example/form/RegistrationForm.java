@@ -1,12 +1,7 @@
 package com.example.form;
 
-import com.example.annotations.Annotation;
-import com.example.annotations.MyEntity;
-import com.example.annotations.MyGeneratedValue;
-import com.example.annotations.MyId;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-
-import javax.persistence.GenerationType;
+import org.springframework.web.multipart.MultipartFile;
 
 //@MyEntity(name = "params")
 public class RegistrationForm {
@@ -14,11 +9,11 @@ public class RegistrationForm {
     //@MyId
     //@MyGeneratedValue(strategy= GenerationType.AUTO)
     private long id;
-    @Annotation
+
     private String name;
 
     private String password;
-    private String avatar;
+    private MultipartFile[] avatar;
     private String email;
     private String decryptedPassword;
 
@@ -49,11 +44,11 @@ public class RegistrationForm {
         this.email = email;
     }
 
-    public String getAvatar() {
+    public MultipartFile[] getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(String avatar) {
+    public void setAvatar(MultipartFile[] avatar) {
         this.avatar = avatar;
     }
 
