@@ -1,20 +1,28 @@
 package com.example.form;
 
+import com.example.api.Attribute;
+import com.example.api.ObjectType;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.multipart.MultipartFile;
 
-//@MyEntity(name = "params")
+@ObjectType(id = "users")
 public class RegistrationForm {
 
-    //@MyId
-    //@MyGeneratedValue(strategy= GenerationType.AUTO)
-    private long id;
-
+    @Attribute(id = "user_name")
     private String name;
 
+    @Attribute(id = "user_password")
     private String password;
+
+    @Attribute(id = "user_avatar")
     private MultipartFile[] avatar;
+
+    @Attribute(id = "user_email")
     private String email;
+
+    @Attribute(id = "user_role")
+    private String role = "ROLE_USER";
+
     private String decryptedPassword;
 
     public RegistrationForm() {}
@@ -27,13 +35,17 @@ public class RegistrationForm {
     }
 
     public RegistrationForm(long id, String name, String password) {
-        this.id = id;
+        //this.id = id;
         this.name = name;
         this.password = password;
     }
 
     public String getRole() {
-        return "ROLE_USER";
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getEmail() {
@@ -56,13 +68,13 @@ public class RegistrationForm {
         return 1;
     }
 
-    public long getId() {
+    /*public long getId() {
         return id;
-    }
+    }*/
 
-    public void setId(int id) {
+    /*public void setId(int id) {
         this.id = id;
-    }
+    }*/
 
     public String getName() {
         return name;

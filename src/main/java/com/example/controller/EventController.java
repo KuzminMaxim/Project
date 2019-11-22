@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.api.MyApi;
 import com.example.dao.NewEventDAO;
 import com.example.form.EventForm;
 import com.example.model.EventInfo;
@@ -23,6 +24,9 @@ public class EventController {
     @Autowired
     private NewEventDAO eventDAO;
 
+    @Autowired
+    private MyApi myApi;
+
 
     @RequestMapping(value = "/viewAllEvents", method = RequestMethod.GET)
     public String showEvents(Model model) {
@@ -40,7 +44,6 @@ public class EventController {
         model.addAttribute("oldMarkers", list);
         return "viewEvents";
     }
-
 
     @RequestMapping(value = "/createEvent", method = RequestMethod.GET)
     public String createEvent(Model model) {
@@ -66,8 +69,9 @@ public class EventController {
     }
 
     @RequestMapping(value = "/createEvent", method = RequestMethod.POST)
-    public String CreateUser(EventForm eventForm) {
-            eventDAO.createEvent(eventForm);
+    public String CreateUser(EventForm eventForm) throws NoSuchFieldException, IllegalAccessException {
+            myApi.save(eventForm);
+            //eventDAO.createEvent(eventForm);
             //EventInfo.class.getDeclaredFields()[1].getAnnotations()[0];
         return "userInfoPage";
     }

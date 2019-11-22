@@ -1,11 +1,24 @@
 package com.example.form;
 
+import com.example.api.Attribute;
+import com.example.api.ObjectType;
+
+@ObjectType(id = "event")
 public class EventForm {
 
+    @Attribute(id = "event_name")
     private String nameOfEvent;
+
+    @Attribute(id = "event_name_of_creator")
     private String nameOfEventCreator;
+
+    @Attribute(id = "event_description")
     private String descriptionOfEvent;
+
+    @Attribute(id = "event_lat")
     private String latitude;
+
+    @Attribute(id = "event_lng")
     private String longitude;
 
     public EventForm(){}

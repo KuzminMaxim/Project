@@ -1,26 +1,15 @@
 package com.example.dao;
 
-import com.example.annotations.Annotation;
 import com.example.form.EventForm;
-import com.example.form.RegistrationForm;
 import com.example.mapper.EventMapperNewDB;
-import com.example.mapper.UserMapperNewDB;
 import com.example.model.EventInfo;
-import com.example.model.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.io.InputStream;
-import java.sql.Blob;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 @Transactional

@@ -6,6 +6,7 @@ public class UserInfo {
     private String name;
     private String password;
     private String email;
+    private String url;
 
     public UserInfo(){}
 
@@ -18,6 +19,17 @@ public class UserInfo {
     public UserInfo(String email) {
     }
 
+    public UserInfo(String url, String url1){
+        this.url = url;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public String getEmail() {
         return email;

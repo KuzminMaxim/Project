@@ -74,8 +74,8 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-    </dependencies>
+        <!-- https://mvnrepository.com/artifact/org.apache.directory.server/apacheds-all -->
+        </dependencies>
 
     <build>
         <plugins>

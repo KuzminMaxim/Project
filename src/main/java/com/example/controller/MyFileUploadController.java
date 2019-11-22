@@ -54,7 +54,10 @@ public class MyFileUploadController {
     private String doUpload(HttpServletRequest request, Model model, //
                             RegistrationForm myUploadForm, Principal principal, NewUserDAO newUserDAO) {
 
-        String uploadRootPath = request.getServletContext().getRealPath("upload");
+        //String uploadRootPath = request.getServletContext().getRealPath("usersAvatars");
+        //String xxx = request.getServletContext().getServerInfo();
+        //System.out.println("getContextPath: "+xxx);
+        String uploadRootPath = "C:\\Users\\Максим\\AppData\\Local\\Temp\\usersAvatars";
         System.out.println("uploadRootPath=" + uploadRootPath);
 
         File uploadRootDir = new File(uploadRootPath);
@@ -75,7 +78,8 @@ public class MyFileUploadController {
 
             if (name != null && name.length() > 0) {
                 try {
-                    File serverFile = new File(uploadRootDir.getAbsolutePath() + File.separator + name);
+                    File serverFile = new File(uploadRootDir.getAbsolutePath() + File.separator +
+                            principal.getName() + "%" + name);
 
                     BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
                     stream.write(fileData.getBytes());

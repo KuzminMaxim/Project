@@ -1,6 +1,6 @@
 package com.example.controller;
 
-import com.example.annotations.MyClass;
+import com.example.api.MyApi;
 import com.example.dao.NewUserDAO;
 import com.example.form.RegistrationForm;
 import com.example.model.UserInfo;
@@ -33,6 +33,9 @@ public class RegistrationController {
 
     @Autowired
     private UserValidator userValidator;
+
+    @Autowired
+    private MyApi api;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder) {
@@ -69,7 +72,7 @@ public class RegistrationController {
     @RequestMapping(value = "/createUser", method = RequestMethod.POST)
     public String CreateUser(Model model,
                              @ModelAttribute("registrationForm") @Validated RegistrationForm registrationForm,
-                             BindingResult result, HttpServletRequest request) {
+                             BindingResult result, HttpServletRequest request) throws NoSuchFieldException, IllegalAccessException {
 
         if (result.hasErrors()) {
             List<UserInfo> username = registerDAO.getAccountsName();
@@ -77,8 +80,8 @@ public class RegistrationController {
             return "registrationPage";
         }
         try {
-            registerDAO.insertUser(registrationForm);
-            //MyClass.checkFields();
+            api.save(registrationForm);
+            /*registerDAO.insertUser(registrationForm);*/
             try {
                 request.login(registrationForm.getName(),registrationForm.getDecryptedPassword());
                 return "userInfoPage";
@@ -91,6 +94,7 @@ public class RegistrationController {
             model.addAttribute("errorMessage", "Error: " + e.getMessage());
             return "registrationPage";
         }
+
         return "redirect:/welcome";
     }
 

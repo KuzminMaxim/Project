@@ -3,6 +3,7 @@ package com.example.controller;
 import java.io.InputStream;
 import java.security.Principal;
 
+import com.example.api.MyApi;
 import com.example.dao.NewUserDAO;
 import com.example.form.RegistrationForm;
 import com.example.utils.WebUtils;
@@ -21,7 +22,7 @@ import javax.servlet.http.Part;
 public class UserChangesController {
 
     @Autowired
-    private NewUserDAO registerDAO;
+    private MyApi api;
 
     @RequestMapping(value = "/changePassword", method = RequestMethod.GET)
     public String viewChangePasswordPage(Model model, Principal principal) {
@@ -39,13 +40,13 @@ public class UserChangesController {
 
 
     @RequestMapping (value = "/changePassword", method = RequestMethod.POST)
-    public String changePassword(RegistrationForm registrationForm){
+    public String changePassword(RegistrationForm registrationForm) throws NoSuchFieldException, IllegalAccessException {
 
         if (registrationForm.getPassword().isEmpty()){
             System.out.println("Password for user: '"+ registrationForm.getName() +"' was not changed.");
             return "/error";
         } else{
-            registerDAO.changePassword(registrationForm);
+            api.update(registrationForm);
             System.out.println("Password for user: '"+ registrationForm.getName() +"' was changed.");
         }
         return "redirect:/userInfo";

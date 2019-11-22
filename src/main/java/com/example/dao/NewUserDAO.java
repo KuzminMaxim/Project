@@ -1,6 +1,5 @@
 package com.example.dao;
 
-import com.example.form.RegistrationForm;
 import com.example.mapper.UserMapperNewDB;
 import com.example.model.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +10,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.security.Principal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -92,15 +89,21 @@ public class NewUserDAO extends JdbcDaoSupport{
         }
     }
 
-/*
-    public byte[] findImageByName(String name) {
-        Byte[] blob_photo;
+
+    /*public UserInfo findImageByName(String name) {
         String sql = UserMapperNewDB.SELECT_IMAGE_SQL;
-        blob_photo = getJdbcTemplate().queryForObject(sql, new Object[] {name}, Byte[].class);
-        if(blob_photo != null)
-            return new byte[Integer.parseInt(Arrays.toString(blob_photo))];
-        else
-            return new byte[1];
+        Object[] params = new Object[] {name};
+        try {
+            return this.getJdbcTemplate().queryForObject(sql, params, new RowMapper<UserInfo>() {
+                @Override
+                public UserInfo mapRow(ResultSet resultSet, int i) throws SQLException {
+                    String avatar = resultSet.getString("image");
+                    return new UserInfo(avatar, avatar);
+                }
+            });
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }*/
 
 
@@ -110,7 +113,7 @@ public class NewUserDAO extends JdbcDaoSupport{
         return this.getJdbcTemplate().queryForList(sql, params, String.class);
     }
 
-    public void insertUser(RegistrationForm registrationForm) throws NullPointerException{
+    /*public void insertUser(RegistrationForm registrationForm) throws NullPointerException{
         getJdbcTemplate().update(UserMapperNewDB.CREATE_OBJECT_SQL);
         getJdbcTemplate().update(UserMapperNewDB.INSERT_EMAIL_SQL, new Object[]{registrationForm.getEmail()});
         getJdbcTemplate().update(UserMapperNewDB.INSERT_NAME_SQL, new Object[]{registrationForm.getName()});
@@ -119,12 +122,12 @@ public class NewUserDAO extends JdbcDaoSupport{
         getJdbcTemplate().update(UserMapperNewDB.INSERT_AVATAR_SQL);
         getJdbcTemplate().update(UserMapperNewDB.CREATE_OBJECT_REFERENCES);
         new UserInfo();
-    }
+    }*/
 
-    public void changePassword(RegistrationForm registrationForm) throws NullPointerException{
+    /*public void changePassword(RegistrationForm registrationForm) throws NullPointerException{
         getJdbcTemplate().update(UserMapperNewDB.SET_PASSWORD_SQL, new Object[]{registrationForm.getName(),
                 registrationForm.getPassword()});
-    }
+    }*/
 
     public void setAvatar(String link, String loginedUser) {
         try {
@@ -137,18 +140,4 @@ public class NewUserDAO extends JdbcDaoSupport{
         }
     }
 
-    public List<String> getAvatar(String name) {
-        String sql = UserMapperNewDB.SELECT_USER_AVATAR;
-        Object[] params = new Object[] { name };
-        return this.getJdbcTemplate().queryForList(sql, params, String.class);
-    }
-
-
-    /*public List<UserInfo> getAvatar() {
-        String sql = UserMapper.BASE_SQL;
-        Object[] params = new Object[] {};
-        UserMapper mapper = new UserMapper();
-        List<UserInfo> list = this.getJdbcTemplate().query(sql, params, mapper);
-        return list;
-    }*/
 }

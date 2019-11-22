@@ -8,8 +8,12 @@
 <h2>User Info Page</h2>
 <b>This is protected user page!</b>
 <h3>Welcome, <span th:utext="${#request.userPrincipal.name}"></span></h3>
-<img id="userImage" name="userImage" src="data:image/jpg;base64,<c:out value='${userImage}'/>" >
+<!--<img id="userImage" name="userImage" th:src="@{userAvatar}" alt="YouAvatar">-->
+<img th:src="@{photo}"/>
+<img src="photo"/>
+<img th:src="photo"/>
 <br/><br/>
+<!--<td th:utext="${oldMarkers.nameOfEvent}">..</td>-->
 <div th:if="${userInfo != null}" th:utext="${userInfo}"></div>
     <a th:if="${#request.userPrincipal != null}" th:href="@{/changePassword}">Change password page</a>
     <a th:if="${#request.userPrincipal != null}" th:href="@{/setAvatar}">Set avatar</a>

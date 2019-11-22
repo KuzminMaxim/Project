@@ -97,13 +97,14 @@ public class UserMapperNewDB implements RowMapper<UserInfo>  {
             "            and object.id = \n" +
             "            (select distinct params.object_id from params where value_text = ?)";
 
-    public static final String SELECT_IMAGE_SQL = "" +
-            "            select params.value_text as image from params\n" +
-            "            join attributes on attributes.id = params.attribute_id\n" +
-            "            join object on params.object_id = object.id\n" +
-            "            where attributes.Attribute = 'user_avatar'\n" +
-            "            and object.id = \n" +
-            "            (select distinct params.object_id from params where value_text = ?)";
+    public static final String SELECT_IMAGE_SQL = "select params.value_text as image from params\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "join object on params.object_id = object.id\n" +
+            "where attributes.Attribute = 'user_avatar'\n" +
+            "and object.id = \n" +
+            "(select distinct params.object_id from params where value_text = ?\n" +
+            "and params.attribute_id = (select attributes.id from attributes where \n" +
+            "attributes.Attribute = 'user_name'))";
 
     public static final String SELECT_NAME_EMAIL_SQL = "SELECT DISTINCT (select params.value_text from params\n" +
             "            join attributes on attributes.id = params.attribute_id\n" +
