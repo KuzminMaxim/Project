@@ -3,6 +3,8 @@ package com.example.form;
 import com.example.api.Attribute;
 import com.example.api.ObjectType;
 
+import java.sql.Date;
+
 @ObjectType(id = "event")
 public class EventForm {
 
@@ -21,6 +23,9 @@ public class EventForm {
     @Attribute(id = "event_lng")
     private String longitude;
 
+    @Attribute(id = "event_time")
+    private String date;
+
     public EventForm(){}
 
     public EventForm(String nameOfEvent, String nameOfEventCreator) {
@@ -28,12 +33,21 @@ public class EventForm {
         this.nameOfEventCreator = nameOfEventCreator;
     }
 
-    public EventForm(String nameOfEvent, String nameOfEventCreator, String descriptionOfEvent, String latitude, String longitude) {
+    public EventForm(String nameOfEvent, String nameOfEventCreator, String descriptionOfEvent, String latitude, String longitude, String date) {
         this.nameOfEvent = nameOfEvent;
         this.nameOfEventCreator = nameOfEventCreator;
         this.descriptionOfEvent = descriptionOfEvent;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.date = date;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getDescriptionOfEvent() {

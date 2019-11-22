@@ -20,7 +20,7 @@ public class NewEventDAO extends JdbcDaoSupport{
         this.setDataSource(dataSource);
     }
 
-    public EventInfo createEvent(EventForm eventForm) throws NullPointerException{
+   /* public EventInfo createEvent(EventForm eventForm) throws NullPointerException{
         assert getJdbcTemplate() != null;
         getJdbcTemplate().update(EventMapperNewDB.CREATE_OBJECT_EVENT_SQL);
         getJdbcTemplate().update(EventMapperNewDB.INSERT_DATE_OF_CREATION_SQL);
@@ -32,7 +32,7 @@ public class NewEventDAO extends JdbcDaoSupport{
         getJdbcTemplate().update(EventMapperNewDB.INSERT_DATE_OF_CREATION_SQL);
         getJdbcTemplate().update(EventMapperNewDB.CREATE_EVENT_OBJECT_REFERENCES);
         return new EventInfo();
-    }
+    }*/
 
     public List<EventInfo> getAllEvents() throws NullPointerException{
         String sql = EventMapperNewDB.SELECT_ALL_EVENTS;
