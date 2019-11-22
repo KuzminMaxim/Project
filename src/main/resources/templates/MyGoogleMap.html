@@ -102,10 +102,10 @@
         document.getElementById('lng').value = lng;
     }
 
-    function addArraysLoc() {
+    /*function addArraysLoc() {
         var arr = [getName(), getLat(), getLng()];
         locations.push(arr);
-    }
+    }*/
 
     function initMap() {
         var map, marker, infoWindow;
@@ -122,7 +122,8 @@
             var lat = document.getElementsByClassName("latitudes")[x].innerHTML;
             var lng = document.getElementsByClassName("longitudes")[x].innerHTML;
             var descript = document.getElementsByClassName("descript")[x].innerHTML;
-            locations.push([names, lat, lng, descript]);
+            var dates = document.getElementsByClassName("eventDates")[x].innerHTML;
+            locations.push([names, lat, lng, descript, dates]);
         }
 
         map = new google.maps.Map(document.getElementById('map'), {
@@ -143,7 +144,7 @@
             });
             google.maps.event.addListener(oldMarker, 'click', (function (oldMarker, i) {
                 return function () {
-                    infoWindow.setContent(locations[i][3]);
+                    infoWindow.setContent("Description: " + locations[i][3] + " Date: " + locations[i][4]);
                     infoWindow.open(map, oldMarker);
                 }
             })(oldMarker, i));
@@ -238,6 +239,9 @@
     </tr>
     <tr th:each="eventDescript : ${eventDescript}">
         <td th:utext="${eventDescript}"  class="descript">..</td>
+    </tr>
+    <tr th:each="eventDate : ${eventDate}">
+        <td th:utext="${eventDate}"  class="eventDates">..</td>
     </tr>
 </table>
 </div>

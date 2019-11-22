@@ -1,5 +1,8 @@
 package com.example.model;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 public class EventInfo {
 
     private String eventDateOfCreation;
@@ -8,6 +11,7 @@ public class EventInfo {
     private String eventDescription;
     private Double eventLatitude;
     private Double eventLongitude;
+    private String date;
 
     public EventInfo(){}
 
@@ -33,12 +37,21 @@ public class EventInfo {
     }
 
 
-        public EventInfo(String eventName, String eventLat, String eventLng, String eventDescription) {
+        public EventInfo(String eventName, String eventLat, String eventLng, String eventDescription, String date) {
             this.nameOfEvent = eventName;
             this.eventLatitude =  Double.parseDouble(eventLat);
             this.eventLongitude = Double.parseDouble(eventLng);
             this.eventDescription = eventDescription;
+            this.date = date;
         }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public String getEventDateOfCreation() {
         return eventDateOfCreation;

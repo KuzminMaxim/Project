@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.ServletException;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -54,17 +56,20 @@ public class EventController {
         Double[] eventLat = new Double[testList.toArray().length];
         Double[] eventLng = new Double[testList.toArray().length];
         String[] eventDescription = new String[testList.toArray().length];
+        String[] dates = new String[testList.toArray().length];
         int n = 0;
         for (int i = 0; i<testList.toArray().length; i++, n++){
             eventName[n] = testList.get(i).getNameOfEvent();
             eventLat[n] = testList.get(i).getEventLatitude();
             eventLng[n] = testList.get(i).getEventLongitude();
             eventDescription[n] = testList.get(i).getEventDescription();
+            dates[n] = testList.get(i).getDate().replace("T", " ");
         }
         model.addAttribute("eventName", eventName);
         model.addAttribute("eventLat", eventLat);
         model.addAttribute("eventLng", eventLng);
         model.addAttribute("eventDescript", eventDescription);
+        model.addAttribute("eventDate", dates);
         return "MyGoogleMap";
     }
 

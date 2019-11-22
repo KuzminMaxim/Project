@@ -1,6 +1,5 @@
 package com.example.dao;
 
-import com.example.form.EventForm;
 import com.example.mapper.EventMapperNewDB;
 import com.example.model.EventInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +8,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -19,20 +21,6 @@ public class NewEventDAO extends JdbcDaoSupport{
     public NewEventDAO(DataSource dataSource) {
         this.setDataSource(dataSource);
     }
-
-   /* public EventInfo createEvent(EventForm eventForm) throws NullPointerException{
-        assert getJdbcTemplate() != null;
-        getJdbcTemplate().update(EventMapperNewDB.CREATE_OBJECT_EVENT_SQL);
-        getJdbcTemplate().update(EventMapperNewDB.INSERT_DATE_OF_CREATION_SQL);
-        getJdbcTemplate().update(EventMapperNewDB.INSERT_NAME_OF_EVENT_SQL, new Object[]{eventForm.getNameOfEvent()});
-        getJdbcTemplate().update(EventMapperNewDB.INSERT_NAME_OF_CREATOR_SQL, new Object[]{eventForm.getNameOfEventCreator()});
-        getJdbcTemplate().update(EventMapperNewDB.INSERT_LATITUDE_OF_EVENT_SQL, new Object[]{eventForm.getLatitude()});
-        getJdbcTemplate().update(EventMapperNewDB.INSERT_LONGITUDE_OF_EVENT_SQL, new Object[]{eventForm.getLongitude()});
-        getJdbcTemplate().update(EventMapperNewDB.INSERT_DESCRIPTION_OF_EVENT_SQL, new Object[]{eventForm.getDescriptionOfEvent()});
-        getJdbcTemplate().update(EventMapperNewDB.INSERT_DATE_OF_CREATION_SQL);
-        getJdbcTemplate().update(EventMapperNewDB.CREATE_EVENT_OBJECT_REFERENCES);
-        return new EventInfo();
-    }*/
 
     public List<EventInfo> getAllEvents() throws NullPointerException{
         String sql = EventMapperNewDB.SELECT_ALL_EVENTS;
@@ -49,7 +37,9 @@ public class NewEventDAO extends JdbcDaoSupport{
             String eventLat = resultSet.getString("event_lat");
             String eventLng = resultSet.getString("event_lng");
             String eventDescription = resultSet.getString("event_description");
-            return new EventInfo(eventName, eventLat, eventLng, eventDescription);
+            String date = resultSet.getString("event_time");
+
+            return new EventInfo(eventName, eventLat, eventLng, eventDescription, date);
         });
     }
 
