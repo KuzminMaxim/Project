@@ -59,6 +59,22 @@ public class NewDAO extends JdbcDaoSupport {
         }
     }
 
+    public void deleteSomething(Map myMap) {
+        try {
+            assert getJdbcTemplate() != null;
+                for ( Object entry : myMap.keySet()) {
+                    String key = (String) entry;
+                    if (key.equals("user_name") ||
+                            key.equals("event_name")){
+                        getJdbcTemplate().update(NewMapperDB.DELETE_SOMETHING_SQL,
+                                new Object[]{key, myMap.get(key)});
+                    }
+                }
+        } catch (NullPointerException npe){
+            npe.printStackTrace();
+        }
+    }
+
     public List<?> getSomethingOne(){
         String sql = NewMapperDB.SELECT_SOMETHING_SQL;
         Object[] params = new Object[] {};

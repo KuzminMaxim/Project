@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Deleting </title>
+    <style>
+        th, td {
+            padding: 5px;
+        }
+        td span  {
+            font-size:90%;
+            font-style: italic;
+            color: black;
+        }
+        .error {
+            color: black;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+<th:block th:include="/_menu"></th:block>
+
+<h2>Delete user</h2>
+
+<form th:action="@{/deleteSomething}" th:object="${registrationForm}" method="POST">
+    <table>
+        <tr>
+            <td>User Name</td>
+            <td><label>
+                <input type="text" th:field="*{name}" />
+            </label></td>
+        </tr>
+        <tr>
+            <td>
+                <input type="submit" value="Submit" />
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+</form>
+
+<h2>Delete event</h2>
+
+<form th:action="@{/deleteSomething}" th:object="${eventForm}" method="POST">
+    <table>
+        <tr>
+            <td>User Name</td>
+            <td><label>
+                <input type="text" th:field="*{nameOfEvent}" />
+            </label></td>
+        </tr>
+        <tr>
+            <td>
+                <input type="submit" value="Submit" />
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+</form>
+
+</body>
+</html>

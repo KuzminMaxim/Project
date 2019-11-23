@@ -27,6 +27,10 @@ public class RegistrationForm {
 
     public RegistrationForm() {}
 
+    public RegistrationForm(String name){
+        this.name = name;
+    }
+
     public RegistrationForm(String email, String name, String password) {
         this.email = email;
         this.name = name;

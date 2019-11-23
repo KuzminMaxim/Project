@@ -24,11 +24,14 @@ public class MyApi {
         change(getAllAboutUsedClass(clazz, object), clazz);
     }
 
+    public void delete(Object object) throws NoSuchFieldException, IllegalAccessException {
+        Class clazz = object.getClass();
+        remove(getAllAboutUsedClass(clazz, object));
+    }
+
     public void readOne(){}
 
     public void readAll(){}
-
-    public void delete(){}
 
 
     private <T> Map<String, String> getAllAboutUsedClass(Class<T> clazz, Object object) throws IllegalAccessException, NoSuchFieldException {
@@ -68,10 +71,18 @@ public class MyApi {
     }
 
     private <T> void change(Map map, Class<T> clazz){
-        String objectTypeAnnotation = clazz.getAnnotation(ObjectType.class).id();
+        String objectType = clazz.getAnnotation(ObjectType.class).id();
         try {
-            dao.updateSomething(map, objectTypeAnnotation);
+            dao.updateSomething(map, objectType);
         } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void remove(Map map){
+        try {
+            dao.deleteSomething(map);
+        } catch (NullPointerException e){
             e.printStackTrace();
         }
     }

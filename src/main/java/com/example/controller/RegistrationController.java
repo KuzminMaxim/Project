@@ -81,7 +81,6 @@ public class RegistrationController {
         }
         try {
             api.save(registrationForm);
-            /*registerDAO.insertUser(registrationForm);*/
             try {
                 request.login(registrationForm.getName(),registrationForm.getDecryptedPassword());
                 return "userInfoPage";
@@ -97,7 +96,6 @@ public class RegistrationController {
 
         return "redirect:/welcome";
     }
-
 
     @RequestMapping(value = "/error", method = RequestMethod.GET)
     public String errorP(Model model) {
