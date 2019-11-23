@@ -195,6 +195,10 @@
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfOlryc_A5QyGcHyOSE54lO6PVQVd1P0U&callback=initMap"
         async defer></script>
+
+<div th:if="${errorMessage != null}"
+     th:utext="${errorMessage}" class="error">...</div>
+
 <div class="login-popup">
     <div class="form-popup" id="popupForm">
         <form th:action="@{/createEvent}" th:object="${eventForm}" method="POST" class="form-container">
@@ -205,7 +209,8 @@
             <input type="hidden" placeholder="Name of creator" th:name="nameOfEventCreator" th:value="*{#request.userPrincipal.name}"/>
             <input type="hidden" placeholder="latitude" th:field="*{latitude}" id="lat"/>
             <input type="hidden" placeholder="longitude" th:field="*{longitude}" id="lng"/>
-            <input type="text" id="nameOfEvent" placeholder="Name of event" th:name="nameOfEvent" required>
+            <input type="text" id="nameOfEvent" placeholder="Name of event" th:field="*{nameOfEvent}" ><!--th:name="nameOfEvent"  required>-->
+                <span th:if="${#fields.hasErrors('nameOfEvent')}" th:errors="nameOfEvent">..</span>
             <label for="descriptionOfEvent">
                 <strong>Description of event</strong>
             </label>

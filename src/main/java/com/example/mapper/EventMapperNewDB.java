@@ -8,6 +8,16 @@ import java.sql.SQLException;
 
 public class EventMapperNewDB implements RowMapper<EventInfo> {
 
+    public static final String SELECT_NAME_OF_EVENT_SQL = "select distinct params.value_text as name from params\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "join object on params.object_id = object.id\n" +
+            "where attributes.Attribute = 'event_name'\n" +
+            "and object.id = \n" +
+            "(select distinct params.object_id from params where \n" +
+            "value_text = ?\n" +
+            "and params.attribute_id = (select distinct attributes.id from attributes\n" +
+            "where attributes.Attribute = 'event_name'))";
+
     public static final String SELECT_ALL_EVENTS = "select \n" +
             "event_name.value_text as event_name,\n" +
             "event_name_of_creator.value_text as event_name_of_creator,\n" +

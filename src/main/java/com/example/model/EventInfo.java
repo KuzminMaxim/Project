@@ -45,6 +45,10 @@ public class EventInfo {
             this.date = date;
         }
 
+    public EventInfo(String eventName) {
+        this.nameOfEvent = eventName;
+    }
+
     public String getDate() {
         return date;
     }

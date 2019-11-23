@@ -3,12 +3,20 @@ package com.example.controller;
 import com.example.api.MyApi;
 import com.example.dao.NewEventDAO;
 import com.example.form.EventForm;
+import com.example.form.RegistrationForm;
 import com.example.model.EventInfo;
 import com.example.model.UserInfo;
+import com.example.validation.EventValidator;
+import com.example.validation.UserValidator;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -28,6 +36,22 @@ public class EventController {
 
     @Autowired
     private MyApi myApi;
+
+    @Autowired
+    private EventValidator eventValidator;
+
+    @InitBinder
+    protected void initBinder(WebDataBinder dataBinder) {
+        Object target = dataBinder.getTarget();
+        if (target == null) {
+            return;
+        }
+        System.out.println("Target=" + target);
+
+        if (target.getClass() == EventForm.class) {
+            dataBinder.setValidator(eventValidator);
+        }
+    }
 
 
     @RequestMapping(value = "/viewAllEvents", method = RequestMethod.GET)
@@ -74,11 +98,23 @@ public class EventController {
     }
 
     @RequestMapping(value = "/createEvent", method = RequestMethod.POST)
-    public String CreateUser(EventForm eventForm) throws NoSuchFieldException, IllegalAccessException {
+    public String CreateUser(Model model, @ModelAttribute("eventForm") @Validated EventForm eventForm,
+                             BindingResult result) throws NoSuchFieldException, IllegalAccessException {
+
+        if (result.hasErrors()) {
+            List<EventInfo> eventName = eventDAO.getEventsName();
+            model.addAttribute("eventInfo", eventName);
+            return "MyGoogleMap";
+        }
+        try {
             myApi.save(eventForm);
-            //eventDAO.createEvent(eventForm);
-            //EventInfo.class.getDeclaredFields()[1].getAnnotations()[0];
-        return "userInfoPage";
+        } catch (Exception e){
+            List<EventInfo> eventName = eventDAO.getEventsName();
+            model.addAttribute("eventInfo", eventName);
+            model.addAttribute("errorMessage", "Error: " + e.getMessage());
+            return "MyGoogleMap";
+        }
+        return "MyGoogleMap";
     }
 
 }
