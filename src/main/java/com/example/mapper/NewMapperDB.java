@@ -39,6 +39,14 @@ public class NewMapperDB implements RowMapper<UserInfo> {
             "AND params.object_id = a.object_id\n" +
             "AND params.attribute_id = b.attribute_id";
 
+    public static final String ADD_SOMETHING_SQL = "insert into params(object_id, attribute_id, value_text)\n" +
+            "values \n" +
+            "((select object.id from object where object.id = \n" +
+            "(select paparams.object_id from params as paparams where paparams.value_text = ? " +
+            "and paparams.attribute_id = \n" +
+            "(select attributes.id from attributes where attributes.Attribute = ?))),\n" +
+            "(select attributes.id from attributes where attributes.Attribute = ?), ?)";
+
     public static final String DELETE_SOMETHING_SQL = "delete from object where \n" +
             "object.id = \n" +
             "(select params.object_id from params where \n" +

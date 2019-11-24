@@ -1,9 +1,7 @@
 package com.example.dao;
 
 import com.example.mapper.EventMapperNewDB;
-import com.example.mapper.UserMapperNewDB;
 import com.example.model.EventInfo;
-import com.example.model.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,9 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -44,8 +39,9 @@ public class NewEventDAO extends JdbcDaoSupport{
             String eventLng = resultSet.getString("event_lng");
             String eventDescription = resultSet.getString("event_description");
             String date = resultSet.getString("event_time");
+            String eventNameOfCreator = resultSet.getString("event_name_of_creator");
 
-            return new EventInfo(eventName, eventLat, eventLng, eventDescription, date);
+            return new EventInfo(date, eventName, eventNameOfCreator, eventDescription, eventLat, eventLng);
         });
     }
 
@@ -59,6 +55,22 @@ public class NewEventDAO extends JdbcDaoSupport{
                 public EventInfo mapRow(ResultSet resultSet, int i) throws SQLException {
                     String name = resultSet.getString("name");
                     return new EventInfo(name);
+                }
+            });
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    public String findNameOfCreator(String creator) {
+        String sql = EventMapperNewDB.SELECT_NAME_OF_EVENT_CREATOR_SQL;
+        Object[] params = new Object[] {creator};
+
+        try {
+            return this.getJdbcTemplate().queryForObject(sql, params, new RowMapper<String>() {
+                @Override
+                public String mapRow(ResultSet resultSet, int i) throws SQLException {
+                    return resultSet.getString("name");
                 }
             });
         } catch (EmptyResultDataAccessException e) {

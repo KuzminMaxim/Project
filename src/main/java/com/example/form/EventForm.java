@@ -26,6 +26,9 @@ public class EventForm {
     @Attribute(id = "event_time")
     private String date;
 
+    @Attribute(id = "event_participant")
+    private String eventParticipant;
+
     public EventForm(){}
 
     public EventForm(String nameOfEvent, String nameOfEventCreator) {
@@ -40,6 +43,14 @@ public class EventForm {
         this.latitude = latitude;
         this.longitude = longitude;
         this.date = date;
+    }
+
+    public String getEventParticipant() {
+        return eventParticipant;
+    }
+
+    public void setEventParticipant(String eventParticipant) {
+        this.eventParticipant = eventParticipant;
     }
 
     public String getDate() {

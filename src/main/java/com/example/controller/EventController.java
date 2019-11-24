@@ -44,6 +44,7 @@ public class EventController {
     protected void initBinder(WebDataBinder dataBinder) {
         Object target = dataBinder.getTarget();
         if (target == null) {
+            System.out.println("Taarget == null!");
             return;
         }
         System.out.println("Target=" + target);
@@ -81,6 +82,7 @@ public class EventController {
         Double[] eventLng = new Double[testList.toArray().length];
         String[] eventDescription = new String[testList.toArray().length];
         String[] dates = new String[testList.toArray().length];
+        String[] eventNameOfCreator = new String[testList.toArray().length];
         int n = 0;
         for (int i = 0; i<testList.toArray().length; i++, n++){
             eventName[n] = testList.get(i).getNameOfEvent();
@@ -88,12 +90,14 @@ public class EventController {
             eventLng[n] = testList.get(i).getEventLongitude();
             eventDescription[n] = testList.get(i).getEventDescription();
             dates[n] = testList.get(i).getDate().replace("T", " ");
+            eventNameOfCreator[n] = testList.get(i).getNameOfEventCreator();
         }
         model.addAttribute("eventName", eventName);
         model.addAttribute("eventLat", eventLat);
         model.addAttribute("eventLng", eventLng);
         model.addAttribute("eventDescript", eventDescription);
         model.addAttribute("eventDate", dates);
+        model.addAttribute("eventNameOfCreator", eventNameOfCreator);
         return "MyGoogleMap";
     }
 

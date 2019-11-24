@@ -112,14 +112,16 @@
         document.getElementById('lng').value = myLatlng.lng;
 
         var locations = [];
-        for (var x = 0; x<document.getElementsByClassName("names").length; x++){
+        for (var x = 0; x < document.getElementsByClassName("names").length; x++){
             var names = document.getElementsByClassName("names")[x].innerHTML;
             var lat = document.getElementsByClassName("latitudes")[x].innerHTML;
             var lng = document.getElementsByClassName("longitudes")[x].innerHTML;
             var descript = document.getElementsByClassName("descript")[x].innerHTML;
             var dates = document.getElementsByClassName("eventDates")[x].innerHTML;
-            locations.push([names, lat, lng, descript, dates]);
+            var eventNamesOfCreator = document.getElementsByClassName("eventNamesOfCreator")[x].innerHTML;
+            locations.push([names, lat, lng, descript, dates, eventNamesOfCreator]);
         }
+
 
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: 12,
@@ -143,6 +145,15 @@
                     infoWindow.open(map, oldMarker);
                 }
             })(oldMarker, i));
+            google.maps.event.addListener(oldMarker, 'dblclick', (function (oldMarker, i) {
+                return function () {
+                    document.getElementById('nameOfOldEvent').value = locations[i][0];
+                    document.getElementById('eventNamesOfCreator').value = locations[i][5];
+                    document.getElementById('descriptionOfThisEvent').value = locations[i][3];
+                    openOldForm();
+                }
+            })(oldMarker, i));
+
         }
 
 
@@ -202,6 +213,7 @@
 <div class="login-popup">
     <div class="form-popup" id="popupForm">
         <form th:action="@{/createEvent}" th:object="${eventForm}" method="POST" class="form-container">
+            <div th:if="${#fields.hasErrors('nameOfEvent')}" th:errors="*{nameOfEvent}">..</div>
             <h2>Please enter the name and description of event</h2>
             <label for="nameOfEvent">
                 <strong>Name of event</strong>
@@ -209,8 +221,11 @@
             <input type="hidden" placeholder="Name of creator" th:name="nameOfEventCreator" th:value="*{#request.userPrincipal.name}"/>
             <input type="hidden" placeholder="latitude" th:field="*{latitude}" id="lat"/>
             <input type="hidden" placeholder="longitude" th:field="*{longitude}" id="lng"/>
-            <input type="text" id="nameOfEvent" placeholder="Name of event" th:field="*{nameOfEvent}" ><!--th:name="nameOfEvent"  required>-->
-                <span th:if="${#fields.hasErrors('nameOfEvent')}" th:errors="nameOfEvent">..</span>
+            <input type="text" id="nameOfEvent" placeholder="Name of event" th:field="*{nameOfEvent}" th:name="nameOfEvent"  required>
+            <!--<span th:if="${errorMessage != null}" th:utext="${errorMessage}" class="error">..</span>
+            <output>
+                <span th:if="${#fields.hasErrors('nameOfEvent')}" th:errors="*{nameOfEvent}">..</span>
+            </output>-->
             <label for="descriptionOfEvent">
                 <strong>Description of event</strong>
             </label>
@@ -218,12 +233,33 @@
             <label for="datetime">
                 <strong>Date and time of event</strong>
             </label>
-            <input type="datetime-local" id="datetime" placeholder="Date and time" th:name="date">
+            <input type="datetime-local" id="datetime" placeholder="Date and time" th:name="date" required>
             <button type="submit" class="btn">Create event</button>
             <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
         </form>
     </div>
 </div>
+
+<div class="login-popup">
+    <div class="form-popup" id="popupFormForOldMarkers">
+        <form th:action="@{/joinToEvent}" th:object="${eventForm}" method="POST" class="form-container">
+            <h2>Do you want to join at this event?</h2>
+            <label for="nameOfEvent">
+                <strong>Name of event</strong>
+            </label>
+            <input type="text" id="eventNamesOfCreator" placeholder="Name of creator" th:field="*{nameOfEventCreator}"/>
+            <input type="text" id="nameOfOldEvent" placeholder="Name of event" th:field="*{nameOfEvent}">
+            <input type="text" id="nameOfParticipant" placeholder="Name of you" th:name="eventParticipant" th:value="*{#request.userPrincipal.name}">
+            <label for="descriptionOfThisEvent">
+                <strong>Description of event</strong>
+            </label>
+            <input type="text" id="descriptionOfThisEvent" placeholder="Description of event" th:field="*{descriptionOfEvent}" required>
+            <button type="submit" class="btn">Join to event</button>
+            <button type="button" class="btn cancel" onclick="closeOldForm()">Close</button>
+        </form>
+    </div>
+</div>
+
 
 <div id="allMarkers" hidden>
 <table>
@@ -243,6 +279,9 @@
     <tr th:each="eventDate : ${eventDate}">
         <td th:utext="${eventDate}"  class="eventDates">..</td>
     </tr>
+    <tr th:each="eventNameOfCreator : ${eventNameOfCreator}">
+        <td th:utext="${eventNameOfCreator}" class="eventNamesOfCreator">..</td>
+    </tr>
 </table>
 </div>
 <script>
@@ -252,6 +291,14 @@
 
     function closeForm() {
         document.getElementById("popupForm").style.display="none";
+    }
+
+    function openOldForm() {
+            document.getElementById("popupFormForOldMarkers").style.display="block";
+    }
+
+    function closeOldForm() {
+        document.getElementById("popupFormForOldMarkers").style.display="none";
     }
 </script>
 

@@ -19,6 +19,11 @@ public class MyApi {
         create(getAllAboutUsedClass(clazz, object), clazz);
     }
 
+    public void add(Object object) throws NoSuchFieldException, IllegalAccessException {
+        Class clazz = object.getClass();
+        insert(getAllAboutUsedClass(clazz, object), clazz);
+    }
+
     public void update(Object object) throws NoSuchFieldException, IllegalAccessException {
         Class clazz = object.getClass();
         change(getAllAboutUsedClass(clazz, object), clazz);
@@ -74,6 +79,15 @@ public class MyApi {
         String objectType = clazz.getAnnotation(ObjectType.class).id();
         try {
             dao.updateSomething(map, objectType);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private <T> void insert(Map map, Class<T> clazz){
+        String objectType = clazz.getAnnotation(ObjectType.class).id();
+        try {
+            dao.addSomething(map, objectType);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
