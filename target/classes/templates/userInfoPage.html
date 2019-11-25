@@ -4,17 +4,55 @@
     <title>User Info</title>
 </head>
 <body>
-<th:block th:include="/_menu"></th:block>
+<th:block th:include="/_menu">..</th:block>
 <h2>User Info Page</h2>
-<b>This is protected user page!</b>
-<h3>Welcome, <span th:utext="${#request.userPrincipal.name}"></span></h3>
-<!--<img id="userImage" name="userImage" th:src="@{userAvatar}" alt="YouAvatar">-->
-<img th:src="@{photo}"/>
-<img src="photo"/>
-<img th:src="photo"/>
+<h3>Welcome, <span th:utext="${#request.userPrincipal.name}">..</span></h3>
+<img th:src="@{photo}" alt="Sorry, no photo "/>
 <br/><br/>
-<!--<td th:utext="${oldMarkers.nameOfEvent}">..</td>-->
-<div th:if="${userInfo != null}" th:utext="${userInfo}"></div>
+
+<div th:if="${eventsWhereCreator != null}">
+    <h3>Events created by me</h3>
+    <form th:each="eventsWhereCreator : ${eventsWhereCreator}" th:action="@{/deleteSomething}" th:object="${eventForm}" method="POST">
+<table border="1">
+    <tr>
+        <th>Date of event creation</th>
+        <th>Name of Event</th>
+        <th>Description of event</th>
+        <th>Date and time of event</th>
+    </tr>
+    <tr th:each="eventsWhereCreator : ${eventsWhereCreator}">
+        <td th:utext="${eventsWhereCreator.eventDateOfCreation}">..</td>
+        <td th:utext="${eventsWhereCreator.nameOfEvent}">..</td>
+        <td th:utext="${eventsWhereCreator.eventDescription}">..</td>
+        <td th:utext="${eventsWhereCreator.date}">..</td>
+    </tr>
+</table>
+        <input type="hidden" th:name="nameOfEvent" th:value="${eventsWhereCreator.nameOfEvent}"/>
+        <input type="submit" value="Delete this event">
+    </form>
+</div>
+
+<div th:if="${eventsWhereParticipant != null}">
+    <h3>Events witch i joined</h3>
+    <form th:each="eventsWhereParticipant : ${eventsWhereParticipant}">
+<table border="1">
+    <tr>
+        <th>Date of event creation</th>
+        <th>Name of Event</th>
+        <th>Description of event</th>
+        <th>Date and time of event</th>
+    </tr>
+    <tr th:each="eventsWhereParticipant : ${eventsWhereParticipant}">
+        <td th:utext="${eventsWhereParticipant.eventDateOfCreation}">..</td>
+        <td th:utext="${eventsWhereParticipant.nameOfEvent}">..</td>
+        <td th:utext="${eventsWhereParticipant.eventDescription}">..</td>
+        <td th:utext="${eventsWhereParticipant.date}">..</td>
+    </tr>
+</table>
+    </form>
+</div>
+
+<div th:if="${userInfo != null}">
     <a th:if="${#request.userPrincipal != null}" th:href="@{/changePassword}">Change password page</a>
     <a th:if="${#request.userPrincipal != null}" th:href="@{/setAvatar}">Set avatar</a>
 <a th:if="${#request.userPrincipal != null}" th:href="@{/uploadOneFile}">uploadOneFile</a>

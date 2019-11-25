@@ -36,7 +36,10 @@ public class MyApi {
 
     public void readOne(){}
 
-    public void readAll(){}
+    public <T> T readAll(Object object){
+
+        return (T) object;
+    }
 
 
     private <T> Map<String, String> getAllAboutUsedClass(Class<T> clazz, Object object) throws IllegalAccessException, NoSuchFieldException {

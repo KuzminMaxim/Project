@@ -27,6 +27,16 @@ public class NewMapperDB implements RowMapper<UserInfo> {
             "where params.object_id = (select id from object order by id desc\n" +
             "limit 1)";
 
+    public static final String CREATE_OBJECT_REFERENCES_FOR_NEW_ELEMENTS = "" +
+            "update params\n" +
+            "Set params.object_references = \n" +
+            "(select * from (select params.object_id from params\n" +
+            "where params.attribute_id = (select attributes.id from attributes where attributes.Attribute = ?)\n" +
+            "and params.value_text = ?) as params1)" +
+            "where params.attribute_id = (select attributes.id from attributes where attributes.Attribute = ?)" +
+            "and params.value_text = ?" +
+            "and params.object_references is NULL";
+
     public static final String SET_SOMETHING_SQL = "UPDATE params, \n" +
             "(select distinct params.object_id from params\n" +
             "join object on params.object_id = object.id\n" +
@@ -47,12 +57,22 @@ public class NewMapperDB implements RowMapper<UserInfo> {
             "(select attributes.id from attributes where attributes.Attribute = ?))),\n" +
             "(select attributes.id from attributes where attributes.Attribute = ?), ?)";
 
-    public static final String DELETE_SOMETHING_SQL = "delete from object where \n" +
+   /* public static final String DELETE_SOMETHING_SQL = "delete from object where \n" +
             "object.id = \n" +
             "(select params.object_id from params where \n" +
             "params.attribute_id = \n" +
             "(select attributes.id from attributes where \n" +
             "attributes.Attribute = ?) \n" +
+            "and params.value_text = ?)";*/
+
+    public static final String DELETE_SOMETHING_SQL = "delete from object where \n" +
+            "object.id IN \n" +
+            "(select params.object_id\n" +
+            "from params, (select attributes.id as a from attributes \n" +
+            "where \n" +
+            "attributes.Attribute = ?) as a \n" +
+            "where \n" +
+            "params.attribute_id = a\n" +
             "and params.value_text = ?)";
 
     public static final String SELECT_SOMETHING_SQL = "select distinct params.value_text as name from params\n" +

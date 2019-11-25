@@ -18,15 +18,18 @@ public class EventMapperNewDB implements RowMapper<EventInfo> {
             "and params.attribute_id = (select distinct attributes.id from attributes\n" +
             "where attributes.Attribute = 'event_name'))";
 
-    public static final String SELECT_NAME_OF_EVENT_CREATOR_SQL = "select distinct params.value_text as name from params\n" +
-            "join attributes on attributes.id = params.attribute_id\n" +
-            "join object on params.object_id = object.id\n" +
-            "where attributes.Attribute = 'event_name_of_creator'\n" +
-            "and object.id = \n" +
-            "(select distinct params.object_id from params where \n" +
+    public static final String SELECT_NAME_OF_EVENT_CREATOR_SQL = "" +
+            "select distinct params.value_text as name \n" +
+            "from params, \n" +
+            "(select params.object_id as sub \n" +
+            "from params \n" +
+            "where \n" +
             "value_text = ?\n" +
-            "and params.attribute_id = (select distinct attributes.id from attributes\n" +
-            "where attributes.Attribute = 'event_name_of_creator'))";
+            "and params.attribute_id = \n" +
+            "(select distinct attributes.id from attributes\n" +
+            "where attributes.Attribute = 'event_name_of_creator')) as sub\n" +
+            "where params.attribute_id = (select attributes.id from attributes where attributes.Attribute = 'event_name_of_creator')\n" +
+            "and params.object_id = sub";
 
     public static final String SELECT_ALL_EVENTS = "select \n" +
             "event_name.value_text as event_name,\n" +
@@ -85,46 +88,6 @@ public class EventMapperNewDB implements RowMapper<EventInfo> {
             "and event_name.object_id = event_description.object_id\n" +
             "and event_name.object_id = event_date_of_creation.object_id\n" +
             "and event_name.object_id = event_name_of_creator.object_id;";
-
-    /*public static final String SELECT_ALL_EVENT_MARKERS = "select distinct \n" +
-            "event_name.value_text as event_name,\n" +
-            "event_lat.value_text as event_lat,\n" +
-            "event_lng.value_text as event_lng, \n" +
-            "event_description.value_text as event_description\n" +
-            "from \n" +
-            "(select distinct params.value_text, params.object_id \n" +
-            "from params\n" +
-            "join object on params.object_id = object.id\n" +
-            "join attributes on attributes.id = params.attribute_id\n" +
-            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_name')\n" +
-            "and object.id IN \n" +
-            "(select distinct params.object_id from params)) as event_name, \n" +
-            "(select distinct params.value_text, params.object_id \n" +
-            "from params\n" +
-            "join object on params.object_id = object.id\n" +
-            "join attributes on attributes.id = params.attribute_id\n" +
-            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_lat')\n" +
-            "and object.id IN \n" +
-            "(select distinct params.object_id from params))  as event_lat, \n" +
-            "(select distinct params.value_text, params.object_id \n" +
-            "from params\n" +
-            "join object on params.object_id = object.id\n" +
-            "join attributes on attributes.id = params.attribute_id\n" +
-            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_lng')\n" +
-            "and object.id IN \n" +
-            "(select distinct params.object_id from params)) \n" +
-            "as event_lng, \n" +
-            "(select distinct params.value_text, params.object_id \n" +
-            "from params\n" +
-            "join object on params.object_id = object.id\n" +
-            "join attributes on params.attribute_id = attributes.id \n" +
-            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_description')\n" +
-            "and object.id IN \n" +
-            "(select distinct params.object_id from params))\n" +
-            "as event_description\n" +
-            "where event_name.object_id = event_lat.object_id \n" +
-            "and event_name.object_id = event_lng.object_id \n" +
-            "and event_name.object_id = event_description.object_id ;";*/
 
     public static final String SELECT_ALL_EVENT_MARKERS = "select distinct \n" +
             "event_name.value_text as event_name,\n" +
@@ -186,15 +149,108 @@ public class EventMapperNewDB implements RowMapper<EventInfo> {
             "and event_name.object_id = event_time.object_id\n" +
             "and event_name.object_id = event_name_of_creator.object_id;";
 
-    /*public static final String SELECT_ALL_EVENT_DESCRIPTION = "select D.value_text as event_description\n" +
-            "from params as D\n" +
-            "where\n" +
-            "D.value_text in (select distinct params.value_text \n" +
+    public static  final String SELECT_EVENS_WHERE_CREATOR="select distinct \n" +
+            "event_date_of_creation.value_date as event_date_of_creation,\n" +
+            "event_name.value_text as event_name,\n" +
+            "event_description.value_text as event_description,\n" +
+            "event_time.value_text as event_time,\n" +
+            "event_name_of_creator.value_text as event_name_of_creator\n" +
+            "from \n" +
+            "(select distinct params.value_date, params.object_id \n" +
             "from params\n" +
-            "join object on params.object_id IN (select object.id from object where object.name = 'OBJECT_EVENT')\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_date_of_creation')\n" +
+            "and object.id IN \n" +
+            "(select distinct params.object_id from params)) as event_date_of_creation, \n" +
+            "(select distinct params.value_text, params.object_id \n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_name')\n" +
+            "and object.id IN \n" +
+            "(select distinct params.object_id from params))  as event_name, \n" +
+            "(select distinct params.value_text, params.object_id\n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
             "join attributes on params.attribute_id = attributes.id \n" +
-            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_description'));";
-*/
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_description')\n" +
+            "and object.id IN \n" +
+            "(select distinct params.object_id from params))\n" +
+            "as event_description,\n" +
+            "(select distinct params.value_text, params.object_id\n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on params.attribute_id = attributes.id \n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_time')\n" +
+            "and object.id IN \n" +
+            "(select distinct params.object_id from params))\n" +
+            "as event_time,\n" +
+            "(select distinct params.value_text, params.object_id\n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on params.attribute_id = attributes.id \n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_name_of_creator')\n" +
+            "and object.id IN \n" +
+            "(select distinct params.object_id from params)\n" +
+            "and params.value_text = ?)\n" +
+            "as event_name_of_creator\n" +
+            "where event_date_of_creation.object_id = event_name.object_id \n" +
+            "and event_date_of_creation.object_id = event_description.object_id\n" +
+            "and event_date_of_creation.object_id = event_time.object_id\n" +
+            "and event_date_of_creation.object_id = event_name_of_creator.object_id";
+
+    public static  final String SELECT_EVENS_WHERE_PARTICIPANT = "select distinct \n" +
+            "event_date_of_creation.value_date as event_date_of_creation,\n" +
+            "event_name.value_text as event_name,\n" +
+            "event_description.value_text as event_description,\n" +
+            "event_time.value_text as event_time,\n" +
+            "event_name_of_creator.value_text as event_name_of_creator\n" +
+            "from \n" +
+            "(select distinct params.value_date, params.object_id \n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_date_of_creation')\n" +
+            "and object.id IN \n" +
+            "(select distinct params.object_id from params)) as event_date_of_creation, \n" +
+            "(select distinct params.value_text, params.object_id \n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_name')\n" +
+            "and object.id IN \n" +
+            "(select distinct params.object_id from params))  as event_name, \n" +
+            "(select distinct params.value_text, params.object_id\n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on params.attribute_id = attributes.id \n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_description')\n" +
+            "and object.id IN \n" +
+            "(select distinct params.object_id from params))\n" +
+            "as event_description,\n" +
+            "(select distinct params.value_text, params.object_id\n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on params.attribute_id = attributes.id \n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_time')\n" +
+            "and object.id IN \n" +
+            "(select distinct params.object_id from params))\n" +
+            "as event_time,\n" +
+            "(select distinct params.value_text, params.object_id\n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on params.attribute_id = attributes.id \n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_participant')\n" +
+            "and object.id IN \n" +
+            "(select distinct params.object_id from params)\n" +
+            "and params.value_text = ?)\n" +
+            "as event_name_of_creator\n" +
+            "where event_date_of_creation.object_id = event_name.object_id \n" +
+            "and event_date_of_creation.object_id = event_description.object_id\n" +
+            "and event_date_of_creation.object_id = event_time.object_id\n" +
+            "and event_date_of_creation.object_id = event_name_of_creator.object_id";
+
     public static final String SELECT_ONE_EVENT_SQL = "" +
             "SELECT DISTINCT (select params.value_date from params\n" +
         "            join attributes on attributes.id = params.attribute_id\n" +

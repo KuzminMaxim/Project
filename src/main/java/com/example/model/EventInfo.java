@@ -15,27 +15,17 @@ public class EventInfo {
 
     public EventInfo(){}
 
-    public EventInfo(String nameOfEvent, String nameOfEventCreator) {
+    public EventInfo(String nameOfEvent, String eventDescription) {
         this.nameOfEvent = nameOfEvent;
-        this.nameOfEventCreator = nameOfEventCreator;
-    }
-
-    public EventInfo(String eventDateOfCreation, String nameOfEvent, String nameOfEventCreator) {
-        this.eventDateOfCreation = eventDateOfCreation;
-        this.nameOfEvent = nameOfEvent;
-        this.nameOfEventCreator = nameOfEventCreator;
-    }
-
-    /*public EventInfo(String eventDateOfCreation, String nameOfEvent, String nameOfEventCreator,
-                     String eventDescription, String eventLatitude, String eventLongitude) {
-        this.eventDateOfCreation = eventDateOfCreation;
-        this.nameOfEvent = nameOfEvent;
-        this.nameOfEventCreator = nameOfEventCreator;
         this.eventDescription = eventDescription;
-        this.eventLatitude = Double.parseDouble(eventLatitude);
-        this.eventLongitude = Double.parseDouble(eventLongitude);
-    }*/
+    }
 
+    public EventInfo(String eventDateOfCreation, String nameOfEvent, String eventDescription, String date) {
+        this.eventDateOfCreation = eventDateOfCreation;
+        this.nameOfEvent = nameOfEvent;
+        this.eventDescription = eventDescription;
+        this.date = date;
+    }
 
         public EventInfo(String date, String eventName, String eventNameOfCreator, String eventDescription, String eventLat, String eventLng) {
             this.nameOfEvent = eventName;

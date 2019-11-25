@@ -2,14 +2,10 @@ package com.example.dao;
 
 import com.example.mapper.NewMapperDB;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -37,7 +33,9 @@ public class NewDAO extends JdbcDaoSupport {
             for ( Object entry : myMap.keySet()) {
                 String key = (String) entry;
                 String value = (String) myMap.get(key);
-                getJdbcTemplate().update(NewMapperDB.INSERT_SQL, new Object[]{key, value});
+                if (value != null){
+                    getJdbcTemplate().update(NewMapperDB.INSERT_SQL, new Object[]{key, value});
+                }
             }
             getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_REFERENCES);
         } catch (NullPointerException npe){
@@ -70,6 +68,8 @@ public class NewDAO extends JdbcDaoSupport {
                     if (key.equals("event_participant")){
                         getJdbcTemplate().update(NewMapperDB.ADD_SOMETHING_SQL,
                                 new Object[]{ myMap.get("event_name"), "event_name", key, myMap.get(key)});
+                        getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_REFERENCES_FOR_NEW_ELEMENTS,
+                                new Object[]{"event_name", myMap.get("event_name"), "event_participant", myMap.get("event_participant")});
                     }
                 }
         } catch (NullPointerException npe){
@@ -81,15 +81,12 @@ public class NewDAO extends JdbcDaoSupport {
         try {
                 for ( Object entry : myMap.keySet()) {
                     String key = (String) entry;
-                    if (key.equals(("user_name"))
+                    if (key.equals("user_name")
                             && newEventDAO.findNameOfCreator((String) myMap.get(key)) != null){
                         getJdbcTemplate().update(NewMapperDB.DELETE_SOMETHING_SQL,
                                 new Object[]{key, myMap.get(key)});
                         getJdbcTemplate().update(NewMapperDB.DELETE_SOMETHING_SQL,
                                 new Object[]{"event_name_of_creator", newEventDAO.findNameOfCreator((String) myMap.get(key))});
-                        /**
-                         * add deleting user from event !!!
-                         */
                     } else if (key.equals("user_name")
                             || key.equals("event_name")){
                         getJdbcTemplate().update(NewMapperDB.DELETE_SOMETHING_SQL,
@@ -101,16 +98,23 @@ public class NewDAO extends JdbcDaoSupport {
         }
     }
 
-    public List<?> getSomethingOne(){
+    /**
+     *
+     * @param <T>
+     * @return
+     * @throws NullPointerException
+     */
+    /*public <T>List<?> getAll() throws NullPointerException {
         String sql = NewMapperDB.SELECT_SOMETHING_SQL;
-        Object[] params = new Object[] {};
-        return this.getJdbcTemplate().query(sql, params, new RowMapper<Object>() {
+        Object params = new Object[] {};
+        return this.getJdbcTemplate().queryForObject(sql, params, new RowMapper<T>() {
             @Override
-            public Object mapRow(ResultSet resultSet, int i) throws SQLException {
-                return resultSet.getString("name");
+            public T mapRow(ResultSet resultSet, int i) throws SQLException {
+                return null;
             }
-        });
-    }
+        })
+        return (List<SomeInfo>) new SomeInfo<T>();
+    }*/
 
 
 }

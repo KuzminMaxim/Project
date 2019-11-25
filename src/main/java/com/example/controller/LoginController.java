@@ -1,6 +1,11 @@
 package com.example.controller;
 
+import com.example.dao.NewEventDAO;
+import com.example.form.EventForm;
+import com.example.form.RegistrationForm;
+import com.example.model.EventInfo;
 import com.example.utils.WebUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
@@ -9,9 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class LoginController {
+
+    @Autowired
+    NewEventDAO eventDAO;
 
     @RequestMapping(value = { "/", "/welcome" }, method = RequestMethod.GET)
     public String welcomePage(Model model) {
@@ -46,11 +55,28 @@ public class LoginController {
 
     @RequestMapping(value = "/userInfo", method = RequestMethod.GET)
     public String userInfo(Model model, Principal principal) throws Exception {
+
         String userName = principal.getName();
         System.out.println("Username: " + userName);
         User loginedUser = (User) ((Authentication) principal).getPrincipal();
         String userInfo = WebUtils.toString(loginedUser);
         model.addAttribute("userInfo", userInfo);
+
+        String name = principal.getName();
+        List<EventInfo> eventsWhereCreator = eventDAO.findEventsWhereCreator(name);
+        if (!eventsWhereCreator.isEmpty()){
+            model.addAttribute("eventsWhereCreator", eventsWhereCreator);
+        }
+        List<EventInfo> eventsWhereParticipant = eventDAO.findEventsWhereParticipant(name);
+        if (!eventsWhereParticipant.isEmpty()){
+            model.addAttribute("eventsWhereParticipant", eventsWhereParticipant);
+        }
+
+        RegistrationForm registrationForm = new RegistrationForm();
+        EventForm eventForm = new EventForm();
+        model.addAttribute("registrationForm", registrationForm);
+        model.addAttribute("eventForm",eventForm);
+
         return "userInfoPage";
     }
 

@@ -85,4 +85,34 @@ public class NewEventDAO extends JdbcDaoSupport{
         return this.getJdbcTemplate().query(sql, params, mapper);
     }
 
+    public List<EventInfo> findEventsWhereCreator(String name) throws NullPointerException{
+        String sql = EventMapperNewDB.SELECT_EVENS_WHERE_CREATOR;
+        Object[] params = new Object[] {name};
+        return this.getJdbcTemplate().query(sql, params, (resultSet, i) -> {
+
+            String eventDateOfCreation = resultSet.getString("event_date_of_creation");
+            String nameOfEvent = resultSet.getString("event_name");
+            String eventDescription = resultSet.getString("event_description");
+            String date = resultSet.getString("event_time");
+
+
+            return new EventInfo(eventDateOfCreation, nameOfEvent, eventDescription, date.replace("T", " "));
+        });
+    }
+
+    public List<EventInfo> findEventsWhereParticipant(String name) throws NullPointerException{
+        String sql = EventMapperNewDB.SELECT_EVENS_WHERE_PARTICIPANT;
+        Object[] params = new Object[] {name};
+        return this.getJdbcTemplate().query(sql, params, (resultSet, i) -> {
+
+            String eventDateOfCreation = resultSet.getString("event_date_of_creation");
+            String nameOfEvent = resultSet.getString("event_name");
+            String eventDescription = resultSet.getString("event_description");
+            String date = resultSet.getString("event_time");
+
+
+            return new EventInfo(eventDateOfCreation, nameOfEvent, eventDescription, date.replace("T", " "));
+        });
+    }
+
 }

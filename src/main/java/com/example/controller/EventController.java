@@ -44,7 +44,6 @@ public class EventController {
     protected void initBinder(WebDataBinder dataBinder) {
         Object target = dataBinder.getTarget();
         if (target == null) {
-            System.out.println("Taarget == null!");
             return;
         }
         System.out.println("Target=" + target);
@@ -102,7 +101,7 @@ public class EventController {
     }
 
     @RequestMapping(value = "/createEvent", method = RequestMethod.POST)
-    public String CreateUser(Model model, @ModelAttribute("eventForm") @Validated EventForm eventForm,
+    public String createUser(Model model, @ModelAttribute("eventForm") @Validated EventForm eventForm,
                              BindingResult result) throws NoSuchFieldException, IllegalAccessException {
 
         if (result.hasErrors()) {

@@ -141,7 +141,7 @@
             });
             google.maps.event.addListener(oldMarker, 'click', (function (oldMarker, i) {
                 return function () {
-                    infoWindow.setContent("Description: " + locations[i][3] + " Date: " + locations[i][4]);
+                    infoWindow.setContent("Description: " + locations[i][3] + '<br>' + "Date: " + locations[i][4]);
                     infoWindow.open(map, oldMarker);
                 }
             })(oldMarker, i));
@@ -153,7 +153,6 @@
                     openOldForm();
                 }
             })(oldMarker, i));
-
         }
 
 
@@ -244,22 +243,17 @@
     <div class="form-popup" id="popupFormForOldMarkers">
         <form th:action="@{/joinToEvent}" th:object="${eventForm}" method="POST" class="form-container">
             <h2>Do you want to join at this event?</h2>
-            <label for="nameOfEvent">
-                <strong>Name of event</strong>
-            </label>
-            <input type="text" id="eventNamesOfCreator" placeholder="Name of creator" th:field="*{nameOfEventCreator}"/>
-            <input type="text" id="nameOfOldEvent" placeholder="Name of event" th:field="*{nameOfEvent}">
-            <input type="text" id="nameOfParticipant" placeholder="Name of you" th:name="eventParticipant" th:value="*{#request.userPrincipal.name}">
-            <label for="descriptionOfThisEvent">
-                <strong>Description of event</strong>
-            </label>
-            <input type="text" id="descriptionOfThisEvent" placeholder="Description of event" th:field="*{descriptionOfEvent}" required>
+            <input type="hidden" id="eventNamesOfCreator" placeholder="Name of creator" th:field="*{nameOfEventCreator}"/>
+            <input type="hidden" id="nameOfOldEvent" placeholder="Name of event" th:field="*{nameOfEvent}">
+            <input type="hidden" id="nameOfParticipant" placeholder="Name of you" th:name="eventParticipant" th:value="*{#request.userPrincipal.name}">
+            <input type="hidden" id="descriptionOfThisEvent" placeholder="Description of event" th:field="*{descriptionOfEvent}">
             <button type="submit" class="btn">Join to event</button>
-            <button type="button" class="btn cancel" onclick="closeOldForm()">Close</button>
+            <button type="button" class="btn cancel" onclick="closeOldForm()">Cancel</button>
         </form>
     </div>
 </div>
 
+<div th:if="${errorOfJoin}" th:utext="${errorOfJoin}"></div>
 
 <div id="allMarkers" hidden>
 <table>
@@ -301,6 +295,8 @@
         document.getElementById("popupFormForOldMarkers").style.display="none";
     }
 </script>
+
+
 
     </body>
 </html>
