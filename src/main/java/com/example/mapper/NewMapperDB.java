@@ -57,14 +57,6 @@ public class NewMapperDB implements RowMapper<UserInfo> {
             "(select attributes.id from attributes where attributes.Attribute = ?))),\n" +
             "(select attributes.id from attributes where attributes.Attribute = ?), ?)";
 
-   /* public static final String DELETE_SOMETHING_SQL = "delete from object where \n" +
-            "object.id = \n" +
-            "(select params.object_id from params where \n" +
-            "params.attribute_id = \n" +
-            "(select attributes.id from attributes where \n" +
-            "attributes.Attribute = ?) \n" +
-            "and params.value_text = ?)";*/
-
     public static final String DELETE_SOMETHING_SQL = "delete from object where \n" +
             "object.id IN \n" +
             "(select params.object_id\n" +
@@ -75,15 +67,10 @@ public class NewMapperDB implements RowMapper<UserInfo> {
             "params.attribute_id = a\n" +
             "and params.value_text = ?)";
 
-    public static final String SELECT_SOMETHING_SQL = "select distinct params.value_text as name from params\n" +
+    public static final String SELECT_SOMETHING_SQL = "select distinct params.value_text as ? from params\n" +
             "join attributes on attributes.id = params.attribute_id\n" +
             "join object on params.object_id = object.id\n" +
-            "where attributes.Attribute = ?\n" +
-            "and object.id = \n" +
-            "(select distinct params.object_id from params where \n" +
-            "value_text = ?\n" +
-            "and params.attribute_id = (select distinct attributes.id from attributes\n" +
-            "where attributes.Attribute = ?))";
+            "where attributes.Attribute = ?";
 
     @Override
     public UserInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException {

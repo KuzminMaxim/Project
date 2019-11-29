@@ -1,11 +1,23 @@
 package com.example.model;
 
+import com.example.api.Attribute;
+import com.example.api.ObjectType;
+
+@ObjectType(id = "users")
 public class UserInfo {
 
     private int id;
+
+    @Attribute(id = "user_name")
     private String name;
+
+    @Attribute(id = "user_password")
     private String password;
+
+    @Attribute(id = "user_email")
     private String email;
+
+    @Attribute(id = "user_avatar")
     private String url;
 
     public UserInfo(){}

@@ -1,12 +1,24 @@
 package com.example.dao;
 
+import com.example.api.Attribute;
+import com.example.api.ObjectType;
 import com.example.mapper.NewMapperDB;
+import com.example.mapper.UserMapperNewDB;
+import com.example.model.UserInfo;
+import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.Map;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
 
 @Repository
 public class NewDAO extends JdbcDaoSupport {
@@ -97,6 +109,42 @@ public class NewDAO extends JdbcDaoSupport {
             npe.printStackTrace();
         }
     }
+
+    public <T> List<T>  selectSomething(String objectType, Map myMap) {
+
+
+            for (Object entry : myMap.keySet()){
+                final String key = (String) entry;
+                String fields = (String) myMap.get(key);
+
+                System.out.println("Fields in select: " + fields);
+
+                System.out.println("key:" + key);
+
+            }
+
+        List list = new ArrayList();
+
+        String sql = NewMapperDB.SELECT_SOMETHING_SQL;
+
+        Object[] params = new Object[] {"event_lng", "event_lng"};
+
+        assert this.getJdbcTemplate() != null;
+        String o = (String) this.getJdbcTemplate().queryForObject(sql, params, new RowMapper<T>() {
+            @Override
+            public T mapRow(ResultSet resultSet, int i) throws SQLException {
+                String field = resultSet.getString("event_lng");
+                list.add(field);
+                return (T) list;
+            }
+        });
+        System.out.println("List: " + list);
+
+        System.out.println("List to array: " + Arrays.toString(list.toArray()));
+
+        return  list;
+    }
+
 
     /**
      *

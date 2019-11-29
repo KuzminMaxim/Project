@@ -1,16 +1,30 @@
 package com.example.model;
 
-import java.time.LocalDateTime;
-import java.util.Date;
+import com.example.api.Attribute;
+import com.example.api.ObjectType;
 
+@ObjectType(id = "event")
 public class EventInfo {
 
+    @Attribute(id = "event_date_of_creation")
     private String eventDateOfCreation;
+
+    @Attribute(id = "event_name")
     private String nameOfEvent;
+
+    @Attribute(id = "event_name_of_creator")
     private String nameOfEventCreator;
+
+    @Attribute(id = "event_description")
     private String eventDescription;
+
+    @Attribute(id = "event_lat")
     private Double eventLatitude;
+
+    @Attribute(id = "event_lng")
     private Double eventLongitude;
+
+    @Attribute(id = "event_time")
     private String date;
 
     public EventInfo(){}

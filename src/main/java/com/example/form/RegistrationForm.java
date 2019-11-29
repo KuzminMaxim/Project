@@ -8,6 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 @ObjectType(id = "users")
 public class RegistrationForm {
 
+    //Rename
+
     @Attribute(id = "user_name")
     private String name;
 

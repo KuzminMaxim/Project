@@ -1,12 +1,15 @@
 package com.example.api;
 
 import com.example.dao.NewDAO;
+import com.example.model.UserInfo;
+import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 @Repository
 public class MyApi {
@@ -34,11 +37,48 @@ public class MyApi {
         remove(getAllAboutUsedClass(clazz, object));
     }
 
-    public void readOne(){}
+    public <T> List readOne(String id) throws NoSuchFieldException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
 
-    public <T> T readAll(Object object){
+        List list = new ArrayList();
+        Map<String, String> myMap = new HashMap<>();
 
-        return (T) object;
+        /////Specify in which package to search for annotations/////
+        Reflections reflections = new Reflections(UserInfo.class.getPackage().getName());
+        Set<Class<?>> classes = reflections.getTypesAnnotatedWith(ObjectType.class);
+
+        for (Class clazz : classes){
+
+            ObjectType objectType = (ObjectType) clazz.getAnnotation(ObjectType.class);
+            //System.out.println("Object type: " + objectType.id());
+            //System.out.println("ID: " + id);
+
+            if (id.equals(objectType.id())){
+
+                Constructor constructor = clazz.getConstructor();
+                Object object = constructor.newInstance();
+
+                Field[] field = clazz.getDeclaredFields();
+
+                String[] annotations = new String[field.length];
+                String[] names = new String[field.length];
+
+                for (int i = 0; i < field.length; i++){
+                    names[i] = field[i].getName();
+                    try {
+                        annotations[i] = clazz.getDeclaredField(names[i]).getAnnotation(Attribute.class).id();
+                    } catch (NullPointerException ignored){}
+                    if (annotations[i] != null){
+                        myMap.put(annotations[i], names[i]);
+                    }
+
+                }
+                return dao.selectSomething(id, myMap);
+            }
+
+            //System.out.println("Attributes: "+Arrays.toString(annotations));
+
+        }
+        return list;
     }
 
 
@@ -67,6 +107,10 @@ public class MyApi {
             }
         }
         return myMap;
+    }
+
+    private <T> void getAllAboutNewClass(Class<T> clazz){
+
     }
 
     private <T> void create(Map map, Class<T> clazz){

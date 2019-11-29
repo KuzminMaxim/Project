@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.Properties;
+
 @Controller
 public class DeleteController {
 
@@ -31,12 +33,11 @@ public class DeleteController {
         if (registrationForm.getName() != null){
             api.delete(registrationForm);
         }
-
         if (eventForm.getNameOfEvent() != null){
             api.delete(eventForm);
         }
 
-        return "adminPage";
+        return "userInfoPage";
     }
 
 }
