@@ -12,7 +12,7 @@
 
 <div th:if="${eventsWhereCreator != null}">
     <h3>Events created by me</h3>
-    <form th:each="eventsWhereCreator : ${eventsWhereCreator}" th:action="@{/deleteSomething}" th:object="${eventForm}" method="POST">
+    <form th:each="eventsWhereCreator : ${eventsWhereCreator}">
 <table border="1">
     <tr>
         <th>Date of event creation</th>
@@ -27,9 +27,17 @@
         <td th:utext="${eventsWhereCreator.date}">..</td>
     </tr>
 </table>
-        <input type="hidden" th:name="nameOfEvent" th:value="${eventsWhereCreator.nameOfEvent}"/>
-        <input type="submit" value="Delete this event">
+        <form th:each="eventsWhereCreator : ${eventsWhereCreator}" th:object="${eventForm}" method="post">
+            <input type="hidden" th:name="nameOfEvent" th:value="${eventsWhereCreator.nameOfEvent}"/>
+            <input type="submit"  th:formaction="deleteSomething" th:formmethod="post" value="Delete this event">
+        </form>
+        <form th:each="eventsWhereCreator : ${eventsWhereCreator}" th:action="@{/openChat}" th:object="${chatForm}" method="post">
+            <input type="hidden" th:name="chatName" th:value="${eventsWhereCreator.nameOfEvent}">
+            <input type="submit" value="Chat">
+        </form>
     </form>
+
+
 </div>
 
 <div th:if="${eventsWhereParticipant != null}">
@@ -49,6 +57,10 @@
         <td th:utext="${eventsWhereParticipant.date}">..</td>
     </tr>
 </table>
+        <form th:each="eventsWhereParticipant : ${eventsWhereParticipant}" th:object="${chatForm}">
+            <input type="hidden" th:name="chatName" th:value="${eventsWhereParticipant.nameOfEvent}">
+            <input type="submit" th:formaction="openChat" th:formmethod="post" value="Chat">
+        </form>
     </form>
 </div>
 

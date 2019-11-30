@@ -137,10 +137,10 @@
 <div id="chat-container">
     <div class="chat-header">
         <div class="user-container">
-            <span id="username" th:utext="${username}"></span>
-            <a th:href="@{/logoutChat}">Logout</a>
+            <span id="username" th:utext="${username}">...</span>
+            <a th:href="@{/userInfo}"> Logout from chat</a>
         </div>
-        <h3>Spring WebSocket Chat Demo</h3>
+        <h3><span id="chatName" th:utext="${chatName}">...</span></h3>
     </div>
 
     <hr/>
@@ -168,12 +168,14 @@
 
     var stompClient = null;
     var username = null;
+    var chatName = null;
 
 
     function connect() {
         username = document.querySelector('#username').innerText.trim();
+        chatName = document.getElementById('chatName').innerText;
 
-        var socket = new SockJS('/ws');
+        var socket = new SockJS('/ws/'+chatName);
         stompClient = Stomp.over(socket);
 
         stompClient.connect({}, onConnected, onError);
@@ -184,13 +186,13 @@
 
     function onConnected() {
         // Subscribe to the Public Topic
-        stompClient.subscribe('/topic/publicChatRoom', onMessageReceived);
+        stompClient.subscribe('/topic/'+chatName+'Room', onMessageReceived);
 
         // Tell your username to the server
-        stompClient.send("/app/chatChat.addUser",
+        stompClient.send("/app/"+ chatName +".addUser",
             {},
-            JSON.stringify({sender: username, type: 'JOIN'})
-        )
+            JSON.stringify({sender: username, chatName:chatName, type: 'JOIN'})
+        );
 
         connectingElement.classList.add('hidden');
     }
@@ -208,9 +210,10 @@
             var chatMessage = {
                 sender: username,
                 content: messageInput.value,
-                type: 'CHAT'
+                type: 'CHAT',
+                chatName: chatName
             };
-            stompClient.send("/app/chatChat.sendMessage", {}, JSON.stringify(chatMessage));
+            stompClient.send("/app/"+ chatName +".sendMessage", {}, JSON.stringify(chatMessage));
             messageInput.value = '';
         }
         event.preventDefault();

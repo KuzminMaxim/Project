@@ -148,6 +148,7 @@
             google.maps.event.addListener(oldMarker, 'dblclick', (function (oldMarker, i) {
                 return function () {
                     document.getElementById('nameOfOldEvent').value = locations[i][0];
+                    document.getElementById('nameOfOldChat').value = locations[i][0];
                     document.getElementById('eventNamesOfCreator').value = locations[i][5];
                     document.getElementById('descriptionOfThisEvent').value = locations[i][3];
                     openOldForm();
@@ -218,13 +219,25 @@
                 <strong>Name of event</strong>
             </label>
             <input type="hidden" placeholder="Name of creator" th:name="nameOfEventCreator" th:value="*{#request.userPrincipal.name}"/>
+
+            <input type="hidden" th:object="${chatForm}" th:name="chatNameOfCreator" th:value="*{#request.userPrincipal.name}"/>
+
             <input type="hidden" placeholder="latitude" th:field="*{latitude}" id="lat"/>
+
             <input type="hidden" placeholder="longitude" th:field="*{longitude}" id="lng"/>
-            <input type="text" id="nameOfEvent" placeholder="Name of event" th:field="*{nameOfEvent}" th:name="nameOfEvent"  required>
+
+            <input type="text" id="nameOfEvent" placeholder="Name of event" th:field="*{nameOfEvent}" th:name="nameOfEvent"
+                   onKeyUp="document.getElementById('chatName').value = this.value;"  required>
+
+            <input type="hidden" id="chatName" th:object="${chatForm}" th:field="*{chatName}">
+
+
             <!--<span th:if="${errorMessage != null}" th:utext="${errorMessage}" class="error">..</span>
             <output>
                 <span th:if="${#fields.hasErrors('nameOfEvent')}" th:errors="*{nameOfEvent}">..</span>
             </output>-->
+
+
             <label for="descriptionOfEvent">
                 <strong>Description of event</strong>
             </label>
@@ -245,7 +258,9 @@
             <h2>Do you want to join at this event?</h2>
             <input type="hidden" id="eventNamesOfCreator" placeholder="Name of creator" th:field="*{nameOfEventCreator}"/>
             <input type="hidden" id="nameOfOldEvent" placeholder="Name of event" th:field="*{nameOfEvent}">
+            <input type="hidden" th:object="${chatForm}" id="nameOfOldChat" th:field="*{chatName}">
             <input type="hidden" id="nameOfParticipant" placeholder="Name of you" th:name="eventParticipant" th:value="*{#request.userPrincipal.name}">
+            <input type="hidden" th:object="${chatForm}" id="nameOfChatParticipant" th:name="chatParticipant" th:value="*{#request.userPrincipal.name}">
             <input type="hidden" id="descriptionOfThisEvent" placeholder="Description of event" th:field="*{descriptionOfEvent}">
             <button type="submit" class="btn">Join to event</button>
             <button type="button" class="btn cancel" onclick="closeOldForm()">Cancel</button>

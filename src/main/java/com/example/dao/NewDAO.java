@@ -36,11 +36,21 @@ public class NewDAO extends JdbcDaoSupport {
     public void createSomething(Map myMap, String objectType) {
         try {
             assert getJdbcTemplate() != null;
-            if (objectType.equals("users")){
-                getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_SQL, new Object[]{objectType, "OBJECT_USER"});
-            } else if (objectType.equals("event")){
-                getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_SQL, new Object[]{objectType, "OBJECT_EVENT"});
-                getJdbcTemplate().update(NewMapperDB.INSERT_DATE_OF_CREATION_SQL);
+            switch (objectType) {
+                case "users":
+                    getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_SQL, new Object[]{objectType, "OBJECT_USER"});
+                    break;
+                case "event":
+                    getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_SQL, new Object[]{objectType, "OBJECT_EVENT"});
+                    getJdbcTemplate().update(NewMapperDB.INSERT_DATE_OF_CREATION_SQL);
+                    break;
+                case "chat":
+                    getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_SQL, new Object[]{objectType, "OBJECT_CHAT"});
+                    getJdbcTemplate().update(NewMapperDB.INSERT_DATE_OF_CHAT_CREATION_SQL);
+                    break;
+                case "messages":
+                    getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_SQL, new Object[]{objectType, "OBJECT_MESSAGE"});
+                    break;
             }
             for ( Object entry : myMap.keySet()) {
                 String key = (String) entry;
@@ -82,6 +92,11 @@ public class NewDAO extends JdbcDaoSupport {
                                 new Object[]{ myMap.get("event_name"), "event_name", key, myMap.get(key)});
                         getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_REFERENCES_FOR_NEW_ELEMENTS,
                                 new Object[]{"event_name", myMap.get("event_name"), "event_participant", myMap.get("event_participant")});
+                    } else if (key.equals("chat_participant")){
+                        getJdbcTemplate().update(NewMapperDB.ADD_SOMETHING_SQL,
+                                new Object[]{ myMap.get("chat_name"), "chat_name", key, myMap.get(key)});
+                        getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_REFERENCES_FOR_NEW_ELEMENTS,
+                                new Object[]{"chat_name", myMap.get("chat_name"), "chat_participant", myMap.get("chat_participant")});
                     }
                 }
         } catch (NullPointerException npe){

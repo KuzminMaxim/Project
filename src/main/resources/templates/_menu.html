@@ -14,10 +14,6 @@
 
     &nbsp;
 
-     <a th:href="@{/loginChat}">Chat</a>
-
-    &nbsp;
-
     </span>
     <span th:if="${#request.userPrincipal != null}">
     <a th:href="@{/userInfo}">My home page</a>
@@ -26,7 +22,7 @@
 
     <a th:href="@{/createEvent}">Map</a>
 
-    &nbsp;
+     &nbsp;
 
     <a  th:href="@{/logout}">Logout</a>
 

@@ -1,0 +1,54 @@
+package com.example.form;
+
+import com.example.api.Attribute;
+import com.example.api.ObjectType;
+
+@ObjectType(id = "chat")
+public class ChatForm {
+
+    @Attribute(id = "chat_name")
+    private String chatName;
+
+    @Attribute(id = "chat_name_of_creator")
+    private String chatNameOfCreator;
+
+    @Attribute(id = "chat_participant")
+    private String chatParticipant;
+
+    public ChatForm(String chatName, String chatNameOfCreator) {
+        this.chatName = chatName;
+        this.chatNameOfCreator = chatNameOfCreator;
+    }
+
+    public ChatForm() {
+
+    }
+
+    public ChatForm(String chatName){
+        this.chatName = chatName;
+    }
+
+    public String getChatName() {
+        return chatName;
+    }
+
+    public String getChatParticipant() {
+        return chatParticipant;
+    }
+
+    public void setChatParticipant(String chatParticipant) {
+        this.chatParticipant = chatParticipant;
+    }
+
+    public void setChatName(String chatName) {
+        this.chatName = chatName;
+    }
+
+    public String getChatNameOfCreator() {
+        return chatNameOfCreator;
+    }
+
+    public void setChatNameOfCreator(String chatNameOfCreator) {
+        this.chatNameOfCreator = chatNameOfCreator;
+    }
+}

@@ -30,9 +30,13 @@ public class DeleteController {
     public String DeleteUser(RegistrationForm registrationForm, EventForm eventForm)
             throws NoSuchFieldException, IllegalAccessException {
 
+        System.out.println("in DeleteSomething!!!" + eventForm.getNameOfEvent());
+
         if (registrationForm.getName() != null){
             api.delete(registrationForm);
         }
+        System.out.println("!= null!!!!   " + eventForm.getNameOfEvent());
+
         if (eventForm.getNameOfEvent() != null){
             api.delete(eventForm);
         }

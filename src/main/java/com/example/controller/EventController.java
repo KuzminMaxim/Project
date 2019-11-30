@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.api.MyApi;
 import com.example.dao.NewEventDAO;
+import com.example.form.ChatForm;
 import com.example.form.EventForm;
 import com.example.form.RegistrationForm;
 import com.example.model.EventInfo;
@@ -74,7 +75,9 @@ public class EventController {
     @RequestMapping(value = "/createEvent", method = RequestMethod.GET)
     public String createEvent(Model model) {
         EventForm form = new EventForm();
+        ChatForm chatForm = new ChatForm();
         model.addAttribute("eventForm", form);
+        model.addAttribute("chatForm", chatForm);
         List<EventInfo> testList = eventDAO.getAllEventMarkers();
         String[] eventName = new String[testList.toArray().length];
         Double[] eventLat = new Double[testList.toArray().length];
@@ -102,7 +105,7 @@ public class EventController {
 
     @RequestMapping(value = "/createEvent", method = RequestMethod.POST)
     public String createUser(Model model, @ModelAttribute("eventForm") @Validated EventForm eventForm,
-                             BindingResult result) throws NoSuchFieldException, IllegalAccessException {
+                             BindingResult result, ChatForm chatForm) {
 
         if (result.hasErrors()) {
             List<EventInfo> eventName = eventDAO.getEventsName();
@@ -111,7 +114,8 @@ public class EventController {
         }
         try {
             myApi.save(eventForm);
-        } catch (Exception e){
+            myApi.save(chatForm);
+        } catch (NoSuchFieldException | IllegalAccessException e){
             List<EventInfo> eventName = eventDAO.getEventsName();
             model.addAttribute("eventInfo", eventName);
             model.addAttribute("errorMessage", "Error: " + e.getMessage());
