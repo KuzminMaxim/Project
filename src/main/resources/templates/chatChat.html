@@ -2,7 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Spring Boot WebSocket</title>
-    <!--<link rel="stylesheet" th:href="@{/static/main.css}" />-->
     <style>
         * {
             -webkit-box-sizing: border-box;
@@ -21,6 +20,9 @@
 
         .nickname  {
             color:blue;margin-right:20px;
+        }
+        .currentDate  {
+            margin-right:20px;
         }
         .hidden {
             display: none;
@@ -63,13 +65,13 @@
         #chat-container {
             border: 2px solid #d5dbdb;
             background-color:  #d5dbdb ;
-            max-width: 500px;
+            max-width: 800px;
             margin-left: auto;
             margin-right: auto;
 
-            margin-top: 30px;
+            margin-top: 40px;
             height: calc(100% - 60px);
-            max-height: 600px;
+            max-height: 1000px;
             position: relative;
 
         }
@@ -125,11 +127,17 @@
             color: #777;
             width: 100%;
         }
+
+        #nickname  {
+            color:blue;margin-right:20px;
+        }
+
+        #currentDateOld  {
+            margin-right:20px;
+        }
     </style>
 
-    <!-- https://cdnjs.com/libraries/sockjs-client -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
-    <!-- https://cdnjs.com/libraries/stomp.js/ -->
     <script  src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
 </head>
@@ -147,7 +155,13 @@
 
     <div id="connecting">Connecting...</div>
     <ul id="messageArea">
+        <li th:each="infoAboutOldMessages : ${infoAboutOldMessages}">
+            <strong><span id="nickname" th:utext="${infoAboutOldMessages.sender}">..</span></strong>
+            <i><span id="currentDateOld" th:utext="${infoAboutOldMessages.currentDate}">..</span></i>
+            <span th:utext="${infoAboutOldMessages.content}">..</span>
+        </li>
     </ul>
+
     <form id="messageForm" name="messageForm">
         <div class="input-message">
             <input type="text" id="message" autocomplete="off"
@@ -165,6 +179,7 @@
     var messageInput = document.querySelector('#message');
     var messageArea = document.querySelector('#messageArea');
     var connectingElement = document.querySelector('#connecting');
+
 
     var stompClient = null;
     var username = null;
@@ -206,12 +221,15 @@
 
     function sendMessage(event) {
         var messageContent = messageInput.value.trim();
+        var now = new Date();
         if(messageContent && stompClient) {
             var chatMessage = {
                 sender: username,
                 content: messageInput.value,
                 type: 'CHAT',
-                chatName: chatName
+                chatName: chatName,
+                currentDate: document.createTextNode(' ' + now.getFullYear()+'.'+now.getMonth()+'.' + now.getDate() + ' '
+                    + now.getHours() + ':' + now.getMinutes() + ' ').textContent
             };
             stompClient.send("/app/"+ chatName +".sendMessage", {}, JSON.stringify(chatMessage));
             messageInput.value = '';
@@ -227,21 +245,32 @@
 
         if(message.type === 'JOIN') {
             messageElement.classList.add('event-message');
-            message.content = message.sender + ' joined!';
+            message.content = message.sender + ' now in chat!';
         } else if (message.type === 'LEAVE') {
             messageElement.classList.add('event-message');
-            message.content = message.sender + ' left!';
+            message.content = message.sender + ' left chat!';
         } else {
             messageElement.classList.add('chat-message');
             var usernameElement = document.createElement('strong');
             usernameElement.classList.add('nickname');
             var usernameText = document.createTextNode(message.sender);
+
+            var now = new Date();
+            var currentDate = document.createElement('i');
+            var currentDateText = document.createTextNode(' ' + now.getFullYear()+'.'+now.getMonth()+'.' + now.getDate() + ' '
+                + now.getHours() + ':' + now.getMinutes() + ' ');
+            currentDate.appendChild(currentDateText);
+            currentDate.classList.add('currentDate');
+
             usernameElement.appendChild(usernameText);
             messageElement.appendChild(usernameElement);
+            messageElement.appendChild(currentDate);
+
         }
 
         var textElement = document.createElement('span');
         var messageText = document.createTextNode(message.content);
+
         textElement.appendChild(messageText);
 
         messageElement.appendChild(textElement);

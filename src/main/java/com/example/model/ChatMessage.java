@@ -17,8 +17,20 @@ public class ChatMessage {
     @Attribute(id = "message_name_of_sender")
     private String sender;
 
+    @Attribute(id = "message_time_of_send")
+    private String currentDate;
+
+    public ChatMessage(){}
+
+    public ChatMessage(String messageChatName, String messageNameOfSender, String messageContent, String currentDate) {
+        this.chatName = messageChatName;
+        this.sender = messageNameOfSender;
+        this.content = messageContent;
+        this.currentDate = currentDate;
+    }
+
     public enum MessageType {
-        CHAT, JOIN, LEAVE
+        CHAT, JOIN, LEAVE, DOWNLOAD
     }
 
     public String getChatName() {
@@ -53,4 +65,11 @@ public class ChatMessage {
         this.sender = sender;
     }
 
+    public String getCurrentDate() {
+        return currentDate;
+    }
+
+    public void setCurrentDate(String currentDate) {
+        this.currentDate = currentDate;
+    }
 }

@@ -30,7 +30,8 @@ import java.util.Objects;
         public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
             StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
-            String username = (String) Objects.requireNonNull(headerAccessor.getSessionAttributes()).get("username");
+            String username = (String) headerAccessor.getSessionAttributes().get("username");
+            String chatName = (String) headerAccessor.getSessionAttributes().get("chatName");
 
             if(username != null) {
                 logger.info("User Disconnected : " + username);
@@ -39,7 +40,10 @@ import java.util.Objects;
                 chatMessage.setType(ChatMessage.MessageType.LEAVE);
                 chatMessage.setSender(username);
 
-                messagingTemplate.convertAndSend("/topic/publicChatRoom", chatMessage);
+                chatMessage.setChatName(chatName);
+
+
+                messagingTemplate.convertAndSend("/topic/"+ chatName +"Room", chatMessage);
             }
         }
 

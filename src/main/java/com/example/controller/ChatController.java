@@ -1,15 +1,22 @@
 package com.example.controller;
 
+import com.example.dao.ChatDAO;
 import com.example.form.ChatForm;
+import com.example.model.ChatMessage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class ChatController {
+
+    @Autowired
+    ChatDAO dao;
 
     @RequestMapping(value = "/openChat", method = RequestMethod.GET)
     public String viewMyChat(Model model, ChatForm chatForm){
@@ -34,23 +41,10 @@ public class ChatController {
         model.addAttribute("username", name);
 
         String chatName = chatForm.getChatName();
-
-        System.out.println("chatName in chatChat: " + chatName);
-
         model.addAttribute("chatName", chatName);
 
-        return "chatChat";
-    }
-
-
-    @RequestMapping("/chatChat1")
-    public String index1(Model model, Principal principal) {
-
-        String name = principal.getName();
-        model.addAttribute("username", name);
-
-        String chatName = "Event 123";
-        model.addAttribute("chatName", chatName);
+        List<ChatMessage> list = dao.findAllContentForThisChat(chatName);
+        model.addAttribute("infoAboutOldMessages", list);
 
         return "chatChat";
     }
