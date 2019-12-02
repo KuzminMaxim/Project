@@ -126,4 +126,21 @@ public class NewEventDAO extends JdbcDaoSupport{
         });
     }
 
+    public EventInfo findCountOfParticipants(String name) {
+        String sql = EventMapperNewDB.FIND_COUNT_OF_PARTICIPANTS_FOR_THIS_EVENT;
+        Object[] params = new Object[] {name};
+
+        try {
+            return this.getJdbcTemplate().queryForObject(sql, params, new RowMapper<EventInfo>() {
+                @Override
+                public EventInfo mapRow(ResultSet resultSet, int i) throws SQLException {
+                    int name = resultSet.getInt("participants");
+                    return new EventInfo(name);
+                }
+            });
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
 }

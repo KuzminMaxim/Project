@@ -1,21 +1,12 @@
 package com.example.dao;
 
-import com.example.api.Attribute;
-import com.example.api.ObjectType;
 import com.example.mapper.NewMapperDB;
-import com.example.mapper.UserMapperNewDB;
-import com.example.model.UserInfo;
-import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -77,11 +68,19 @@ public class NewDAO extends JdbcDaoSupport {
                     }
                 }
             } else if (objectType.equals("event")){
+                Date date = new Date();
+                String currentTime = date.toString();
                 for ( Object entry : myMap.keySet()) {
                     String key = (String) entry;
                     if (key.equals("event_name")){
                         getJdbcTemplate().update(NewMapperDB.SET_SOMETHING_SQL,
                                 new Object[]{myMap.get("event_name"), "cancelled", "chat_status"});
+                        getJdbcTemplate().update(NewMapperDB.SET_SOMETHING_SQL,
+                                new Object[]{myMap.get("event_name"),
+                                        (myMap.get("event_name") + " was cancelled at " + currentTime), "chat_name"});
+                        getJdbcTemplate().update(NewMapperDB.SET_SOMETHING_SQL,
+                                new Object[]{myMap.get("event_name"),
+                                        (myMap.get("event_name") + " was cancelled at " + currentTime), "message_chat_name"});
                     }
                 }
             }

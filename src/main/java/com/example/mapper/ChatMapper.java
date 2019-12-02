@@ -51,6 +51,7 @@ public class ChatMapper implements RowMapper<ChatMessage> {
             "and message_chat_name.object_id = message_time_of_send.object_id;";
 
 
+
     @Override
     public ChatMessage mapRow(ResultSet resultSet, int i) throws SQLException {
 

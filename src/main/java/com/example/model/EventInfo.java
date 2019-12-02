@@ -27,6 +27,8 @@ public class EventInfo {
     @Attribute(id = "event_time")
     private String date;
 
+    private int countOfParticipants;
+
     public EventInfo(){}
 
     public EventInfo(String nameOfEvent, String eventDescription) {
@@ -52,6 +54,10 @@ public class EventInfo {
 
     public EventInfo(String eventName) {
         this.nameOfEvent = eventName;
+    }
+
+    public EventInfo(int countOfParticipants) {
+        this.countOfParticipants = countOfParticipants;
     }
 
     public String getDate() {
@@ -108,5 +114,13 @@ public class EventInfo {
 
     public void setEventDescription(String eventDescription) {
         this.eventDescription = eventDescription;
+    }
+
+    public int getCountOfParticipants() {
+        return countOfParticipants;
+    }
+
+    public void setCountOfParticipants(int countOfParticipants) {
+        this.countOfParticipants = countOfParticipants;
     }
 }

@@ -285,6 +285,26 @@ public class EventMapperNewDB implements RowMapper<EventInfo> {
             "where chat_name.object_id = chat_participant.object_id\n" +
             "and chat_name.object_id = chat_status.object_id";
 
+    public static final String FIND_COUNT_OF_PARTICIPANTS_FOR_THIS_EVENT = "" +
+            "select count(event_participant.value_text) as participants\n" +
+            "from\n" +
+            "(select distinct params.value_text, params.object_id\n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'chat_name')\n" +
+            "and params.value_text = ?\n" +
+            "and object.id IN\n" +
+            "(select distinct params.object_id from params)) as event_name,\n" +
+            "(select distinct params.value_text, params.object_id\n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id IN (select attributes.id from attributes where attributes.Attribute IN ('chat_participant', 'chat_name_of_creator'))\n" +
+            "and object.id IN\n" +
+            "(select distinct params.object_id from params))  as event_participant\n" +
+            "where event_name.object_id = event_participant.object_id";
+
     public static final String SELECT_ONE_EVENT_SQL = "" +
             "SELECT DISTINCT (select params.value_date from params\n" +
         "            join attributes on attributes.id = params.attribute_id\n" +

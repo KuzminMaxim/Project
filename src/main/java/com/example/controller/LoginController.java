@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -63,17 +65,34 @@ public class LoginController {
         model.addAttribute("userInfo", userInfo);
 
         String name = principal.getName();
+
         List<EventInfo> eventsWhereCreator = eventDAO.findEventsWhereCreator(name);
         if (!eventsWhereCreator.isEmpty()){
+            for (int i = 0; i < eventsWhereCreator.size(); i++) {
+                String x = eventsWhereCreator.get(i).getNameOfEvent();
+                EventInfo countOfParticipants = eventDAO.findCountOfParticipants(x);
+                eventsWhereCreator.get(i).setCountOfParticipants(countOfParticipants.getCountOfParticipants());
+            }
             model.addAttribute("eventsWhereCreator", eventsWhereCreator);
         }
+
         List<EventInfo> eventsWhereParticipant = eventDAO.findEventsWhereParticipant(name);
         if (!eventsWhereParticipant.isEmpty()){
+            for (int i = 0; i < eventsWhereParticipant.size(); i++) {
+                String x = eventsWhereParticipant.get(i).getNameOfEvent();
+                EventInfo countOfParticipants = eventDAO.findCountOfParticipants(x);
+                eventsWhereParticipant.get(i).setCountOfParticipants(countOfParticipants.getCountOfParticipants());
+            }
             model.addAttribute("eventsWhereParticipant", eventsWhereParticipant);
         }
 
         List<EventInfo> cancelledChats = eventDAO.findCancelledChats(name);
         if (!cancelledChats.isEmpty()){
+            for (int i = 0; i < cancelledChats.size(); i++) {
+                String x = cancelledChats.get(i).getNameOfEvent();
+                EventInfo countOfParticipants = eventDAO.findCountOfParticipants(x);
+                cancelledChats.get(i).setCountOfParticipants(countOfParticipants.getCountOfParticipants());
+            }
             model.addAttribute("cancelledChats", cancelledChats);
         }
 
@@ -81,6 +100,8 @@ public class LoginController {
         EventForm eventForm = new EventForm();
         model.addAttribute("registrationForm", registrationForm);
         model.addAttribute("eventForm",eventForm);
+
+
 
         return "userInfoPage";
     }

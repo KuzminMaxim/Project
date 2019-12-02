@@ -28,19 +28,16 @@ public class DeleteController {
     public String deleteUser(RegistrationForm registrationForm, EventForm eventForm)
             throws NoSuchFieldException, IllegalAccessException {
 
-        System.out.println("in DeleteSomething!!!" + eventForm.getNameOfEvent());
-
         if (registrationForm.getName() != null){
             api.delete(registrationForm);
         }
-        System.out.println("!= null!!!!   " + eventForm.getNameOfEvent());
 
         if (eventForm.getNameOfEvent() != null){
             api.delete(eventForm);
             api.update(eventForm);
         }
 
-        return "userInfoPage";
+        return "redirect:/userInfo";
     }
 
     @RequestMapping(value = "/deleteParticipantFromEvent", method = RequestMethod.POST)
@@ -51,7 +48,7 @@ public class DeleteController {
             api.deleteOne(eventForm);
         }
 
-        return "userInfoPage";
+        return "redirect:/userInfo";
     }
 
 }

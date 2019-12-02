@@ -110,7 +110,7 @@ public class EventController {
         if (result.hasErrors()) {
             List<EventInfo> eventName = eventDAO.getEventsName();
             model.addAttribute("eventInfo", eventName);
-            return "MyGoogleMap";
+            return "redirect:/createEvent";
         }
         try {
             myApi.save(eventForm);
@@ -119,9 +119,9 @@ public class EventController {
             List<EventInfo> eventName = eventDAO.getEventsName();
             model.addAttribute("eventInfo", eventName);
             model.addAttribute("errorMessage", "Error: " + e.getMessage());
-            return "MyGoogleMap";
+            return "redirect:/createEvent";
         }
-        return "MyGoogleMap";
+        return "redirect:/userInfo";
     }
 
 }
