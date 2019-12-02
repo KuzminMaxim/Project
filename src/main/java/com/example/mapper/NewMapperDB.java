@@ -62,6 +62,78 @@ public class NewMapperDB implements RowMapper<UserInfo> {
             "(select attributes.id from attributes where attributes.Attribute = ?))),\n" +
             "(select attributes.id from attributes where attributes.Attribute = ?), ?)";
 
+    public static final String DELETE_PARTICIPANT_FROM_EVENT = "" +
+            "delete from params where\n" +
+            "params.object_id = \n" +
+            "(select a.object_id from\n" +
+            "(select distinct params.value_text, params.object_id\n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_name')\n" +
+            "and params.value_text = ?\n" +
+            "and object.id IN\n" +
+            "(select distinct params.object_id from params)) as a,\n" +
+            "(select distinct params.value_text, params.object_id\n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_participant')\n" +
+            "and params.value_text = ?\n" +
+            "and object.id IN\n" +
+            "(select distinct params.object_id from params)) as b\n" +
+            "where a.object_id = b.object_id)\n" +
+            "and params.attribute_id = (select attributes.id from attributes where attributes.Attribute = 'event_participant')\n" +
+            "and params.value_text = ?";
+
+    public static final String DELETE_PARTICIPANT_FROM_CHAT = "" +
+            "delete from params where\n" +
+            "params.object_id = \n" +
+            "(select a.object_id from\n" +
+            "(select distinct params.value_text, params.object_id\n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'chat_name')\n" +
+            "and params.value_text = ?\n" +
+            "and object.id IN\n" +
+            "(select distinct params.object_id from params)) as a,\n" +
+            "(select distinct params.value_text, params.object_id\n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'chat_participant')\n" +
+            "and params.value_text = ?\n" +
+            "and object.id IN\n" +
+            "(select distinct params.object_id from params)) as b\n" +
+            "where a.object_id = b.object_id)\n" +
+            "and params.attribute_id = (select attributes.id from attributes where attributes.Attribute = 'chat_participant')\n" +
+            "and params.value_text = ?";
+
+    public static final String DELETE_CREATOR_FROM_CHAT = "" +
+            "delete from params where\n" +
+            "params.object_id = \n" +
+            "(select a.object_id from\n" +
+            "(select distinct params.value_text, params.object_id\n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'chat_name')\n" +
+            "and params.value_text = ?\n" +
+            "and object.id IN\n" +
+            "(select distinct params.object_id from params)) as a,\n" +
+            "(select distinct params.value_text, params.object_id\n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'chat_name_of_creator')\n" +
+            "and params.value_text = ?\n" +
+            "and object.id IN\n" +
+            "(select distinct params.object_id from params)) as b\n" +
+            "where a.object_id = b.object_id)\n" +
+            "and params.attribute_id = (select attributes.id from attributes where attributes.Attribute = 'chat_name_of_creator')\n" +
+            "and params.value_text = ?";
+
     public static final String DELETE_SOMETHING_SQL = "delete from object where \n" +
             "object.id IN \n" +
             "(select params.object_id\n" +
@@ -76,6 +148,7 @@ public class NewMapperDB implements RowMapper<UserInfo> {
             "join attributes on attributes.id = params.attribute_id\n" +
             "join object on params.object_id = object.id\n" +
             "where attributes.Attribute = ?";
+
 
     @Override
     public UserInfo mapRow(ResultSet resultSet, int rowNum) throws SQLException {

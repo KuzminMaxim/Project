@@ -76,6 +76,14 @@ public class NewDAO extends JdbcDaoSupport {
                                 new Object[]{myMap.get("user_name"), myMap.get(key), key});
                     }
                 }
+            } else if (objectType.equals("event")){
+                for ( Object entry : myMap.keySet()) {
+                    String key = (String) entry;
+                    if (key.equals("event_name")){
+                        getJdbcTemplate().update(NewMapperDB.SET_SOMETHING_SQL,
+                                new Object[]{myMap.get("event_name"), "cancelled", "chat_status"});
+                    }
+                }
             }
         } catch (NullPointerException npe){
             npe.printStackTrace();
@@ -120,6 +128,24 @@ public class NewDAO extends JdbcDaoSupport {
                                 new Object[]{key, myMap.get(key)});
                     }
                 }
+        } catch (NullPointerException npe){
+            npe.printStackTrace();
+        }
+    }
+
+    public void deleteSomeoneFromSomething(Map myMap) {
+        try {
+            for ( Object entry : myMap.keySet()) {
+                String key = (String) entry;
+                if (key.equals("event_participant")){
+                    getJdbcTemplate().update(NewMapperDB.DELETE_PARTICIPANT_FROM_EVENT,
+                            new Object[]{myMap.get("event_name"), myMap.get(key), myMap.get(key)});
+                    getJdbcTemplate().update(NewMapperDB.DELETE_PARTICIPANT_FROM_CHAT,
+                            new Object[]{myMap.get("event_name"), myMap.get(key), myMap.get(key)});
+                    getJdbcTemplate().update(NewMapperDB.DELETE_CREATOR_FROM_CHAT,
+                            new Object[]{myMap.get("event_name"), myMap.get(key), myMap.get(key)});
+                }
+            }
         } catch (NullPointerException npe){
             npe.printStackTrace();
         }

@@ -9,8 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.util.Properties;
-
 @Controller
 public class DeleteController {
 
@@ -27,7 +25,7 @@ public class DeleteController {
     }
 
     @RequestMapping(value = "/deleteSomething", method = RequestMethod.POST)
-    public String DeleteUser(RegistrationForm registrationForm, EventForm eventForm)
+    public String deleteUser(RegistrationForm registrationForm, EventForm eventForm)
             throws NoSuchFieldException, IllegalAccessException {
 
         System.out.println("in DeleteSomething!!!" + eventForm.getNameOfEvent());
@@ -39,6 +37,18 @@ public class DeleteController {
 
         if (eventForm.getNameOfEvent() != null){
             api.delete(eventForm);
+            api.update(eventForm);
+        }
+
+        return "userInfoPage";
+    }
+
+    @RequestMapping(value = "/deleteParticipantFromEvent", method = RequestMethod.POST)
+    public String deleteParticipantFromEvent(EventForm eventForm)
+            throws NoSuchFieldException, IllegalAccessException {
+
+        if (eventForm.getNameOfEvent() != null){
+            api.deleteOne(eventForm);
         }
 
         return "userInfoPage";

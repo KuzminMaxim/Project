@@ -115,4 +115,15 @@ public class NewEventDAO extends JdbcDaoSupport{
         });
     }
 
+    public List<EventInfo> findCancelledChats(String name) throws NullPointerException{
+        String sql = EventMapperNewDB.SELECT_CANCELLED_CHATS;
+        Object[] params = new Object[] {name};
+        return this.getJdbcTemplate().query(sql, params, (resultSet, i) -> {
+
+            String nameOfEvent = resultSet.getString("chat_name");
+
+            return new EventInfo(nameOfEvent);
+        });
+    }
+
 }

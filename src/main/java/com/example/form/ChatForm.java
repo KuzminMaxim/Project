@@ -15,6 +15,9 @@ public class ChatForm {
     @Attribute(id = "chat_participant")
     private String chatParticipant;
 
+    @Attribute(id = "chat_status")
+    private String chatStatus = "active";
+
     public ChatForm(String chatName, String chatNameOfCreator) {
         this.chatName = chatName;
         this.chatNameOfCreator = chatNameOfCreator;
@@ -50,5 +53,13 @@ public class ChatForm {
 
     public void setChatNameOfCreator(String chatNameOfCreator) {
         this.chatNameOfCreator = chatNameOfCreator;
+    }
+
+    public String getChatStatus() {
+        return chatStatus;
+    }
+
+    public void setChatStatus(String chatStatus) {
+        this.chatStatus = chatStatus;
     }
 }

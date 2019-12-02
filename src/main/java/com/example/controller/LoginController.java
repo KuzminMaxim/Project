@@ -54,7 +54,7 @@ public class LoginController {
     }
 
     @RequestMapping(value = "/userInfo", method = RequestMethod.GET)
-    public String userInfo(Model model, Principal principal) throws Exception {
+    public String userInfo(Model model, Principal principal) {
 
         String userName = principal.getName();
         System.out.println("Username: " + userName);
@@ -70,6 +70,11 @@ public class LoginController {
         List<EventInfo> eventsWhereParticipant = eventDAO.findEventsWhereParticipant(name);
         if (!eventsWhereParticipant.isEmpty()){
             model.addAttribute("eventsWhereParticipant", eventsWhereParticipant);
+        }
+
+        List<EventInfo> cancelledChats = eventDAO.findCancelledChats(name);
+        if (!cancelledChats.isEmpty()){
+            model.addAttribute("cancelledChats", cancelledChats);
         }
 
         RegistrationForm registrationForm = new RegistrationForm();

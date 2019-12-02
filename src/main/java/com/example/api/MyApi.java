@@ -37,6 +37,11 @@ public class MyApi {
         remove(getAllAboutUsedClass(clazz, object));
     }
 
+    public void deleteOne(Object object) throws NoSuchFieldException, IllegalAccessException {
+        Class clazz = object.getClass();
+        removeOne(getAllAboutUsedClass(clazz, object));
+    }
+
     public <T> List readOne(String id) throws NoSuchFieldException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
 
         List list = new ArrayList();
@@ -143,6 +148,14 @@ public class MyApi {
     private void remove(Map map){
         try {
             dao.deleteSomething(map);
+        } catch (NullPointerException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void removeOne(Map map){
+        try {
+            dao.deleteSomeoneFromSomething(map);
         } catch (NullPointerException e){
             e.printStackTrace();
         }
