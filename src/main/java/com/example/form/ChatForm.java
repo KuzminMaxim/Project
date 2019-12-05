@@ -27,8 +27,8 @@ public class ChatForm {
 
     }
 
-    public ChatForm(String chatName){
-        this.chatName = chatName;
+    public ChatForm(String chatParticipant){
+        this.chatParticipant = chatParticipant;
     }
 
     public String getChatName() {

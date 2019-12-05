@@ -18,16 +18,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws/{chatName}").withSockJS().setInterceptors(handshakeInterceptor);
-        //registry.addEndpoint("/secured/room").withSockJS();
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.setApplicationDestinationPrefixes("/app");
         registry.enableSimpleBroker("/topic");
-        /*registry.setApplicationDestinationPrefixes("/app");
-        registry.enableSimpleBroker("/secured/user/specific-event");
-        registry.setUserDestinationPrefix("/secured/user");*/
     }
 
 }

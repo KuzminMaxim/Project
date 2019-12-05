@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,12 @@ import java.util.Objects;
 
         @EventListener
         public void handleWebSocketConnectListener(SessionConnectedEvent event) {
-            logger.info("Received a new web socket connection");
+            /*logger.info("Received a new web socket connection");
+
+            String nameOfListener = Objects.requireNonNull(event.getUser()).getName();
+            logger.info("New user name event.getUser(): " + nameOfListener);
+
+            messagingTemplate.convertAndSend("/topic/"+ "{chatName}" +"Room", nameOfListener);*/
         }
 
         @EventListener
@@ -32,6 +38,7 @@ import java.util.Objects;
 
             String username = (String) headerAccessor.getSessionAttributes().get("username");
             String chatName = (String) headerAccessor.getSessionAttributes().get("chatName");
+            logger.info("chatName: " + chatName);
 
             if(username != null) {
                 logger.info("User Disconnected : " + username);
@@ -39,9 +46,7 @@ import java.util.Objects;
                 ChatMessage chatMessage = new ChatMessage();
                 chatMessage.setType(ChatMessage.MessageType.LEAVE);
                 chatMessage.setSender(username);
-
                 chatMessage.setChatName(chatName);
-
 
                 messagingTemplate.convertAndSend("/topic/"+ chatName +"Room", chatMessage);
             }

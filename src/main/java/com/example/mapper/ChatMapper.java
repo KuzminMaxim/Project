@@ -50,6 +50,26 @@ public class ChatMapper implements RowMapper<ChatMessage> {
             "and message_chat_name.object_id = message_content.object_id \n" +
             "and message_chat_name.object_id = message_time_of_send.object_id;";
 
+    public static final String FIND_ALL_PARTICIPANTS_FOR_THIS_EVENT = "" +
+            "select event_participant.value_text as participants\n" +
+            "from\n" +
+            "(select distinct params.value_text, params.object_id\n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'chat_name')\n" +
+            "and params.value_text = ?\n" +
+            "and object.id IN\n" +
+            "(select distinct params.object_id from params)) as event_name,\n" +
+            "(select distinct params.value_text, params.object_id\n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id IN (select attributes.id from attributes where attributes.Attribute IN ('chat_participant', 'chat_name_of_creator'))\n" +
+            "and object.id IN\n" +
+            "(select distinct params.object_id from params))  as event_participant\n" +
+            "where event_name.object_id = event_participant.object_id";
+
 
 
     @Override
