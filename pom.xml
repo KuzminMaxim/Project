@@ -25,6 +25,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <spring.version>5.0.6.RELEASE</spring.version>
+        <spring-security.version>5.0.6.RELEASE</spring-security.version>
     </properties>
 
     <dependencies>
@@ -64,6 +66,12 @@
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <!--   <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        org.springframework.security:spring-security-messaging    -->
         <!--Date and time-->
         <dependency>
             <groupId>org.threeten</groupId>
@@ -83,6 +91,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-messaging</artifactId>
+            <version>${spring-security.version}</version>
         </dependency>
         </dependencies>
 

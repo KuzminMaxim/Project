@@ -10,11 +10,9 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Controller
 public class WebSocketController {
@@ -23,6 +21,9 @@ public class WebSocketController {
     MyApi api;
 
     private static final Logger logger = LoggerFactory.getLogger(WebSocketController.class);
+    public static List<String> usersOnlineList = new ArrayList<>();
+    //public static Map<String, String> usersOnlineMap = new HashMap<>();
+    //public static List<Map<String, String>> usersOnlineList = new ArrayList<>();
 
     @MessageMapping("/{chatName}.sendMessage")
     @SendTo("/topic/{chatName}Room")
@@ -40,49 +41,39 @@ public class WebSocketController {
     @SendTo("/topic/{chatName}Room")
     public ChatMessage addUser(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
 
-        logger.info("inAddUser name:", chatMessage.getSender());
+        logger.info("inAddUser name:" + chatMessage.getSender());
         System.out.println(chatMessage.getSender());
         headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
         headerAccessor.getSessionAttributes().put("chatName", chatMessage.getChatName());
-        logger.info("User has been added: " + chatMessage.getSender() + " in chat: " + chatMessage.getChatName());
+        logger.info("User " + chatMessage.getSender() + " has been added in chat: " + chatMessage.getChatName());
+        usersOnlineList.add(chatMessage.getSender());
+        headerAccessor.getSessionAttributes().put("usersInOnlineList", usersOnlineList);
+        //model.addAttribute("usersInOnlineList", usersOnlineList);
+
+        //System.out.println("usersOnlineMap.size(): " + usersOnlineMap.size());
+        //System.out.println("usersOnlineList.size(): " + usersOnlineList.size());
+        //usersOnlineMap.add(chatMessage.getSender());
+        //usersOnlineMap.put(chatMessage.getChatName(), chatMessage.getSender());
+
+
+        /*for (int i = 0; i<usersOnlineList.size(); i++){
+            System.out.println("UserNameInList: " + usersOnlineList.get(i));
+        }*/
+
+        //System.out.println("usersOnlineList.size() after add: " + usersOnlineList.size());
 
         return chatMessage;
     }
 
     @MessageMapping("/{chatName}.addInOnline")
     @SendTo("/topic/{chatName}Room")
-    public ChatMessage removeUser(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
-
-        String user = chatMessage.getContent();
-        String[] x = new String[100];
-        for (int i = 0; i< x.length; i++){
-            if (x[i] == null){
-                x[i] = user;
-                System.out.println(x[i]);
-                break;
-            }
-        }
-        System.out.println(Arrays.toString(x));
+    public ChatMessage addUserInOnlineList(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
 
 
-        System.out.println("user: " + user);
-
-        List <String> chatMessages = new ArrayList<>();
-        chatMessages.add("123");
-        System.out.println("chatMessages.size(): " + chatMessages.size());
-
-        if (!user.equals(chatMessages.get(0))) {
-            chatMessages.add(chatMessage.getContent());
-            System.out.println("@@@chatMessages.size(): " + chatMessages.size());
-        }
-
-        //System.out.println("@@@chatMessages.size(): " + chatMessages.size());
-
-        /*List <ChatMessage> chatMessages = new ArrayList<>();
-        chatMessages.add(chatMessage);
-        System.out.println("chatMessages.size(): " + chatMessages.size());
-        System.out.println("inAddOnline: " + chatMessage.getSender());
+        /*System.out.println("inAddOnline: " + chatMessage.getSender());
         System.out.println("inAddOnline: " + chatMessage.getContent());*/
+
+
 
 
         /*List<String> usersOnline = new ArrayList<>();

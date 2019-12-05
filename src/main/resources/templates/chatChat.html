@@ -264,14 +264,17 @@
     var participantArea = document.querySelector('#participantOnlineArea');
 
 
+
     var stompClient = null;
     var username = null;
     var chatName = null;
+    //var usersInOnlineList = null;
 
 
     function connect() {
         username = document.querySelector('#username').innerText.trim();
         chatName = document.getElementById('chatName').innerText;
+        //usersInOnlineList = document.querySelector('#usersInOnlineList').innerText.trim();
 
         var socket = new SockJS('/ws/'+chatName);
         stompClient = Stomp.over(socket);
@@ -347,6 +350,7 @@
             messageElement.classList.add('event-message');
             message.content = message.sender + ' now in chat!';
             online.content = message.sender;
+            //var messageStatus = document.createTextNode(usersInOnlineList);
             //var messageStatus = document.createTextNode(sendUserOnline(online.content));
             var messageStatus = document.createTextNode(online.content);
             textOnlineElement.appendChild(messageStatus);
