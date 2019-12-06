@@ -110,16 +110,16 @@ public class EventController {
         if (result.hasErrors()) {
             List<EventInfo> eventName = eventDAO.getEventsName();
             model.addAttribute("eventInfo", eventName);
-            return "redirect:/createEvent";
+            return "MyGoogleMap";
         }
         try {
             myApi.save(eventForm);
             myApi.save(chatForm);
-        } catch (NoSuchFieldException | IllegalAccessException e){
+        } catch (Exception e){
             List<EventInfo> eventName = eventDAO.getEventsName();
             model.addAttribute("eventInfo", eventName);
             model.addAttribute("errorMessage", "Error: " + e.getMessage());
-            return "redirect:/createEvent";
+            return "/createEvent";
         }
         return "redirect:/userInfo";
     }

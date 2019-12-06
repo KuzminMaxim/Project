@@ -14,6 +14,7 @@
         }
         body {
             font-family: Roboto, Helvetica, sans-serif;
+            background: #c7b39b url(images/mapPicture.png);
         }
         /* Fix the button on the left side of the page */
         .open-btn {
@@ -70,7 +71,7 @@
         }
         /* Style submit/login button */
         .form-container .btn {
-            background-color: #8ebf42;
+            background-color: #0017bf;
             color: #fff;
             padding: 12px 20px;
             border: none;
@@ -81,7 +82,7 @@
         }
         /* Style cancel button */
         .form-container .cancel {
-            background-color: #cc0000;
+            background-color: #cc0016;
         }
         /* Hover effects for buttons */
         .form-container .btn:hover, .open-button:hover {
@@ -207,17 +208,11 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfOlryc_A5QyGcHyOSE54lO6PVQVd1P0U&callback=initMap"
         async defer></script>
 
-<div th:if="${errorMessage != null}"
-     th:utext="${errorMessage}" class="error">...</div>
-
 <div class="login-popup">
     <div class="form-popup" id="popupForm">
         <form th:action="@{/createEvent}" th:object="${eventForm}" method="POST" class="form-container">
-            <div th:if="${#fields.hasErrors('nameOfEvent')}" th:errors="*{nameOfEvent}">..</div>
             <h2>Please enter the name and description of event</h2>
-            <label for="nameOfEvent">
-                <strong>Name of event</strong>
-            </label>
+
             <input type="hidden" placeholder="Name of creator" th:name="nameOfEventCreator" th:value="*{#request.userPrincipal.name}"/>
 
             <input type="hidden" th:object="${chatForm}" th:name="chatNameOfCreator" th:value="*{#request.userPrincipal.name}"/>
@@ -226,9 +221,44 @@
 
             <input type="hidden" placeholder="longitude" th:field="*{longitude}" id="lng"/>
 
-            <input type="text" id="nameOfEvent" placeholder="Name of event" th:field="*{nameOfEvent}" th:name="nameOfEvent"
-                   onKeyUp="document.getElementById('chatName').value = this.value;"  required>
-
+            <table>
+                <tr>
+                    <td>
+                        <label for="nameOfEvent">
+                            <strong>Name of event</strong>
+                        </label>
+                        <input type="text" id="nameOfEvent" placeholder="Name of event" th:field="*{nameOfEvent}" th:name="nameOfEvent"
+                               onKeyUp="document.getElementById('chatName').value = this.value;"  required>
+                        <span th:if="${#fields.hasErrors('nameOfEvent')}" th:errors="*{nameOfEvent}">...</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="descriptionOfEvent">
+                            <strong>Description of event</strong>
+                        </label>
+                        <input type="text" id="descriptionOfEvent" placeholder="Description of event" name="descriptionOfEvent" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="datetime">
+                            <strong>Date and time of event</strong>
+                        </label>
+                        <input type="datetime-local" id="datetime" placeholder="Date and time" th:name="date" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button type="submit" class="btn">Create event</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+                    </td>
+                </tr>
+            </table>
             <input type="hidden" id="chatName" th:object="${chatForm}" th:field="*{chatName}">
 
 
@@ -237,17 +267,6 @@
                 <span th:if="${#fields.hasErrors('nameOfEvent')}" th:errors="*{nameOfEvent}">..</span>
             </output>-->
 
-
-            <label for="descriptionOfEvent">
-                <strong>Description of event</strong>
-            </label>
-            <input type="text" id="descriptionOfEvent" placeholder="Description of event" name="descriptionOfEvent" required>
-            <label for="datetime">
-                <strong>Date and time of event</strong>
-            </label>
-            <input type="datetime-local" id="datetime" placeholder="Date and time" th:name="date" required>
-            <button type="submit" class="btn">Create event</button>
-            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
         </form>
     </div>
 </div>
@@ -293,7 +312,10 @@
     </tr>
 </table>
 </div>
-<script>
+
+<!--<script type="text/javascript" src="/static/js/OpenAllForm.js"></script>-->
+
+<<script>
     function openForm() {
         document.getElementById("popupForm").style.display="block";
     }
