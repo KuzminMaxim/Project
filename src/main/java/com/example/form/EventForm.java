@@ -8,8 +8,16 @@ import java.sql.Date;
 @ObjectType(id = "event")
 public class EventForm {
 
+    private int countOfParticipant;
+
     @Attribute(id = "event_name")
     private String nameOfEvent;
+
+    @Attribute(id = "event_date_of_creation")
+    private String eventDateOfCreation;
+
+    @Attribute(id = "event_participant")
+    private String eventParticipant;
 
     @Attribute(id = "event_name_of_creator")
     private String nameOfEventCreator;
@@ -26,9 +34,6 @@ public class EventForm {
     @Attribute(id = "event_time")
     private String date;
 
-    @Attribute(id = "event_participant")
-    private String eventParticipant;
-
     public EventForm(){}
 
     public EventForm(String nameOfEvent, String nameOfEventCreator) {
@@ -43,6 +48,30 @@ public class EventForm {
         this.latitude = latitude;
         this.longitude = longitude;
         this.date = date;
+    }
+
+    public EventForm(int countOfParticipant) {
+        this.countOfParticipant = countOfParticipant;
+    }
+
+    public EventForm(String nameOfEvent) {
+        this.nameOfEvent = nameOfEvent;
+    }
+
+    public int getCountOfParticipant() {
+        return countOfParticipant;
+    }
+
+    public void setCountOfParticipant(int countOfParticipant) {
+        this.countOfParticipant = countOfParticipant;
+    }
+
+    public String getEventDateOfCreation() {
+        return eventDateOfCreation;
+    }
+
+    public void setEventDateOfCreation(String eventDateOfCreation) {
+        this.eventDateOfCreation = eventDateOfCreation;
     }
 
     public String getEventParticipant() {

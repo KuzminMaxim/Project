@@ -11,7 +11,7 @@ public class NewMapperDB implements RowMapper<UserInfo> {
     public static final String CREATE_OBJECT_SQL ="insert into object(object_type_id, name) values\n" +
             "((select object_types.id from object_types where object_types.Object_Type = ?),?);";
 
-    public static final String INSERT_DATE_OF_CREATION_SQL = "insert into params(object_id, attribute_id, value_date)\n" +
+    public static final String INSERT_DATE_OF_CREATION_SQL = "insert into params(object_id, attribute_id, value_text)\n" +
             "values ((select id from object order by id desc\n" +
             "limit 1),\n" +
             "(select attributes.id from attributes where attributes.Attribute = 'event_date_of_creation'), CURDATE());";

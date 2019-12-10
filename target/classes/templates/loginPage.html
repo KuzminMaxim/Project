@@ -2,52 +2,95 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Login</title>
+    <style>
+        body {
+            background: #c7b39b url(../static/images/mapPicture.png);
+        }
+        .error {
+            color: black;
+            font-style: italic;
+        }
+        .login-container {
+            max-width: 500px;
+            padding: 50px;
+            background: #ccc;
+            position: fixed; top: 50%; left: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+        /* Full-width for input fields */
+        .login-container input[type=text], .login-container input[type=password]{
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 22px 0;
+            border: none;
+            background: #eee;
+            position: center;
+        }
+        /* When the inputs get focus, do something */
+        .login-container input[type=text]:focus, .login-container input[type=password]:focus{
+            background-color: #ddd;
+            outline: none;
+        }
+        /* Style submit/login button */
+        .login-container .btn {
+            background-color: #0017bf;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom:10px;
+            opacity: 0.8;
+        }
+        /* Style cancel button */
+        .login-container .cancel {
+            background-color: #cc0016;
+        }
+        /* Hover effects for buttons */
+        .login-container .btn:hover, .open-button:hover {
+            opacity: 1;
+        }
+    </style>
 </head>
 <body>
-<!-- Include _menu.html -->
-<th:block th:include="/_menu"></th:block>
+<th:block th:include="/_menu">...</th:block>
 
-<h1>Login</h1>
+<!--<span th:if="${#request.getParameter('error') == 'true'}"
+      style="color:black;margin:10px 0px;">
+    <span th:if="${#session!= null and #session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION') != null}"
+          th:utext="${#session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION').message}">
+    </span>
+</span>-->
 
-<!-- /login?error=true -->
-<div th:if="${#request.getParameter('error') == 'true'}"
-     style="color:black;margin:10px 0px;">
-    Login Failed!!!<br />
-    Reason :
-    <span th:if="${#session!= null and #session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION') != null}">
-          <!-- th:utext="${#session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION').message}"> -->
-                Invalid name or password
-         </span>
-
-</div>
-
-<h3>Enter user name and password:</h3>
-<form name='f' th:action="@{/j_spring_security_check}" method='POST'>
+<form name='f' th:action="@{/j_spring_security_check}" method='POST' class="login-container">
+    <h2>Login</h2>
     <table>
         <tr>
-            <td>User:</td>
-            <td><label>
-                <input type='text' name='username' value=''>
-            </label></td>
+            <td>
+                <label for="Nickname">
+                    <strong>Enter you name</strong>
+                </label>
+                <input type='text' id="Nickname" placeholder="Name" name='username' value=''>
+            </td>
         </tr>
         <tr>
-            <td>Password:</td>
-            <td><label>
-                <input type='password' name='password' />
-            </label></td>
+            <td>
+                <label for="Password">
+                    <strong>Password</strong>
+                </label>
+                <input type='password' id="Password" placeholder="Password" name='password' />
+                <span th:if="${#request.getParameter('error') == 'true'}" class="error">
+                    Invalid name or password
+                </span>
+            </td>
         </tr>
         <tr>
-            <td><input name="submit" type="submit" value="submit" /></td>
+            <td><input name="submit" class="btn" type="submit" value="submit" /></td>
         </tr>
     </table>
 </form>
-
-<br>
-Username/pass:
-<ul>
-    <li>dbuser1/123</li>
-    <li>dbadmin1/123</li>
-</ul>
 
 </body>
 

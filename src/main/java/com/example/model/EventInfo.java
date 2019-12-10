@@ -6,6 +6,8 @@ import com.example.api.ObjectType;
 @ObjectType(id = "event")
 public class EventInfo {
 
+    private int countOfParticipants;
+
     @Attribute(id = "event_date_of_creation")
     private String eventDateOfCreation;
 
@@ -26,8 +28,6 @@ public class EventInfo {
 
     @Attribute(id = "event_time")
     private String date;
-
-    private int countOfParticipants;
 
     public EventInfo(){}
 
@@ -60,13 +60,13 @@ public class EventInfo {
         this.countOfParticipants = countOfParticipants;
     }
 
-    public String getDate() {
+    /*public String getDate() {
         return date;
     }
 
     public void setDate(String date) {
         this.date = date;
-    }
+    }*/
 
     public String getEventDateOfCreation() {
         return eventDateOfCreation;
@@ -92,7 +92,7 @@ public class EventInfo {
         this.eventDateOfCreation = eventDateOfCreation;
     }
 
-    public String getNameOfEvent() {
+    /*public String getNameOfEvent() {
         return nameOfEvent;
     }
 
@@ -102,7 +102,7 @@ public class EventInfo {
 
     public String getNameOfEventCreator() {
         return nameOfEventCreator;
-    }
+    }*/
 
     public void setNameOfEventCreator(String nameOfEventCreator) {
         this.nameOfEventCreator = nameOfEventCreator;

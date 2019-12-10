@@ -4,15 +4,15 @@
     <title>Change password</title>
     <style>
         body {
-            background: #c7b39b url(images/mapPicture.png);
+            background: #c7b39b url(../static/images/mapPicture.png);
         }
     </style>
 </head>
 <body>
-<th:block th:include="/_menu"></th:block>
+<th:block th:include="/_menu">...</th:block>
 <div th:if="${userInfo != null}">
 
-    <span th:utext="${#request.userPrincipal.name}"></span>
+    <span th:utext="${#request.userPrincipal.name}">...</span>
 
     <h2>Change avatar</h2>
     <form  th:multiple = "true" th:action="@{/setAvatar}"  th:object="${registrationForm}" enctype="multipart/form-data" method="POST">

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.lang.reflect.InvocationTargetException;
 import java.security.Principal;
 
+@RequestMapping
 @Controller
 public class JoinController {
 

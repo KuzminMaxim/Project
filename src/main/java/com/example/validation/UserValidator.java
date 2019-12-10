@@ -1,5 +1,6 @@
 package com.example.validation;
 
+import com.example.api.MyApi;
 import org.apache.commons.validator.routines.EmailValidator;
 import com.example.dao.NewUserDAO;
 import com.example.form.RegistrationForm;
@@ -16,7 +17,7 @@ public class UserValidator implements Validator {
     private EmailValidator emailValidator = EmailValidator.getInstance();
 
     @Autowired
-    private NewUserDAO newUserDAO;
+    private MyApi api;
 
     // The classes are supported by this validator.
     @Override
@@ -27,6 +28,7 @@ public class UserValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         RegistrationForm registrationForm = (RegistrationForm) target;
+        RegistrationForm newRegistrationForm = new RegistrationForm();
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "NotEmpty.registrationForm.name");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "NotEmpty.registrationForm.email");
@@ -35,14 +37,18 @@ public class UserValidator implements Validator {
         if (!this.emailValidator.isValid(registrationForm.getEmail())) {
             errors.rejectValue("email", "Pattern.registrationForm.email");
         } else if (registrationForm.getEmail() != null) {
-            UserInfo userDAOEmail = newUserDAO.findEmail(registrationForm.getEmail());
+
+            RegistrationForm userDAOEmail = api.readSomethingOne(newRegistrationForm, registrationForm.getEmail(), "user_email");
+
             if (userDAOEmail != null) {
                 errors.rejectValue("email", "Duplicate.registrationForm.email");
             }
         }
 
         if (!errors.hasFieldErrors("name")) {
-            UserInfo dbUser = newUserDAO.findName(registrationForm.getName());
+
+            RegistrationForm dbUser = api.readSomethingOne(newRegistrationForm, registrationForm.getName(), "user_name");
+
             if (dbUser != null) {
                 errors.rejectValue("name", "Duplicate.registrationForm.name");
             }

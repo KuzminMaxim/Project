@@ -3,12 +3,8 @@ package com.example.controller;
 import com.example.api.MyApi;
 import com.example.dao.NewUserDAO;
 import com.example.form.RegistrationForm;
-import com.example.model.UserInfo;
-import com.example.utils.WebUtils;
 import com.example.validation.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,15 +17,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 import java.util.List;
 
 
+@RequestMapping
 @Controller
 public class RegistrationController {
-
-    @Autowired
-    private NewUserDAO registerDAO;
 
     @Autowired
     private UserValidator userValidator;
@@ -51,14 +44,10 @@ public class RegistrationController {
     }
 
     @RequestMapping(value = "/viewRegisterUser", method = RequestMethod.GET)
-    public String showAccounts(Model model, Principal principal) {
-        User loginedUser = (User) ((Authentication) principal).getPrincipal();
-
-        String userInfo = WebUtils.toString(loginedUser);
-        model.addAttribute("userInfo", userInfo);
-
-        List<UserInfo> list = registerDAO.getAccountsName();
-        model.addAttribute("appUser", list);
+    public String showAccounts(Model model) {
+        RegistrationForm info = new RegistrationForm();
+        List<RegistrationForm> list = api.readAll(info);
+        model.addAttribute("listOfUser", list);
         return "registeredPage";
     }
 
@@ -72,10 +61,12 @@ public class RegistrationController {
     @RequestMapping(value = "/createUser", method = RequestMethod.POST)
     public String CreateUser(Model model,
                              @ModelAttribute("registrationForm") @Validated RegistrationForm registrationForm,
-                             BindingResult result, HttpServletRequest request) throws NoSuchFieldException, IllegalAccessException {
+                             BindingResult result, HttpServletRequest request) {
+
+        RegistrationForm newRegistrationForm = new RegistrationForm();
 
         if (result.hasErrors()) {
-            List<UserInfo> username = registerDAO.getAccountsName();
+            List<RegistrationForm> username = api.readAll(newRegistrationForm);
             model.addAttribute("userInfo", username);
             return "registrationPage";
         }
@@ -88,7 +79,7 @@ public class RegistrationController {
                 System.out.println("Fail authentication");
             }
         } catch (Exception e) {
-            List<UserInfo> username = registerDAO.getAccountsName();
+            List<RegistrationForm> username = api.readAll(newRegistrationForm);
             model.addAttribute("userInfo", username);
             model.addAttribute("errorMessage", "Error: " + e.getMessage());
             return "registrationPage";
@@ -98,7 +89,7 @@ public class RegistrationController {
     }
 
     @RequestMapping(value = "/error", method = RequestMethod.GET)
-    public String errorP(Model model) {
+    public String errorP() {
         return "error";
     }
 

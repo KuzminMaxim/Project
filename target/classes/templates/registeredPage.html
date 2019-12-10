@@ -7,26 +7,29 @@
         th, td {
             padding: 5px;
         }
+        body {
+            background: #c7b39b url(../static/images/mapPicture.png);
+        }
     </style>
 
 </head>
 
 <body>
 <!-- Include _menu.html -->
-<th:block th:include="/_menu"></th:block>
+<th:block th:include="/_menu">...</th:block>
 
 <h2>Accounts</h2>
 
 <table border="1">
     <tr>
-        <th>Email</th>
         <th>Name</th>
         <th>Password</th>
+        <th>Email</th>
     </tr>
-    <tr th:each="userInfo : ${appUser}">
-        <td th:utext="${userInfo.email}">..</td>
-         <td th:utext="${userInfo.name}">..</td>
-        <td th:utext="${userInfo.password}">..</td>
+    <tr th:each="listOfUser : ${listOfUser}">
+        <td th:utext="${listOfUser.name}">..</td>
+         <td th:utext="${listOfUser.password}">..</td>
+        <td th:utext="${listOfUser.email}">..</td>
     </tr>
 
 </table>

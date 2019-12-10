@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+import java.util.Date;
 import java.util.Objects;
 
 @Component
@@ -24,9 +25,11 @@ import java.util.Objects;
 
         @EventListener
         public void handleWebSocketConnectListener(SessionConnectedEvent event) {
-            /*logger.info("Received a new web socket connection");
+            logger.info("Received a new web socket connection");
 
-            String nameOfListener = Objects.requireNonNull(event.getUser()).getName();
+            logger.info("User connect: " + Objects.requireNonNull(event.getUser()).getName());
+
+            /*String nameOfListener = Objects.requireNonNull(event.getUser()).getName();
             logger.info("New user name event.getUser(): " + nameOfListener);
 
             messagingTemplate.convertAndSend("/topic/"+ "{chatName}" +"Room", nameOfListener);*/
@@ -39,7 +42,8 @@ import java.util.Objects;
             String username = (String) headerAccessor.getSessionAttributes().get("username");
             String chatName = (String) headerAccessor.getSessionAttributes().get("chatName");
             logger.info("chatName: " + chatName);
-
+            Date date =new Date();
+            System.out.println(date);
             if(username != null) {
                 logger.info("User Disconnected : " + username);
 

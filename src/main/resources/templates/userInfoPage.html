@@ -8,7 +8,7 @@
     </script>
     <style>
         body {
-            background: #c7b39b url(images/mapPicture.png);
+            background: #c7b39b url(../static/images/mapPicture.png);
         }
         table {
             border-spacing: 0 10px;
@@ -98,9 +98,9 @@
         </form> </td>
         <td th:utext="${eventsWhereCreator.eventDateOfCreation}">..</td>
         <td th:utext="${eventsWhereCreator.nameOfEvent}">..</td>
-        <td th:utext="${eventsWhereCreator.eventDescription}">..</td>
+        <td th:utext="${eventsWhereCreator.descriptionOfEvent}">..</td>
         <td th:utext="${eventsWhereCreator.date}">..</td>
-        <td th:utext="${eventsWhereCreator.countOfParticipants}">..</td>
+        <td th:utext="${eventsWhereCreator.countOfParticipant}">..</td>
     </tr>
     </tbody>
 
@@ -134,9 +134,9 @@
         </form> </td>
         <td th:utext="${eventsWhereParticipant.eventDateOfCreation}">..</td>
         <td th:utext="${eventsWhereParticipant.nameOfEvent}">..</td>
-        <td th:utext="${eventsWhereParticipant.eventDescription}">..</td>
+        <td th:utext="${eventsWhereParticipant.descriptionOfEvent}">..</td>
         <td th:utext="${eventsWhereParticipant.date}">..</td>
-        <td th:utext="${eventsWhereParticipant.countOfParticipants}">..</td>
+        <td th:utext="${eventsWhereParticipant.countOfParticipant}">..</td>
     </tr>
     </tbody>
 </table>
@@ -165,7 +165,7 @@
                     <input type="submit" class="btn" th:formaction="openChat" th:formmethod="post" value="Chat">
                 </form> </td>
                 <td th:utext="${cancelledChats.nameOfEvent}">..</td>
-                <td th:utext="${cancelledChats.countOfParticipants}">..</td>
+                <td th:utext="${cancelledChats.countOfParticipant}">..</td>
             </tr>
             </tbody>
         </table>

@@ -1,7 +1,12 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:utext="${title}"></title>
+    <title th:utext="${title}">...</title>
+    <style>
+        body {
+            background: #c7b39b url(../static/images/mapPicture.png);
+        }
+    </style>
 </head>
 <body>
 <!-- Include _menu.html -->
@@ -9,7 +14,7 @@
 
 <h2>Admin Page</h2>
 <b>This is protected page!</b>
-<h3>Welcome, <span th:utext="${#request.userPrincipal.name}"></span>
+<h3>Welcome, <span th:utext="${#request.userPrincipal.name}">...</span>
 </h3>
 
 <br/><br/>
@@ -18,8 +23,7 @@
 <p>
     <br><br>
     <a th:href="@{/viewRegisterUser}">View registered user</a>
-    <a th:href="@{/viewAllEvents}">View Events</a>
-    <a th:href="@{/viewAllEventMarkers}">View Events Markers</a>
+    <a th:href="@{/viewAllEvents}">View all events</a>
     <a th:href="@{/deleteSomething}">Delete something</a>
 </p>
 </body>

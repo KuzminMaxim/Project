@@ -6,6 +6,46 @@
     </script>
     <script type = "text/javascript" src ="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.1/js/jquery.tablesorter.js">
     </script>
+    <style>
+        body {
+            background: #c7b39b url(../static/images/mapPicture.png);
+        }
+        table {
+            border-spacing: 0 10px;
+            font-family: 'Open Sans', sans-serif;
+            font-weight: bold;
+        }
+        th {
+            padding: 10px 20px;
+            background: #0017bf;
+            color: #c7b39b;
+            border-right: 2px solid;
+            font-size: 0.9em;
+        }
+        td {
+            vertical-align: middle;
+            padding: 10px;
+            font-size: 14px;
+            text-align: center;
+            border-top: 2px solid #0017bf;
+            border-bottom: 2px solid #0017bf;
+            border-right: 2px solid #0017bf;
+            border-left: 2px solid #0017bf;
+        }
+        .allTable .btn {
+            background-color: #0017bf;
+            color: #c7b39b;
+            padding: 10px 10px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom:10px;
+            opacity: 0.8;
+        }
+        .allTable .btn:hover{
+            opacity: 1;
+        }
+    </style>
 </head>
 <body>
 
@@ -34,7 +74,7 @@
 
 <div th:if="${eventsWhereCreator != null}">
     <h3>Events created by me</h3>
-<table id="eventsWhereCreatorTable" border="1">
+<table id="eventsWhereCreatorTable" class="allTable">
     <thead>
     <tr>
         <th>Cancel this event</th>
@@ -50,17 +90,17 @@
     <tr th:each="eventsWhereCreator : ${eventsWhereCreator}">
         <td> <form  th:object="${eventForm}" method="post">
             <input type="hidden" th:name="nameOfEvent" th:value="${eventsWhereCreator.nameOfEvent}"/>
-            <input type="submit"  th:formaction="deleteSomething" th:formmethod="post" value="Cancel">
+            <input type="submit" class="btn"  th:formaction="deleteSomething" th:formmethod="post" value="Cancel">
         </form> </td>
         <td> <form  th:action="@{/openChat}" th:object="${chatForm}" method="post">
             <input type="hidden" th:name="chatName" th:value="${eventsWhereCreator.nameOfEvent}">
-            <input type="submit" value="Chat">
+            <input type="submit" class="btn" value="Chat">
         </form> </td>
         <td th:utext="${eventsWhereCreator.eventDateOfCreation}">..</td>
         <td th:utext="${eventsWhereCreator.nameOfEvent}">..</td>
-        <td th:utext="${eventsWhereCreator.eventDescription}">..</td>
+        <td th:utext="${eventsWhereCreator.descriptionOfEvent}">..</td>
         <td th:utext="${eventsWhereCreator.date}">..</td>
-        <td th:utext="${eventsWhereCreator.countOfParticipants}">..</td>
+        <td th:utext="${eventsWhereCreator.countOfParticipant}">..</td>
     </tr>
     </tbody>
 
@@ -69,7 +109,7 @@
 
 <div th:if="${eventsWhereParticipant != null}">
     <h3>Events witch i joined</h3>
-<table id="eventsWhereParticipantTable" border="1">
+<table id="eventsWhereParticipantTable" class="allTable">
     <thead>
     <tr>
         <th>Exit from this event</th>
@@ -86,17 +126,17 @@
         <td> <form th:each="eventsWhereParticipant : ${eventsWhereParticipant}" th:object="${eventForm}" method="post">
             <input type="hidden" th:name="nameOfEvent" th:value="${eventsWhereParticipant.nameOfEvent}"/>
             <input type="hidden" th:name="eventParticipant" th:value="${#request.userPrincipal.name}"/>
-            <input type="submit"  th:formaction="deleteParticipantFromEvent" th:formmethod="post" value="Exit from this event">
+            <input type="submit" class="btn" th:formaction="deleteParticipantFromEvent" th:formmethod="post" value="Exit from this event">
         </form> </td>
         <td> <form th:each="eventsWhereParticipant : ${eventsWhereParticipant}" th:object="${chatForm}">
             <input type="hidden" th:name="chatName" th:value="${eventsWhereParticipant.nameOfEvent}">
-            <input type="submit" th:formaction="openChat" th:formmethod="post" value="Chat">
+            <input type="submit" class="btn" th:formaction="openChat" th:formmethod="post" value="Chat">
         </form> </td>
         <td th:utext="${eventsWhereParticipant.eventDateOfCreation}">..</td>
         <td th:utext="${eventsWhereParticipant.nameOfEvent}">..</td>
-        <td th:utext="${eventsWhereParticipant.eventDescription}">..</td>
+        <td th:utext="${eventsWhereParticipant.descriptionOfEvent}">..</td>
         <td th:utext="${eventsWhereParticipant.date}">..</td>
-        <td th:utext="${eventsWhereParticipant.countOfParticipants}">..</td>
+        <td th:utext="${eventsWhereParticipant.countOfParticipant}">..</td>
     </tr>
     </tbody>
 </table>
@@ -104,7 +144,7 @@
 
 <div th:if="${cancelledChats != null}">
     <h3>Events that have been canceled</h3>
-        <table id="cancelledChatsTable" border="1">
+        <table id="cancelledChatsTable" class="allTable">
             <thead>
             <tr>
                 <th>Exit from this chat</th>
@@ -118,14 +158,14 @@
                 <td> <form th:each="cancelledChats : ${cancelledChats}" th:object="${eventForm}" method="post">
                     <input type="hidden" th:name="nameOfEvent" th:value="${cancelledChats.nameOfEvent}"/>
                     <input type="hidden" th:name="eventParticipant" th:value="${#request.userPrincipal.name}"/>
-                    <input type="submit"  th:formaction="deleteParticipantFromEvent" th:formmethod="post" value="Exit from this chat">
+                    <input type="submit" class="btn" th:formaction="deleteParticipantFromEvent" th:formmethod="post" value="Exit from this chat">
                 </form> </td>
                 <td> <form th:each="cancelledChats : ${cancelledChats}" th:object="${chatForm}">
                     <input type="hidden" th:name="chatName" th:value="${cancelledChats.nameOfEvent}">
-                    <input type="submit" th:formaction="openChat" th:formmethod="post" value="Chat">
+                    <input type="submit" class="btn" th:formaction="openChat" th:formmethod="post" value="Chat">
                 </form> </td>
                 <td th:utext="${cancelledChats.nameOfEvent}">..</td>
-                <td th:utext="${cancelledChats.countOfParticipants}">..</td>
+                <td th:utext="${cancelledChats.countOfParticipant}">..</td>
             </tr>
             </tbody>
         </table>

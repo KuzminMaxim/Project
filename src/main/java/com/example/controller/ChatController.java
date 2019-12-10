@@ -3,21 +3,16 @@ package com.example.controller;
 import com.example.dao.ChatDAO;
 import com.example.form.ChatForm;
 import com.example.model.ChatMessage;
-import com.example.model.EventInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpSession;
-import java.lang.reflect.Array;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
+@RequestMapping
 @Controller
 public class ChatController {
 

@@ -1,9 +1,9 @@
 package com.example.controller;
 
+import com.example.api.MyApi;
 import com.example.dao.NewEventDAO;
 import com.example.form.EventForm;
 import com.example.form.RegistrationForm;
-import com.example.model.EventInfo;
 import com.example.utils.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -14,15 +14,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+@RequestMapping
 @Controller
 public class LoginController {
 
     @Autowired
     NewEventDAO eventDAO;
+
+    @Autowired
+    MyApi api;
 
     @RequestMapping(value = { "/", "/welcome" }, method = RequestMethod.GET)
     public String welcomePage(Model model) {
@@ -44,7 +46,7 @@ public class LoginController {
 
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String loginPage(Model model) {
+    public String loginPage() {
         return "loginPage";
     }
 
@@ -66,32 +68,34 @@ public class LoginController {
 
         String name = principal.getName();
 
-        List<EventInfo> eventsWhereCreator = eventDAO.findEventsWhereCreator(name);
+
+        EventForm eventInfo = new EventForm();
+        List<EventForm> eventsWhereCreator = api.readAllWhereSomething(eventInfo, principal.getName(), "event_name_of_creator");
         if (!eventsWhereCreator.isEmpty()){
-            for (int i = 0; i < eventsWhereCreator.size(); i++) {
-                String x = eventsWhereCreator.get(i).getNameOfEvent();
-                EventInfo countOfParticipants = eventDAO.findCountOfParticipants(x);
-                eventsWhereCreator.get(i).setCountOfParticipants(countOfParticipants.getCountOfParticipants());
+            for (EventForm eventForm : eventsWhereCreator) {
+                String x = eventForm.getNameOfEvent();
+                EventForm countOfParticipants = eventDAO.findCountOfParticipants(x);
+                eventForm.setCountOfParticipant(countOfParticipants.getCountOfParticipant());
             }
             model.addAttribute("eventsWhereCreator", eventsWhereCreator);
         }
 
-        List<EventInfo> eventsWhereParticipant = eventDAO.findEventsWhereParticipant(name);
+        List<EventForm> eventsWhereParticipant = api.readAllWhereSomething(eventInfo, principal.getName(), "event_participant");
         if (!eventsWhereParticipant.isEmpty()){
-            for (int i = 0; i < eventsWhereParticipant.size(); i++) {
-                String x = eventsWhereParticipant.get(i).getNameOfEvent();
-                EventInfo countOfParticipants = eventDAO.findCountOfParticipants(x);
-                eventsWhereParticipant.get(i).setCountOfParticipants(countOfParticipants.getCountOfParticipants());
+            for (EventForm eventForm : eventsWhereParticipant) {
+                String x = eventForm.getNameOfEvent();
+                EventForm countOfParticipants = eventDAO.findCountOfParticipants(x);
+                eventForm.setCountOfParticipant(countOfParticipants.getCountOfParticipant());
             }
             model.addAttribute("eventsWhereParticipant", eventsWhereParticipant);
         }
 
-        List<EventInfo> cancelledChats = eventDAO.findCancelledChats(name);
+        List<EventForm> cancelledChats = eventDAO.findCancelledChats(name);
         if (!cancelledChats.isEmpty()){
-            for (int i = 0; i < cancelledChats.size(); i++) {
-                String x = cancelledChats.get(i).getNameOfEvent();
-                EventInfo countOfParticipants = eventDAO.findCountOfParticipants(x);
-                cancelledChats.get(i).setCountOfParticipants(countOfParticipants.getCountOfParticipants());
+            for (EventForm cancelledChat : cancelledChats) {
+                String x = cancelledChat.getNameOfEvent();
+                EventForm countOfParticipants = eventDAO.findCountOfParticipants(x);
+                cancelledChat.setCountOfParticipant(countOfParticipants.getCountOfParticipant());
             }
             model.addAttribute("cancelledChats", cancelledChats);
         }
@@ -124,62 +128,5 @@ public class LoginController {
 
         return "403Page";
     }
-
-    /*    @RequestMapping(value = "/cover={avatarNAME}", method = RequestMethod.GET)
-    public BufferedImage userAvatar(Model model, Principal principal, ServletContext servletContext,
-                                    @PathVariable String avatarNAME) throws Exception {
-        String userName = principal.getName();
-        UserInfo path = userDAO.findImageByName(userName);
-        String url = path.getUrl();
-        System.out.println("url: " + url);
-
-        ByteArrayOutputStream bao = new ByteArrayOutputStream();
-
-        BufferedImage image = ImageIO.read(new File(url));
-        ImageIO.write(image,"image.png",bao);
-        System.out.println(ImageIO.write(image,"image.png",bao));
-/////////////////////////////////////////////////////////////////
-        String rootPath = System.getProperty("catalina.home");
-        System.out.println("reeeerefefdcsdsdf:;::::: "+rootPath);
-        *//*Book book = bookService.getBookById(Long.parseLong(bookId));
-        String format = book.getImageSource().split("\\.")[1];
-
-        ByteArrayOutputStream out = null;
-        InputStream input = null;
-        try{
-            out = new ByteArrayOutputStream();
-            input = new BufferedInputStream(new FileInputStream(rootPath + File.separator + book.getImageSource()));
-            int data = 0;
-            while ((data = input.read()) != -1){
-                out.write(data);
-            }
-        }
-        finally{
-            if (null != input){
-                input.close();
-            }
-            if (null != out){
-                out.close();
-            }
-        }
-        byte[] bytes = out.toByteArray();
-
-        final HttpHeaders headers = new HttpHeaders();
-        if (format.equals("png"))
-            headers.setContentType(MediaType.IMAGE_PNG);
-        if (format.equals("jpg"))
-            headers.setContentType(MediaType.IMAGE_JPEG);
-        if (format.equals("gif"))
-            headers.setContentType(MediaType.IMAGE_GIF);*//*
-        return image;
-    }*/
-
- /*   @RequestMapping(value = "/photo", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
-    public byte[] testphoto(ServletContext servletContext) throws IOException {
-        InputStream in = servletContext.getResourceAsStream("/images/no_image.jpg");
-        //OutputStream outputStream = new ObjectOutputStream(OutputStream.nullOutputStream());
-        //IOUtils.copy(in, outputStream);
-        return ;
-    }*/
 
 }

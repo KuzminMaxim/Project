@@ -26,24 +26,26 @@ public class NewUserDAO extends JdbcDaoSupport{
 
     public NewUserDAO(){}
 
-    public List<UserInfo> getAccountsEmail() {
+    /*public List<UserInfo> getAccountsEmail() {
         String sql = UserMapperNewDB.SELECT_ALL_EMAIL;
         Object[] params = new Object[] {};
         UserMapperNewDB mapper = new UserMapperNewDB();
         return this.getJdbcTemplate().query(sql, params, mapper);
-    }
-    public List<UserInfo> getAccountsName() {
+    }*/
+
+    /*public List<UserInfo> getAccountsName() {
         String sql = UserMapperNewDB.SELECT_ALL_USERS;
         Object[] params = new Object[] {};
         UserMapperNewDB mapper = new UserMapperNewDB();
         return this.getJdbcTemplate().query(sql, params, mapper);
-    }
-    public List<UserInfo> getAccountsPassword() {
+    }*/
+
+    /*public List<UserInfo> getAccountsPassword() {
         String sql = UserMapperNewDB.SELECT_ALL_PASSWORD;
         Object[] params = new Object[] {};
         UserMapperNewDB mapper = new UserMapperNewDB();
         return this.getJdbcTemplate().query(sql, params, mapper);
-    }
+    }*/
 
     public UserInfo findUserByName(String name) {
         String sql = UserMapperNewDB.SELECT_EMAIL_NAME_PASSWORD_SQL;
@@ -56,7 +58,7 @@ public class NewUserDAO extends JdbcDaoSupport{
         }
     }
 
-    public UserInfo findName(String name) {
+/*    public UserInfo findName(String name) {
         String sql = UserMapperNewDB.SELECT_NAME_SQL;
         Object[] params = new Object[] {name};
 
@@ -87,7 +89,7 @@ public class NewUserDAO extends JdbcDaoSupport{
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
-    }
+    }*/
 
 
     /*public UserInfo findImageByName(String name) {

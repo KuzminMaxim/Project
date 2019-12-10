@@ -8,6 +8,9 @@ public class UserInfo {
 
     private int id;
 
+    /*@Attribute(id = "user_avatar")*/
+    private String url;
+
     @Attribute(id = "user_name")
     private String name;
 
@@ -16,9 +19,6 @@ public class UserInfo {
 
     @Attribute(id = "user_email")
     private String email;
-
-    @Attribute(id = "user_avatar")
-    private String url;
 
     public UserInfo(){}
 

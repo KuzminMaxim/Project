@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.Part;
 
 
+@RequestMapping
 @Controller
 public class UserChangesController {
 

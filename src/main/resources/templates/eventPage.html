@@ -8,7 +8,7 @@
             padding: 5px;
         }
         body {
-            background: #c7b39b url(images/mapPicture.png);
+            background: #c7b39b url(../static/images/mapPicture.png);
         }
     </style>
 
@@ -16,26 +16,26 @@
 
 <body>
 <!-- Include _menu.html -->
-<th:block th:include="/_menu"></th:block>
+<th:block th:include="/_menu">...</th:block>
 
-<h2>Accounts</h2>
+<h2>All events</h2>
 
 <table border="1">
     <tr>
-        <th>Date</th>
-        <th>Name</th>
-        <th>CreatorName</th>
+        <th>Name of event</th>
+        <th>Time of event</th>
+        <th>Name of creator</th>
         <th>Description</th>
         <th>Latitude</th>
         <th>Longitude</th>
     </tr>
-    <tr th:each="eventInfo : ${eventInfo}">
-        <td th:utext="${eventInfo.eventDateOfCreation}">..</td>
-        <td th:utext="${eventInfo.nameOfEvent}">..</td>
-        <td th:utext="${eventInfo.nameOfEventCreator}">..</td>
-        <td th:utext="${eventInfo.eventDescription}">..</td>
-        <td th:utext="${eventInfo.eventLatitude}">..</td>
-        <td th:utext="${eventInfo.eventLongitude}">..</td>
+    <tr th:each="allEvents : ${allEvents}">
+        <td th:utext="${allEvents.nameOfEvent}">..</td>
+        <td th:utext="${allEvents.date}">..</td>
+        <td th:utext="${allEvents.nameOfEventCreator}">..</td>
+        <td th:utext="${allEvents.descriptionOfEvent}">..</td>
+        <td th:utext="${allEvents.latitude}">..</td>
+        <td th:utext="${allEvents.longitude}">..</td>
     </tr>
 
 </table>

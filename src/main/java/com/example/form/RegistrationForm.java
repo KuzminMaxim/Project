@@ -16,6 +16,8 @@ public class RegistrationForm {
     @Attribute(id = "user_password")
     private String password;
 
+    private String decryptedPassword;
+
     @Attribute(id = "user_avatar")
     private MultipartFile[] avatar;
 
@@ -24,8 +26,6 @@ public class RegistrationForm {
 
     @Attribute(id = "user_role")
     private String role = "ROLE_USER";
-
-    private String decryptedPassword;
 
     public RegistrationForm() {}
 

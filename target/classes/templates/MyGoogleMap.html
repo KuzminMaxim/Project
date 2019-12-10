@@ -14,7 +14,7 @@
         }
         body {
             font-family: Roboto, Helvetica, sans-serif;
-            background: #c7b39b url(images/mapPicture.png);
+            background: #c7b39b url(../static/images/mapPicture.png);
         }
         /* Fix the button on the left side of the page */
         .open-btn {
@@ -92,7 +92,7 @@
     </style>
 </head>
 <body>
-<th:block th:include="/_menu"></th:block>
+<th:block th:include="/_menu">..</th:block>
 <div style="padding:0px">
     <div id="map"></div>
 </div>
@@ -313,9 +313,9 @@
 </table>
 </div>
 
-<!--<script type="text/javascript" src="/static/js/OpenAllForm.js"></script>-->
+<!--<script type="text/javascript" th:src= "@{/static/js/OpenAllForm.js}"></script>-->
 
-<<script>
+<script>
     function openForm() {
         document.getElementById("popupForm").style.display="block";
     }

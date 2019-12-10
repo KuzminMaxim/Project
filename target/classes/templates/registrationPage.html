@@ -2,9 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title> Registration </title>
+
     <style>
         body {
-            background: #c7b39b url(images/mapPicture.png); /* Цвет фона и путь к файлу */
+            background: #c7b39b url(/images/mapPicture.png); /* Цвет фона и путь к файлу */
         }
         td span  {
             font-size:90%;
@@ -59,7 +60,6 @@
             opacity: 1;
         }
     </style>
-    <script type="text/javascript" th:src="@{/js/src/script.js}"></script>
 </head>
 <body>
 <th:block th:include="/_menu">...</th:block>

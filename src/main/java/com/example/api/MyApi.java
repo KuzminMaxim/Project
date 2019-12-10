@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.util.*;
 
 @Repository
@@ -42,7 +43,34 @@ public class MyApi {
         removeOne(getAllAboutUsedClass(clazz, object));
     }
 
-    public <T> List readOne(String id) throws NoSuchFieldException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    public <T> List <T> readAll(Object object) {
+        try {
+            return dao.selectListOfSomething(object);
+        } catch (IllegalAccessException | SQLException | InstantiationException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public <T> List <T> readAllWhereSomething(Object object, String name, String attribute) {
+        try {
+            return dao.selectListOfSomethingWhereSomething(object, name, attribute);
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public <T> T readSomethingOne(Object object, String name, String attribute){
+        try {
+            return dao.selectSomethingOne(object, name, attribute);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /*public <T> List readOne(String id) throws NoSuchFieldException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
 
         List list = new ArrayList();
         Map<String, String> myMap = new HashMap<>();
@@ -84,11 +112,11 @@ public class MyApi {
 
         }
         return list;
-    }
+    }*/
 
 
     private <T> Map<String, String> getAllAboutUsedClass(Class<T> clazz, Object object) throws IllegalAccessException, NoSuchFieldException {
-        Map<String, String> myMap = new HashMap<>();
+        Map<String, String> attributesValues = new HashMap<>();
         Field[] fields = clazz.getDeclaredFields();
         String[] names = new String[fields.length];
         String[] annotation = new String[fields.length];
@@ -108,54 +136,54 @@ public class MyApi {
                 Field field = clazz.getDeclaredField(names[i]);
                 field.setAccessible(true);
                 values[i] = (String) field.get(object);
-                myMap.put(annotation[i], values[i]);
+                attributesValues.put(annotation[i], values[i]);
             }
         }
-        return myMap;
+        return attributesValues;
     }
 
     private <T> void getAllAboutNewClass(Class<T> clazz){
 
     }
 
-    private <T> void create(Map map, Class<T> clazz){
+    private <T> void create(Map attributesValues, Class<T> clazz){
         String objectTypeAnnotation = clazz.getAnnotation(ObjectType.class).id();
         try {
-            dao.createSomething(map, objectTypeAnnotation);
+            dao.createSomething(attributesValues, objectTypeAnnotation);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
 
-    private <T> void change(Map map, Class<T> clazz){
+    private <T> void change(Map attributesValues, Class<T> clazz){
         String objectType = clazz.getAnnotation(ObjectType.class).id();
         try {
-            dao.updateSomething(map, objectType);
+            dao.updateSomething(attributesValues, objectType);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
 
-    private <T> void insert(Map map, Class<T> clazz){
+    private <T> void insert(Map attributesValues, Class<T> clazz){
         String objectType = clazz.getAnnotation(ObjectType.class).id();
         try {
-            dao.addSomething(map, objectType);
+            dao.addSomething(attributesValues, objectType);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
 
-    private void remove(Map map){
+    private void remove(Map attributesValues){
         try {
-            dao.deleteSomething(map);
+            dao.deleteSomething(attributesValues);
         } catch (NullPointerException e){
             e.printStackTrace();
         }
     }
 
-    private void removeOne(Map map){
+    private void removeOne(Map attributesValues){
         try {
-            dao.deleteSomeoneFromSomething(map);
+            dao.deleteSomeoneFromSomething(attributesValues);
         } catch (NullPointerException e){
             e.printStackTrace();
         }
