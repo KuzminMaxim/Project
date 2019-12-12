@@ -1,10 +1,10 @@
-package com.example.form;
+package com.example.model;
 
 import com.example.api.Attribute;
 import com.example.api.ObjectType;
 
 @ObjectType(id = "chat")
-public class ChatForm {
+public class ChatModel {
 
     @Attribute(id = "chat_name")
     private String chatName;
@@ -18,16 +18,16 @@ public class ChatForm {
     @Attribute(id = "chat_status")
     private String chatStatus = "active";
 
-    public ChatForm(String chatName, String chatNameOfCreator) {
+    public ChatModel(String chatName, String chatNameOfCreator) {
         this.chatName = chatName;
         this.chatNameOfCreator = chatNameOfCreator;
     }
 
-    public ChatForm() {
+    public ChatModel() {
 
     }
 
-    public ChatForm(String chatParticipant){
+    public ChatModel(String chatParticipant){
         this.chatParticipant = chatParticipant;
     }
 

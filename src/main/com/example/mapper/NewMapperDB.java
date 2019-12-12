@@ -8,7 +8,7 @@ public class NewMapperDB {
     public static final String INSERT_DATE_OF_CREATION_SQL = "insert into params(object_id, attribute_id, value_text)\n" +
             "values ((select id from object order by id desc\n" +
             "limit 1),\n" +
-            "(select attributes.id from attributes where attributes.Attribute = 'event_date_of_creation'), CURDATE());";
+            "(select attributes.id from attributes where attributes.Attribute = ?), CURDATE());";
 
     public static final String INSERT_DATE_OF_CHAT_CREATION_SQL = "insert into params(object_id, attribute_id, value_text)\n" +
             "values ((select id from object order by id desc\n" +

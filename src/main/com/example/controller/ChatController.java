@@ -1,13 +1,16 @@
 package com.example.controller;
 
 import com.example.dao.ChatDAO;
-import com.example.form.ChatForm;
 import com.example.model.ChatMessage;
+import com.example.model.ChatModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.security.Principal;
 import java.util.List;
@@ -19,36 +22,39 @@ public class ChatController {
     @Autowired
     ChatDAO dao;
 
-    @RequestMapping(value = "/openChat", method = RequestMethod.GET)
-    public String viewMyChat(Model model, ChatForm chatForm){
+    private static final Logger logger = LoggerFactory.getLogger(ChatController.class);
 
-        model.addAttribute("chatForm", chatForm);
+    @GetMapping(value = "/openChat")
+    public String viewMyChat(Model model, ChatModel chatModel){
+        logger.debug("openChat");
+
+        model.addAttribute("chatForm", chatModel);
 
         return "userInfoPage";
     }
 
-    @RequestMapping(value = "/openChat", method = RequestMethod.POST)
-    public String openChat(Model model, Principal principal, ChatForm chatForm){
+    @PostMapping(value = "/openChat")
+    public String openChat(Model model, Principal principal, ChatModel chatModel){
 
-        return index(model, principal, chatForm);
+        return index(model, principal, chatModel);
     }
 
 
 
     @RequestMapping("/chatChat")
-    public String index(Model model, Principal principal, ChatForm chatForm) {
+    public String index(Model model, Principal principal, ChatModel chatModel) {
 
 
         String name = principal.getName();
         model.addAttribute("username", name);
 
-        String chatName = chatForm.getChatName();
+        String chatName = chatModel.getChatName();
         model.addAttribute("chatName", chatName);
 
         List<ChatMessage> list = dao.findAllContentForThisChat(chatName);
         model.addAttribute("infoAboutOldMessages", list);
 
-        List<ChatForm> participants = dao.findAllParticipants(chatName);
+        List<ChatModel> participants = dao.findAllParticipants(chatName);
         model.addAttribute("participants", participants);
 
 

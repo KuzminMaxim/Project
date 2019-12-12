@@ -1,4 +1,4 @@
-package com.example.form;
+package com.example.model;
 
 import com.example.api.Attribute;
 import com.example.api.ObjectType;
@@ -6,7 +6,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.multipart.MultipartFile;
 
 @ObjectType(id = "users")
-public class RegistrationForm {
+public class UserModel {
 
     //Rename
 
@@ -27,20 +27,20 @@ public class RegistrationForm {
     @Attribute(id = "user_role")
     private String role = "ROLE_USER";
 
-    public RegistrationForm() {}
+    public UserModel() {}
 
-    public RegistrationForm(String name){
+    public UserModel(String name){
         this.name = name;
     }
 
-    public RegistrationForm(String email, String name, String password) {
+    public UserModel(String email, String name, String password) {
         this.email = email;
         this.name = name;
         this.password = password;
         this.decryptedPassword = password;
     }
 
-    public RegistrationForm(long id, String name, String password) {
+    public UserModel(long id, String name, String password) {
         //this.id = id;
         this.name = name;
         this.password = password;

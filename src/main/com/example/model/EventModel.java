@@ -1,10 +1,10 @@
-package com.example.form;
+package com.example.model;
 
 import com.example.api.Attribute;
 import com.example.api.ObjectType;
 
 @ObjectType(id = "event")
-public class EventForm {
+public class EventModel {
 
     private int countOfParticipant;
 
@@ -32,14 +32,14 @@ public class EventForm {
     @Attribute(id = "event_time")
     private String date;
 
-    public EventForm(){}
+    public EventModel(){}
 
-    public EventForm(String nameOfEvent, String nameOfEventCreator) {
+    public EventModel(String nameOfEvent, String nameOfEventCreator) {
         this.nameOfEvent = nameOfEvent;
         this.nameOfEventCreator = nameOfEventCreator;
     }
 
-    public EventForm(String nameOfEvent, String nameOfEventCreator, String descriptionOfEvent, String latitude, String longitude, String date) {
+    public EventModel(String nameOfEvent, String nameOfEventCreator, String descriptionOfEvent, String latitude, String longitude, String date) {
         this.nameOfEvent = nameOfEvent;
         this.nameOfEventCreator = nameOfEventCreator;
         this.descriptionOfEvent = descriptionOfEvent;
@@ -48,11 +48,11 @@ public class EventForm {
         this.date = date;
     }
 
-    public EventForm(int countOfParticipant) {
+    public EventModel(int countOfParticipant) {
         this.countOfParticipant = countOfParticipant;
     }
 
-    public EventForm(String nameOfEvent) {
+    public EventModel(String nameOfEvent) {
         this.nameOfEvent = nameOfEvent;
     }
 

@@ -1,7 +1,7 @@
 package com.example.dao;
 
 import com.example.api.Attribute;
-import com.example.form.EventForm;
+import com.example.model.EventModel;
 import com.example.mapper.NewMapperDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
@@ -27,25 +27,13 @@ public class NewDAO extends JdbcDaoSupport {
 
     public NewDAO() {}
 
-    public void createSomething(Map attributesValues, String objectType) {
+    public void createNewObjectInDatabase(Map attributesValues, String objectType) {
         try {
             assert getJdbcTemplate() != null;
-            switch (objectType) {
-                case "users":
-                    getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_SQL, objectType, "OBJECT_USER");
-                    break;
-                case "event":
-                    getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_SQL, objectType, "OBJECT_EVENT");
-                    getJdbcTemplate().update(NewMapperDB.INSERT_DATE_OF_CREATION_SQL);
-                    break;
-                case "chat":
-                    getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_SQL, objectType, "OBJECT_CHAT");
-                    getJdbcTemplate().update(NewMapperDB.INSERT_DATE_OF_CHAT_CREATION_SQL);
-                    break;
-                case "messages":
-                    getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_SQL, objectType, "OBJECT_MESSAGE");
-                    break;
-            }
+
+            getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_SQL, objectType, objectType);
+            getJdbcTemplate().update(NewMapperDB.INSERT_DATE_OF_CREATION_SQL, objectType + "_date_of_creation");
+
             for ( Object entry : attributesValues.keySet()) {
                 String key = (String) entry;
                 String value = (String) attributesValues.get(key);
@@ -53,13 +41,15 @@ public class NewDAO extends JdbcDaoSupport {
                     getJdbcTemplate().update(NewMapperDB.INSERT_SQL, key, value);
                 }
             }
+
             getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_REFERENCES);
+
         } catch (NullPointerException npe){
             npe.printStackTrace();
         }
     }
 
-    public void updateSomething(Map attributesValues, String objectType) {
+    public void updateObjectInDatabase(Map attributesValues, String objectType) {
         try {
             assert getJdbcTemplate() != null;
             if (objectType.equals("users")){
@@ -92,7 +82,7 @@ public class NewDAO extends JdbcDaoSupport {
         }
     }
 
-    public void addSomething(Map attributesValues, String objectType) {
+    public void addOneNewAttributesIntoObjectInDatabase(Map attributesValues, String objectType) {
         try {
             assert getJdbcTemplate() != null;
                 for ( Object entry : attributesValues.keySet()) {
@@ -114,24 +104,26 @@ public class NewDAO extends JdbcDaoSupport {
         }
     }
 
-    public void deleteSomething(Map attributesValues) {
+    public void deleteObjectFromDatabase(Map attributesValues) {
 
         try {
                 for ( Object entry : attributesValues.keySet()) {
                     String key = (String) entry;
                     if (key.equals("user_name")
-                            && selectSomethingOne(EventForm.class, (String) attributesValues.get(key),
+                            && findUniqueRecordInDatabaseWhereThisNameIsThisAttributeOfParticularObjectRelatedToThisClass
+                            (EventModel.class, (String) attributesValues.get(key),
                             "event_name_of_creator") != null){
                         assert getJdbcTemplate() != null;
                         getJdbcTemplate().update(NewMapperDB.DELETE_SOMETHING_SQL,
                                 key, attributesValues.get(key));
 
-                        EventForm eventForm = selectSomethingOne(EventForm.class, (String) attributesValues.get(key),
+                        EventModel eventModel = findUniqueRecordInDatabaseWhereThisNameIsThisAttributeOfParticularObjectRelatedToThisClass
+                                (EventModel.class, (String) attributesValues.get(key),
                                 "event_name_of_creator");
-                        System.out.println("eventForm.getNameOfEventCreator() in DELETE:" + eventForm.getNameOfEventCreator());
+                        System.out.println("eventModel.getNameOfEventCreator() in DELETE:" + eventModel.getNameOfEventCreator());
 
                         getJdbcTemplate().update(NewMapperDB.DELETE_SOMETHING_SQL,
-                                "event_name_of_creator", eventForm.getNameOfEventCreator());
+                                "event_name_of_creator", eventModel.getNameOfEventCreator());
                     } else if (key.equals("user_name")
                             || key.equals("event_name")){
                         assert getJdbcTemplate() != null;
@@ -139,12 +131,12 @@ public class NewDAO extends JdbcDaoSupport {
                                 key, attributesValues.get(key));
                     }
                 }
-        } catch (NullPointerException | SQLException npe){
+        } catch (NullPointerException npe){
             npe.printStackTrace();
         }
     }
 
-    public void deleteSomeoneFromSomething(Map attributesValues) {
+    public void deleteOneAttributeFromObjectInDatabase(Map attributesValues) {
         try {
             for ( Object entry : attributesValues.keySet()) {
                 String key = (String) entry;
@@ -164,7 +156,7 @@ public class NewDAO extends JdbcDaoSupport {
     }
 
 
-    public <T> List <T> selectListOfSomething(Class clazz) throws IllegalAccessException, InstantiationException {
+    public <T> List <T> getAllRecordsFromTheDatabaseRelatedToThisClassObjectType(Class clazz) {
 
         List<T> list= new ArrayList<>();
 
@@ -282,7 +274,9 @@ public class NewDAO extends JdbcDaoSupport {
                     T newInstance = (T) clazz.getConstructor().newInstance();
                     loadResultIntoObject(rs, newInstance);
                     list.add(newInstance);
-                } catch (NoSuchMethodException | InvocationTargetException e){
+                } catch (InstantiationException e){
+                    e.printStackTrace();
+                } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e){
                     e.printStackTrace();
                 }
             }
@@ -297,7 +291,7 @@ public class NewDAO extends JdbcDaoSupport {
         return list;
     }
 
-    public <T> List<T> selectListOfSomethingWhereSomething(Class clazz, String name, String attribute) throws SQLException {
+    public <T> List<T> getAllRecordsFromTheDatabaseRelatedToThisClassObjectTypeAndThisNameIsAttribute(Class clazz, String name, String attribute) {
 
         List<T> list= new ArrayList<T>();
 
@@ -457,7 +451,7 @@ public class NewDAO extends JdbcDaoSupport {
         return list;
     }
 
-    public <T> T selectSomethingOne(Class clazz, String name, String attribute) throws SQLException {
+    public <T> T findUniqueRecordInDatabaseWhereThisNameIsThisAttributeOfParticularObjectRelatedToThisClass(Class clazz, String name, String attribute) {
 
         StringBuilder queryForResultSet = new StringBuilder("SELECT DISTINCT params.value_text as ");
 

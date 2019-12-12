@@ -1,8 +1,8 @@
 package com.example.validation;
 
-import com.example.api.MyApi;
+import com.example.api.ApiForInteractingWithTheDatabase;
+import com.example.model.UserModel;
 import org.apache.commons.validator.routines.EmailValidator;
-import com.example.form.RegistrationForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -15,16 +15,16 @@ public class UserValidator implements Validator {
     private EmailValidator emailValidator = EmailValidator.getInstance();
 
     @Autowired
-    private MyApi api;
+    private ApiForInteractingWithTheDatabase api;
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return clazz == RegistrationForm.class;
+        return clazz == UserModel.class;
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        RegistrationForm registrationForm = (RegistrationForm) target;
+        UserModel registrationForm = (UserModel) target;
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "NotEmpty.registrationForm.name");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "NotEmpty.registrationForm.email");
@@ -34,7 +34,7 @@ public class UserValidator implements Validator {
             errors.rejectValue("email", "Pattern.registrationForm.email");
         } else if (registrationForm.getEmail() != null) {
 
-            RegistrationForm userDAOEmail = api.readSomethingOne(RegistrationForm.class, registrationForm.getEmail(), "user_email");
+            UserModel userDAOEmail = api.readSomethingOne(UserModel.class, registrationForm.getEmail(), "user_email");
 
             if (userDAOEmail != null) {
                 errors.rejectValue("email", "Duplicate.registrationForm.email");
@@ -43,7 +43,7 @@ public class UserValidator implements Validator {
 
         if (!errors.hasFieldErrors("name")) {
 
-            RegistrationForm dbUser = api.readSomethingOne(RegistrationForm.class, registrationForm.getName(), "user_name");
+            UserModel dbUser = api.readSomethingOne(UserModel.class, registrationForm.getName(), "user_name");
 
             if (dbUser != null) {
                 errors.rejectValue("name", "Duplicate.registrationForm.name");

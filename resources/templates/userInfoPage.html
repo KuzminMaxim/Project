@@ -8,7 +8,7 @@
     </script>
     <style>
         body {
-            background: #c7b39b url(/images/mapPicture.png);
+            background: #c7b39b;
         }
         table {
             border-spacing: 0 10px;
@@ -79,6 +79,7 @@
     <tr>
         <th>Cancel this event</th>
         <th>Chat</th>
+        <th>View on map</th>
         <th>Date of event creation</th>
         <th>Name of Event</th>
         <th>Description of event</th>
@@ -88,13 +89,18 @@
     </thead>
     <tbody>
     <tr th:each="eventsWhereCreator : ${eventsWhereCreator}">
-        <td> <form  th:object="${eventForm}" method="post">
+        <td> <form  th:object="${eventModel}" method="post">
             <input type="hidden" th:name="nameOfEvent" th:value="${eventsWhereCreator.nameOfEvent}"/>
             <input type="submit" class="btn"  th:formaction="deleteSomething" th:formmethod="post" value="Cancel">
         </form> </td>
-        <td> <form  th:action="@{/openChat}" th:object="${chatForm}" method="post">
+        <td> <form  th:action="@{/openChat}" th:object="${chatModel}" method="post">
             <input type="hidden" th:name="chatName" th:value="${eventsWhereCreator.nameOfEvent}">
             <input type="submit" class="btn" value="Chat">
+        </form> </td>
+        <td> <form  th:action="@{/createEvent}" method="get">
+            <input type="hidden" th:name="latitude" th:value="${eventsWhereCreator.latitude}">
+            <input type="hidden" th:name="longitude" th:value="${eventsWhereCreator.longitude}">
+            <input type="submit" class="btn" value="View on map">
         </form> </td>
         <td th:utext="${eventsWhereCreator.eventDateOfCreation}">..</td>
         <td th:utext="${eventsWhereCreator.nameOfEvent}">..</td>
@@ -114,6 +120,7 @@
     <tr>
         <th>Exit from this event</th>
         <th>Chat</th>
+        <th>View on map</th>
         <th>Date of event creation</th>
         <th>Name of Event</th>
         <th>Description of event</th>
@@ -123,14 +130,19 @@
     </thead>
     <tbody>
     <tr th:each="eventsWhereParticipant : ${eventsWhereParticipant}">
-        <td> <form th:each="eventsWhereParticipant : ${eventsWhereParticipant}" th:object="${eventForm}" method="post">
+        <td> <form th:each="eventsWhereParticipant : ${eventsWhereParticipant}" th:object="${eventModel}" method="post">
             <input type="hidden" th:name="nameOfEvent" th:value="${eventsWhereParticipant.nameOfEvent}"/>
             <input type="hidden" th:name="eventParticipant" th:value="${#request.userPrincipal.name}"/>
             <input type="submit" class="btn" th:formaction="deleteParticipantFromEvent" th:formmethod="post" value="Exit from this event">
         </form> </td>
-        <td> <form th:each="eventsWhereParticipant : ${eventsWhereParticipant}" th:object="${chatForm}">
+        <td> <form th:each="eventsWhereParticipant : ${eventsWhereParticipant}" th:object="${chatModel}">
             <input type="hidden" th:name="chatName" th:value="${eventsWhereParticipant.nameOfEvent}">
             <input type="submit" class="btn" th:formaction="openChat" th:formmethod="post" value="Chat">
+        </form> </td>
+        <td> <form  th:action="@{/createEvent}" method="get">
+            <input type="hidden" th:name="latitude" th:value="${eventsWhereParticipant.latitude}">
+            <input type="hidden" th:name="longitude" th:value="${eventsWhereParticipant.longitude}">
+            <input type="submit" class="btn" value="View on map">
         </form> </td>
         <td th:utext="${eventsWhereParticipant.eventDateOfCreation}">..</td>
         <td th:utext="${eventsWhereParticipant.nameOfEvent}">..</td>
@@ -155,12 +167,12 @@
             </thead>
             <tbody>
             <tr th:each="cancelledChats : ${cancelledChats}">
-                <td> <form th:each="cancelledChats : ${cancelledChats}" th:object="${eventForm}" method="post">
+                <td> <form th:each="cancelledChats : ${cancelledChats}" th:object="${eventModel}" method="post">
                     <input type="hidden" th:name="nameOfEvent" th:value="${cancelledChats.nameOfEvent}"/>
                     <input type="hidden" th:name="eventParticipant" th:value="${#request.userPrincipal.name}"/>
                     <input type="submit" class="btn" th:formaction="deleteParticipantFromEvent" th:formmethod="post" value="Exit from this chat">
                 </form> </td>
-                <td> <form th:each="cancelledChats : ${cancelledChats}" th:object="${chatForm}">
+                <td> <form th:each="cancelledChats : ${cancelledChats}" th:object="${chatModel}">
                     <input type="hidden" th:name="chatName" th:value="${cancelledChats.nameOfEvent}">
                     <input type="submit" class="btn" th:formaction="openChat" th:formmethod="post" value="Chat">
                 </form> </td>

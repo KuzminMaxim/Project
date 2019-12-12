@@ -1,6 +1,6 @@
 package com.example.dao;
 
-import com.example.form.EventForm;
+import com.example.model.EventModel;
 import com.example.mapper.EventMapperNewDB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -20,7 +20,7 @@ public class NewEventDAO extends JdbcDaoSupport{
         this.setDataSource(dataSource);
     }
 
-    public List<EventForm> findCancelledChats(String name) throws NullPointerException{
+    public List<EventModel> findCancelledChats(String name) throws NullPointerException{
         String sql = EventMapperNewDB.SELECT_CANCELLED_CHATS;
         Object[] params = new Object[] {name};
         assert this.getJdbcTemplate() != null;
@@ -28,11 +28,11 @@ public class NewEventDAO extends JdbcDaoSupport{
 
             String nameOfEvent = resultSet.getString("chat_name");
 
-            return new EventForm(nameOfEvent);
+            return new EventModel(nameOfEvent);
         });
     }
 
-    public EventForm findCountOfParticipants(String name) {
+    public EventModel findCountOfParticipants(String name) {
         String sql = EventMapperNewDB.FIND_COUNT_OF_PARTICIPANTS_FOR_THIS_EVENT;
         Object[] params = new Object[] {name};
 
@@ -40,7 +40,7 @@ public class NewEventDAO extends JdbcDaoSupport{
             assert this.getJdbcTemplate() != null;
             return this.getJdbcTemplate().queryForObject(sql, params, (resultSet, i) -> {
                 int countOfParticipant = resultSet.getInt("participants");
-                return new EventForm(countOfParticipant);
+                return new EventModel(countOfParticipant);
             });
         } catch (EmptyResultDataAccessException e) {
             return null;

@@ -1,7 +1,7 @@
 package com.example.controller;
 
-import com.example.api.MyApi;
-import com.example.form.RegistrationForm;
+import com.example.api.ApiForInteractingWithTheDatabase;
+import com.example.model.UserModel;
 import com.example.validation.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,10 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +24,7 @@ public class RegistrationController {
     private UserValidator userValidator;
 
     @Autowired
-    private MyApi api;
+    private ApiForInteractingWithTheDatabase api;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder) {
@@ -35,34 +32,33 @@ public class RegistrationController {
         if (target == null) {
             return;
         }
-        System.out.println("Target=" + target);
 
-        if (target.getClass() == RegistrationForm.class) {
+        if (target.getClass() == UserModel.class) {
             dataBinder.setValidator(userValidator);
         }
     }
 
-    @RequestMapping(value = "/viewRegisterUser", method = RequestMethod.GET)
+    @GetMapping(value = "/viewRegisterUser")
     public String showAccounts(Model model) {
-        List<RegistrationForm> list = api.readAll(RegistrationForm.class);
+        List<UserModel> list = api.readAll(UserModel.class);
         model.addAttribute("listOfUser", list);
         return "registeredPage";
     }
 
-    @RequestMapping(value = "/createUser", method = RequestMethod.GET)
+    @GetMapping(value = "/createUser")
     public String viewRegisterPage(Model model) {
-        RegistrationForm form = new RegistrationForm();
+        UserModel form = new UserModel();
         model.addAttribute("registrationForm", form);
         return "registrationPage";
     }
 
-    @RequestMapping(value = "/createUser", method = RequestMethod.POST)
+    @PostMapping(value = "/createUser")
     public String CreateUser(Model model,
-                             @ModelAttribute("registrationForm") @Validated RegistrationForm registrationForm,
+                             @ModelAttribute("registrationForm") @Validated UserModel registrationForm,
                              BindingResult result, HttpServletRequest request) {
 
         if (result.hasErrors()) {
-            List<RegistrationForm> username = api.readAll(RegistrationForm.class);
+            List<UserModel> username = api.readAll(UserModel.class);
             model.addAttribute("userInfo", username);
             return "registrationPage";
         }
@@ -75,7 +71,7 @@ public class RegistrationController {
                 System.out.println("Fail authentication");
             }
         } catch (Exception e) {
-            List<RegistrationForm> username = api.readAll(RegistrationForm.class);
+            List<UserModel> username = api.readAll(UserModel.class);
             model.addAttribute("userInfo", username);
             model.addAttribute("errorMessage", "Error: " + e.getMessage());
             return "registrationPage";
@@ -84,7 +80,7 @@ public class RegistrationController {
         return "redirect:/welcome";
     }
 
-    @RequestMapping(value = "/error", method = RequestMethod.GET)
+    @GetMapping(value = "/error")
     public String errorP() {
         return "error";
     }

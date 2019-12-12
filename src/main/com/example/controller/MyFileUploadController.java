@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.dao.NewUserDAO;
-import com.example.form.RegistrationForm;
+import com.example.model.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,21 +25,19 @@ public class MyFileUploadController {
     @Autowired
     private NewUserDAO newUserDAO;
 
-    // GET: Show upload form page.
     @RequestMapping(value = "/uploadOneFile", method = RequestMethod.GET)
     public String uploadOneFileHandler(Model model) {
 
-        RegistrationForm myUploadForm = new RegistrationForm();
+        UserModel myUploadForm = new UserModel();
         model.addAttribute("myUploadForm", myUploadForm);
 
         return "uploadOneFile";
     }
 
-    // POST: Do Upload
     @RequestMapping(value = "/uploadOneFile", method = RequestMethod.POST)
     public String uploadOneFileHandlerPOST(HttpServletRequest request, //
                                            Model model, //
-                                           @ModelAttribute("myUploadForm") RegistrationForm myUploadForm, Principal principal) {
+                                           @ModelAttribute("myUploadForm") UserModel myUploadForm, Principal principal) {
 
 
 
@@ -48,7 +46,7 @@ public class MyFileUploadController {
     }
 
     private String doUpload(HttpServletRequest request, Model model, //
-                            RegistrationForm myUploadForm, Principal principal, NewUserDAO newUserDAO) {
+                            UserModel myUploadForm, Principal principal, NewUserDAO newUserDAO) {
 
         //String uploadRootPath = request.getServletContext().getRealPath("usersAvatars");
         //String xxx = request.getServletContext().getServerInfo();

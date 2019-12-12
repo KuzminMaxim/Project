@@ -210,12 +210,12 @@
 
 <div class="login-popup">
     <div class="form-popup" id="popupForm">
-        <form th:action="@{/createEvent}" th:object="${eventForm}" method="POST" class="form-container">
+        <form th:action="@{/createEvent}" th:object="${eventModel}" method="POST" class="form-container">
             <h2>Please enter the name and description of event</h2>
 
             <input type="hidden" placeholder="Name of creator" th:name="nameOfEventCreator" th:value="*{#request.userPrincipal.name}"/>
 
-            <input type="hidden" th:object="${chatForm}" th:name="chatNameOfCreator" th:value="*{#request.userPrincipal.name}"/>
+            <input type="hidden" th:object="${chatModel}" th:name="chatNameOfCreator" th:value="*{#request.userPrincipal.name}"/>
 
             <input type="hidden" placeholder="latitude" th:field="*{latitude}" id="lat"/>
 
@@ -259,13 +259,7 @@
                     </td>
                 </tr>
             </table>
-            <input type="hidden" id="chatName" th:object="${chatForm}" th:field="*{chatName}">
-
-
-            <!--<span th:if="${errorMessage != null}" th:utext="${errorMessage}" class="error">..</span>
-            <output>
-                <span th:if="${#fields.hasErrors('nameOfEvent')}" th:errors="*{nameOfEvent}">..</span>
-            </output>-->
+            <input type="hidden" id="chatName" th:object="${chatModel}" th:field="*{chatName}">
 
         </form>
     </div>
@@ -273,13 +267,13 @@
 
 <div class="login-popup">
     <div class="form-popup" id="popupFormForOldMarkers">
-        <form th:action="@{/joinToEvent}" th:object="${eventForm}" method="POST" class="form-container">
+        <form th:action="@{/joinToEvent}" th:object="${eventModel}" method="POST" class="form-container">
             <h2>Do you want to join at this event?</h2>
             <input type="hidden" id="eventNamesOfCreator" placeholder="Name of creator" th:field="*{nameOfEventCreator}"/>
             <input type="hidden" id="nameOfOldEvent" placeholder="Name of event" th:field="*{nameOfEvent}">
-            <input type="hidden" th:object="${chatForm}" id="nameOfOldChat" th:field="*{chatName}">
+            <input type="hidden" th:object="${chatModel}" id="nameOfOldChat" th:field="*{chatName}">
             <input type="hidden" id="nameOfParticipant" placeholder="Name of you" th:name="eventParticipant" th:value="*{#request.userPrincipal.name}">
-            <input type="hidden" th:object="${chatForm}" id="nameOfChatParticipant" th:name="chatParticipant" th:value="*{#request.userPrincipal.name}">
+            <input type="hidden" th:object="${chatModel}" id="nameOfChatParticipant" th:name="chatParticipant" th:value="*{#request.userPrincipal.name}">
             <input type="hidden" id="descriptionOfThisEvent" placeholder="Description of event" th:field="*{descriptionOfEvent}">
             <button type="submit" class="btn">Join to event</button>
             <button type="button" class="btn cancel" onclick="closeOldForm()">Cancel</button>
@@ -313,7 +307,7 @@
 </table>
 </div>
 
-<!--<script type="text/javascript" th:src= "@{/static/js/OpenAllForm.js}"></script>-->
+<!--<script type="text/javascript" th:src= "@{/static/OpenAllForm.js}"></script>-->
 
 <script>
     function openForm() {

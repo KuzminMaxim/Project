@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan("com.example")
+/*@ComponentScan("com.example")*/
 public class WebConfiguration implements WebMvcConfigurer {
 
     /*private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {
@@ -52,11 +52,11 @@ public class WebConfiguration implements WebMvcConfigurer {
         return messageSource;
     }
 
-   /* @Override
+   /*@Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
-    }
-
+    }*/
+    /*
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
@@ -69,19 +69,15 @@ public class WebConfiguration implements WebMvcConfigurer {
 
 
 
-    /*public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
-        int cacheMaxAge = 5 * 60;
+/*    public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
         registry
                 .addResourceHandler("/js/**")
                 .addResourceLocations("/resources/static/js/");
         registry
-                .addResourceHandler("/resources/css/**")
-                .addResourceLocations("/resources/static/css/");
-        registry
-                .addResourceHandler("/images/**")
-                .addResourceLocations("/resources/static/images/");
+                .addResourceHandler("/css/**")
+                .addResourceLocations("/resources/static/css/**");
+
         WebMvcConfigurer.super.addResourceHandlers(registry);
 
     }*/

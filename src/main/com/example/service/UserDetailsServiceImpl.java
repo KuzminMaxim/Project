@@ -1,7 +1,7 @@
 package com.example.service;
 
-import com.example.api.MyApi;
-import com.example.form.RegistrationForm;
+import com.example.api.ApiForInteractingWithTheDatabase;
+import com.example.model.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,11 +18,11 @@ import java.util.List;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private MyApi api;
+    private ApiForInteractingWithTheDatabase api;
 
     @Override
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-        List<RegistrationForm> appUser = api.readAllWhereSomething(RegistrationForm.class, name, "user_name");
+        List<UserModel> appUser = api.readAllWhereSomething(UserModel.class, name, "user_name");
 
         if (appUser.get(0) == null) {
             System.out.println("User not found! " + name);

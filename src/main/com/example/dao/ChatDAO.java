@@ -1,6 +1,6 @@
 package com.example.dao;
 
-import com.example.form.ChatForm;
+import com.example.model.ChatModel;
 import com.example.mapper.ChatMapper;
 import com.example.model.ChatMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +28,14 @@ public class ChatDAO extends JdbcDaoSupport {
         return this.getJdbcTemplate().query(sql, params, mapper);
     }
 
-    public List<ChatForm> findAllParticipants(String name) throws NullPointerException{
+    public List<ChatModel> findAllParticipants(String name) throws NullPointerException{
         String sql = ChatMapper.FIND_ALL_PARTICIPANTS_FOR_THIS_EVENT;
         Object[] params = new Object[] {name};
         return this.getJdbcTemplate().query(sql, params, (resultSet, i) -> {
 
             String nameOfEvent = resultSet.getString("participants");
 
-            return new ChatForm(nameOfEvent);
+            return new ChatModel(nameOfEvent);
         });
     }
 }
