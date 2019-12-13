@@ -51,10 +51,18 @@ public class ChatController {
         String chatName = chatModel.getChatName();
         model.addAttribute("chatName", chatName);
 
-        List<ChatMessage> list = dao.findAllContentForThisChat(chatName);
+        String chatId = chatModel.getId();
+
+        if (chatId == null){
+            chatId = chatModel.getChatName()+chatModel.getChatDateOfCreation()+chatModel.getChatNameOfCreator();
+        }
+
+        model.addAttribute("chatId", chatId);
+
+        List<ChatMessage> list = dao.findAllContentForThisChat(chatId);
         model.addAttribute("infoAboutOldMessages", list);
 
-        List<ChatModel> participants = dao.findAllParticipants(chatName);
+        List<ChatModel> participants = dao.findAllParticipants(chatId);
         model.addAttribute("participants", participants);
 
 

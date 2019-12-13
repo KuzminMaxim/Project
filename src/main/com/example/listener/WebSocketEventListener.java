@@ -40,7 +40,11 @@ import java.util.Objects;
 
             String username = (String) headerAccessor.getSessionAttributes().get("username");
             String chatName = (String) headerAccessor.getSessionAttributes().get("chatName");
+            String chatId = (String) headerAccessor.getSessionAttributes().get("chatId");
+
             logger.info("chatName: " + chatName);
+            logger.info("chatId:" + chatId);
+
             Date date =new Date();
             System.out.println(date);
             if(username != null) {
@@ -50,8 +54,9 @@ import java.util.Objects;
                 chatMessage.setType(ChatMessage.MessageType.LEAVE);
                 chatMessage.setSender(username);
                 chatMessage.setChatName(chatName);
+                chatMessage.setChatId(chatId);
 
-                messagingTemplate.convertAndSend("/topic/"+ chatName +"Room", chatMessage);
+                messagingTemplate.convertAndSend("/topic/"+ chatId +"Room", chatMessage);
             }
         }
 

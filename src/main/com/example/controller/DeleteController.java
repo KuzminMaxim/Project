@@ -44,6 +44,7 @@ public class DeleteController {
         }
 
         if (eventModel.getNameOfEvent() != null){
+            eventModel.setId(eventModel.getNameOfEvent() + eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator());
             api.delete(eventModel);
             api.update(eventModel);
             logger.info("Event {} was cancelled", eventModel.getNameOfEvent());
@@ -58,6 +59,9 @@ public class DeleteController {
         logger.debug("Delete participant from event, method = POST");
 
         if (eventModel.getNameOfEvent() != null){
+            if (eventModel.getId() == null){
+                eventModel.setId(eventModel.getNameOfEvent() + eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator());
+            }
             api.deleteOne(eventModel);
             logger.info("User {} was deleting from event {}", eventModel.getEventParticipant(), eventModel.getNameOfEvent());
         }

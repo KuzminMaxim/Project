@@ -68,13 +68,14 @@ public class LoginController {
 
         String name = principal.getName();
 
-
         List<EventModel> eventsWhereCreator = api.readAllWhereSomething(EventModel.class, principal.getName(), "event_name_of_creator");
         if (!eventsWhereCreator.isEmpty()){
             for (EventModel eventModel : eventsWhereCreator) {
-                String x = eventModel.getNameOfEvent();
-                EventModel countOfParticipants = eventDAO.findCountOfParticipants(x);
+                String id = eventModel.getNameOfEvent() + eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator();
+                EventModel countOfParticipants = eventDAO.findCountOfParticipants(id);
+
                 eventModel.setCountOfParticipant(countOfParticipants.getCountOfParticipant());
+                eventModel.setId(eventModel.getNameOfEvent() + eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator());
             }
             model.addAttribute("eventsWhereCreator", eventsWhereCreator);
         }
@@ -82,9 +83,11 @@ public class LoginController {
         List<EventModel> eventsWhereParticipant = api.readAllWhereSomething(EventModel.class, principal.getName(), "event_participant");
         if (!eventsWhereParticipant.isEmpty()){
             for (EventModel eventModel : eventsWhereParticipant) {
-                String x = eventModel.getNameOfEvent();
-                EventModel countOfParticipants = eventDAO.findCountOfParticipants(x);
+                String id = eventModel.getNameOfEvent() + eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator();
+                EventModel countOfParticipants = eventDAO.findCountOfParticipants(id);
+
                 eventModel.setCountOfParticipant(countOfParticipants.getCountOfParticipant());
+                eventModel.setId(eventModel.getNameOfEvent() + eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator());
             }
             model.addAttribute("eventsWhereParticipant", eventsWhereParticipant);
         }
@@ -92,8 +95,7 @@ public class LoginController {
         List<EventModel> cancelledChats = eventDAO.findCancelledChats(name);
         if (!cancelledChats.isEmpty()){
             for (EventModel cancelledChat : cancelledChats) {
-                String x = cancelledChat.getNameOfEvent();
-                EventModel countOfParticipants = eventDAO.findCountOfParticipants(x);
+                EventModel countOfParticipants = eventDAO.findCountOfParticipants(cancelledChat.getId());
                 cancelledChat.setCountOfParticipant(countOfParticipants.getCountOfParticipant());
             }
             model.addAttribute("cancelledChats", cancelledChats);

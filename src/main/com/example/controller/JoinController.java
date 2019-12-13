@@ -25,6 +25,10 @@ public class JoinController {
             model.addAttribute("errorOfJoin", errorOfJoin);
             return "MyGoogleMap";
         } else {
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            System.out.println(eventModel.getNameOfEvent() + eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator());
+            eventModel.setId(eventModel.getNameOfEvent() + eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator());
+            chatModel.setId(eventModel.getNameOfEvent() + eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator());
             apiForInteractingWithTheDatabase.add(eventModel);
             apiForInteractingWithTheDatabase.add(chatModel);
         }

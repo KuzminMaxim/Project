@@ -27,14 +27,15 @@ public class NewEventDAO extends JdbcDaoSupport{
         return this.getJdbcTemplate().query(sql, params, (resultSet, i) -> {
 
             String nameOfEvent = resultSet.getString("chat_name");
+            String id = resultSet.getString("chat_id");
 
-            return new EventModel(nameOfEvent);
+            return new EventModel(id, nameOfEvent);
         });
     }
 
-    public EventModel findCountOfParticipants(String name) {
+    public EventModel findCountOfParticipants(String id) {
         String sql = EventMapperNewDB.FIND_COUNT_OF_PARTICIPANTS_FOR_THIS_EVENT;
-        Object[] params = new Object[] {name};
+        Object[] params = new Object[] {id};
 
         try {
             assert this.getJdbcTemplate() != null;

@@ -16,7 +16,9 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RequestMapping
@@ -57,10 +59,6 @@ public class EventController {
     public String createEvent(Model model, @RequestParam(required = false) String latitude) {
         logger.debug("Create event, method = GET");
 
-        logger.info("String on enter: {}", latitude);
-
-        System.out.println(apiForInteractingWithTheDatabase.readSomethingOne(UserModel.class, "admin@admin.com", "user_email").toString());
-
         EventModel form = new EventModel();
         ChatModel chatModel = new ChatModel();
         model.addAttribute("eventModel", form);
@@ -81,6 +79,7 @@ public class EventController {
             String[] eventDescription = new String[testList.toArray().length];
             String[] dates = new String[testList.toArray().length];
             String[] eventNameOfCreator = new String[testList.toArray().length];
+            String[] dateOfCreation = new String[testList.toArray().length];
             int n = 0;
             for (int i = 0; i < testList.toArray().length; i++, n++){
                 eventName[n] = testList.get(i).getNameOfEvent();
@@ -89,6 +88,7 @@ public class EventController {
                 eventDescription[n] = testList.get(i).getDescriptionOfEvent();
                 dates[n] = testList.get(i).getDate().replace("T", " ");
                 eventNameOfCreator[n] = testList.get(i).getNameOfEventCreator();
+                dateOfCreation[n] = testList.get(i).getEventDateOfCreation();
             }
             model.addAttribute("eventName", eventName);
             model.addAttribute("eventLat", eventLat);
@@ -96,6 +96,7 @@ public class EventController {
             model.addAttribute("eventDescript", eventDescription);
             model.addAttribute("eventDate", dates);
             model.addAttribute("eventNameOfCreator", eventNameOfCreator);
+            model.addAttribute("dateOfCreation", dateOfCreation);
 
         return "MyGoogleMap";
     }
@@ -103,6 +104,12 @@ public class EventController {
     @PostMapping(value = "/createEvent")
     public String createNewEvent(Model model, @ModelAttribute("eventForm") @Validated EventModel eventModel,
                              BindingResult result, ChatModel chatModel) {
+
+        Date date = new Date();
+        Timestamp ts = new Timestamp(date.getTime());
+        String dateOfCreation = ts.toString();
+
+        String newIdForEventAndChat = eventModel.getNameOfEvent() + dateOfCreation + eventModel.getNameOfEventCreator();
 
         logger.debug("Create event, method = POST");
         logger.info("result.hasErrors {}", result.hasErrors());
@@ -112,6 +119,11 @@ public class EventController {
             return "MyGoogleMap";
         }
         try {
+
+            eventModel.setId(newIdForEventAndChat);
+            eventModel.setEventDateOfCreation(dateOfCreation);
+            chatModel.setId(newIdForEventAndChat);
+            chatModel.setChatDateOfCreation(dateOfCreation);
 
             apiForInteractingWithTheDatabase.save(eventModel);
             apiForInteractingWithTheDatabase.save(chatModel);

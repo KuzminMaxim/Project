@@ -20,17 +20,17 @@ public class ChatDAO extends JdbcDaoSupport {
         this.setDataSource(dataSource);
     }
 
-    public List<ChatMessage> findAllContentForThisChat(String name) throws NullPointerException{
+    public List<ChatMessage> findAllContentForThisChat(String chatId) throws NullPointerException{
         String sql = ChatMapper.FIND_ALL_CONTENT_FOR_THIS_CHAT;
-        Object[] params = new Object[] {name};
+        Object[] params = new Object[] {chatId};
         ChatMapper mapper = new ChatMapper();
         assert this.getJdbcTemplate() != null;
         return this.getJdbcTemplate().query(sql, params, mapper);
     }
 
-    public List<ChatModel> findAllParticipants(String name) throws NullPointerException{
+    public List<ChatModel> findAllParticipants(String chatId) throws NullPointerException{
         String sql = ChatMapper.FIND_ALL_PARTICIPANTS_FOR_THIS_EVENT;
-        Object[] params = new Object[] {name};
+        Object[] params = new Object[] {chatId};
         return this.getJdbcTemplate().query(sql, params, (resultSet, i) -> {
 
             String nameOfEvent = resultSet.getString("participants");

@@ -21,6 +21,9 @@ public class UserModel {
     @Attribute(id = "user_avatar")
     private MultipartFile[] avatar;
 
+    @Attribute(id = "user_id")
+    private String id;
+
     @Attribute(id = "user_email")
     private String email;
 
@@ -44,6 +47,14 @@ public class UserModel {
         //this.id = id;
         this.name = name;
         this.password = password;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getRole() {

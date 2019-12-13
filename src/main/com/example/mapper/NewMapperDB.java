@@ -5,16 +5,6 @@ public class NewMapperDB {
     public static final String CREATE_OBJECT_SQL ="insert into object(object_type_id, name) values\n" +
             "((select object_types.id from object_types where object_types.Object_Type = ?),?);";
 
-    public static final String INSERT_DATE_OF_CREATION_SQL = "insert into params(object_id, attribute_id, value_text)\n" +
-            "values ((select id from object order by id desc\n" +
-            "limit 1),\n" +
-            "(select attributes.id from attributes where attributes.Attribute = ?), CURDATE());";
-
-    public static final String INSERT_DATE_OF_CHAT_CREATION_SQL = "insert into params(object_id, attribute_id, value_text)\n" +
-            "values ((select id from object order by id desc\n" +
-            "limit 1),\n" +
-            "(select attributes.id from attributes where attributes.Attribute = 'chat_date_of_creation'), CURDATE());";
-
     public static final String INSERT_SQL = "insert into params(object_id, attribute_id, value_text)\n" +
             "values ((select id from object order by id desc\n" +
             "limit 1),\n" +
@@ -64,7 +54,7 @@ public class NewMapperDB {
             "from params\n" +
             "join object on params.object_id = object.id\n" +
             "join attributes on attributes.id = params.attribute_id\n" +
-            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_name')\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'event_id')\n" +
             "and params.value_text = ?\n" +
             "and object.id IN\n" +
             "(select distinct params.object_id from params)) as a,\n" +
@@ -88,7 +78,7 @@ public class NewMapperDB {
             "from params\n" +
             "join object on params.object_id = object.id\n" +
             "join attributes on attributes.id = params.attribute_id\n" +
-            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'chat_name')\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'chat_id')\n" +
             "and params.value_text = ?\n" +
             "and object.id IN\n" +
             "(select distinct params.object_id from params)) as a,\n" +
@@ -112,7 +102,7 @@ public class NewMapperDB {
             "from params\n" +
             "join object on params.object_id = object.id\n" +
             "join attributes on attributes.id = params.attribute_id\n" +
-            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'chat_name')\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'chat_id')\n" +
             "and params.value_text = ?\n" +
             "and object.id IN\n" +
             "(select distinct params.object_id from params)) as a,\n" +

@@ -24,12 +24,5 @@ public class EventValidator implements Validator {
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "nameOfEvent", "NotEmpty.eventForm.nameOfEvent");
 
-        if (!errors.hasFieldErrors("nameOfEvent")) {
-            EventModel dbUser = api.readSomethingOne(EventModel.class, eventModel.getNameOfEvent(), "event_name");
-            if (dbUser != null) {
-                errors.rejectValue("nameOfEvent", "Duplicate.eventForm.nameOfEvent");
-            }
-        }
-
     }
 }

@@ -8,6 +8,9 @@ public class ChatMessage {
 
     private MessageType type;
 
+    @Attribute(id = "message_chat_id")
+    private String chatId;
+
     @Attribute(id = "message_chat_name")
     private String chatName;
 
@@ -22,8 +25,7 @@ public class ChatMessage {
 
     public ChatMessage(){}
 
-    public ChatMessage(String messageChatName, String messageNameOfSender, String messageContent, String currentDate) {
-        this.chatName = messageChatName;
+    public ChatMessage(String messageNameOfSender, String messageContent, String currentDate) {
         this.sender = messageNameOfSender;
         this.content = messageContent;
         this.currentDate = currentDate;
@@ -31,6 +33,14 @@ public class ChatMessage {
 
     public enum MessageType {
         CHAT, JOIN, LEAVE, DOWNLOAD
+    }
+
+    public String getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
     }
 
     public String getChatName() {

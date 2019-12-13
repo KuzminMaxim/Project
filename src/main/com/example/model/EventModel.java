@@ -17,6 +17,9 @@ public class EventModel {
     @Attribute(id = "event_participant")
     private String eventParticipant;
 
+    @Attribute(id = "event_id")
+    private String id;
+
     @Attribute(id = "event_name_of_creator")
     private String nameOfEventCreator;
 
@@ -34,25 +37,12 @@ public class EventModel {
 
     public EventModel(){}
 
-    public EventModel(String nameOfEvent, String nameOfEventCreator) {
-        this.nameOfEvent = nameOfEvent;
-        this.nameOfEventCreator = nameOfEventCreator;
-    }
-
-    public EventModel(String nameOfEvent, String nameOfEventCreator, String descriptionOfEvent, String latitude, String longitude, String date) {
-        this.nameOfEvent = nameOfEvent;
-        this.nameOfEventCreator = nameOfEventCreator;
-        this.descriptionOfEvent = descriptionOfEvent;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.date = date;
-    }
-
     public EventModel(int countOfParticipant) {
         this.countOfParticipant = countOfParticipant;
     }
 
-    public EventModel(String nameOfEvent) {
+    public EventModel(String id, String nameOfEvent) {
+        this.id = id;
         this.nameOfEvent = nameOfEvent;
     }
 
@@ -62,6 +52,14 @@ public class EventModel {
 
     public void setCountOfParticipant(int countOfParticipant) {
         this.countOfParticipant = countOfParticipant;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getEventDateOfCreation() {

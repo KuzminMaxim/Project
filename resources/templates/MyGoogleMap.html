@@ -120,7 +120,8 @@
             var descript = document.getElementsByClassName("descript")[x].innerHTML;
             var dates = document.getElementsByClassName("eventDates")[x].innerHTML;
             var eventNamesOfCreator = document.getElementsByClassName("eventNamesOfCreator")[x].innerHTML;
-            locations.push([names, lat, lng, descript, dates, eventNamesOfCreator]);
+            var eventDatesOfCreation = document.getElementsByClassName("eventDatesOfCreation")[x].innerHTML;
+            locations.push([names, lat, lng, descript, dates, eventNamesOfCreator, eventDatesOfCreation]);
         }
 
 
@@ -142,7 +143,8 @@
             });
             google.maps.event.addListener(oldMarker, 'click', (function (oldMarker, i) {
                 return function () {
-                    infoWindow.setContent("Description: " + locations[i][3] + '<br>' + "Date: " + locations[i][4]);
+                    infoWindow.setContent("Description: " + locations[i][3] + '<br>' + "Date: " + locations[i][4]
+                        + '<br>' + "Date of creation: " + locations[i][6]);
                     infoWindow.open(map, oldMarker);
                 }
             })(oldMarker, i));
@@ -152,6 +154,7 @@
                     document.getElementById('nameOfOldChat').value = locations[i][0];
                     document.getElementById('eventNamesOfCreator').value = locations[i][5];
                     document.getElementById('descriptionOfThisEvent').value = locations[i][3];
+                    document.getElementById('dateOfCreation').value = locations[i][6];
                     openOldForm();
                 }
             })(oldMarker, i));
@@ -275,6 +278,7 @@
             <input type="hidden" id="nameOfParticipant" placeholder="Name of you" th:name="eventParticipant" th:value="*{#request.userPrincipal.name}">
             <input type="hidden" th:object="${chatModel}" id="nameOfChatParticipant" th:name="chatParticipant" th:value="*{#request.userPrincipal.name}">
             <input type="hidden" id="descriptionOfThisEvent" placeholder="Description of event" th:field="*{descriptionOfEvent}">
+            <input type="hidden" id="dateOfCreation" th:name="eventDateOfCreation" th:value="*{eventDateOfCreation}">
             <button type="submit" class="btn">Join to event</button>
             <button type="button" class="btn cancel" onclick="closeOldForm()">Cancel</button>
         </form>
@@ -286,7 +290,6 @@
 <div id="allMarkers" hidden>
 <table>
     <tr th:each="eventName : ${eventName}">
-
         <td  th:utext="${eventName}" class="names">..</td>
     </tr>
     <tr th:each="eventLat : ${eventLat}">
@@ -303,6 +306,9 @@
     </tr>
     <tr th:each="eventNameOfCreator : ${eventNameOfCreator}">
         <td th:utext="${eventNameOfCreator}" class="eventNamesOfCreator">..</td>
+    </tr>
+    <tr th:each="dateOfCreation : ${dateOfCreation}">
+        <td th:utext="${dateOfCreation}" class="eventDatesOfCreation">..</td>
     </tr>
 </table>
 </div>

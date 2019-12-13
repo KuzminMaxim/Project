@@ -231,6 +231,7 @@
             <a th:href="@{/userInfo}"> Logout from chat</a>
         </div>
         <h3><span id="chatName" th:utext="${chatName}">...</span></h3>
+        <h6><span id="chatId" th:utext="${chatId}">...</span> </h6>
     </div>
 
     <hr/>
@@ -256,6 +257,7 @@
 <script>
     'use strict';
 
+    document.getElementById('chatId').style.display='none';
 
     var messageForm = document.querySelector('#messageForm');
     var messageInput = document.querySelector('#message');
@@ -268,15 +270,17 @@
     var stompClient = null;
     var username = null;
     var chatName = null;
+    var chatId = null;
     //var usersInOnlineList = null;
 
 
     function connect() {
         username = document.querySelector('#username').innerText.trim();
         chatName = document.getElementById('chatName').innerText;
+        chatId = document.getElementById('chatId').innerText;
         //usersInOnlineList = document.querySelector('#usersInOnlineList').innerText.trim();
 
-        var socket = new SockJS('/ws/'+chatName);
+        var socket = new SockJS('/ws/'+chatId);
         stompClient = Stomp.over(socket);
 
         stompClient.connect({}, onConnected, onError);
@@ -288,12 +292,12 @@
 
     function onConnected() {
         // Subscribe to the Public Topic
-        stompClient.subscribe('/topic/'+chatName+'Room', onMessageReceived);
+        stompClient.subscribe('/topic/'+chatId+'Room', onMessageReceived);
 
         // Tell your username to the server
-        stompClient.send("/app/"+ chatName +".addUser",
+        stompClient.send("/app/"+ chatId +".addUser",
             {},
-            JSON.stringify({sender: username, chatName:chatName, type: 'JOIN'})
+            JSON.stringify({sender: username, chatName:chatName, chatId:chatId, type: 'JOIN'})
         );
 
         connectingElement.classList.add('hidden');
@@ -315,10 +319,11 @@
                 content: messageInput.value,
                 type: 'CHAT',
                 chatName: chatName,
+                chatId: chatId,
                 currentDate: document.createTextNode(' ' + now.getFullYear()+'.'+now.getMonth()+'.' + now.getDate() + ' '
                     + now.getHours() + ':' + now.getMinutes() + ' ').textContent
             };
-            stompClient.send("/app/"+ chatName +".sendMessage", {}, JSON.stringify(chatMessage));
+            stompClient.send("/app/"+ chatId +".sendMessage", {}, JSON.stringify(chatMessage));
             messageInput.value = '';
         }
         event.preventDefault();
@@ -328,8 +333,9 @@
         var sendUser = {
             content: sender,
             chatName: chatName,
+            chatId: chatId
         };
-        stompClient.send("/app/"+ chatName +".addInOnline", {}, JSON.stringify(sendUser));
+        stompClient.send("/app/"+ chatId +".addInOnline", {}, JSON.stringify(sendUser));
         return sender;
     }
 

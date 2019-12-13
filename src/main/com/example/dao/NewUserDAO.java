@@ -23,8 +23,6 @@ public class NewUserDAO extends JdbcDaoSupport{
 
     public void setAvatar(String link, String loginedUser) {
         try {
-            System.out.println("Name in setAvatar: " + loginedUser);
-            System.out.println("link in setAvatar: " + link);
             assert getJdbcTemplate() != null;
             getJdbcTemplate().update(UserMapperNewDB.SET_AVATAR_SQL, loginedUser, link);
         } catch (NullPointerException npe) {

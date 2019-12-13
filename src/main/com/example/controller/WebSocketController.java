@@ -24,8 +24,8 @@ public class WebSocketController {
     private static final Logger logger = LoggerFactory.getLogger(WebSocketController.class);
     public static List<String> usersOnlineList = new ArrayList<>();
 
-    @MessageMapping("/{chatName}.sendMessage")
-    @SendTo("/topic/{chatName}Room")
+    @MessageMapping("/{chatId}.sendMessage")
+    @SendTo("/topic/{chatId}Room")
     public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
 
         api.save(chatMessage);
@@ -33,21 +33,23 @@ public class WebSocketController {
         return chatMessage;
     }
 
-    @MessageMapping("/{chatName}.addUser")
-    @SendTo("/topic/{chatName}Room")
+    @MessageMapping("/{chatId}.addUser")
+    @SendTo("/topic/{chatId}Room")
     public ChatMessage addUser(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
 
         Objects.requireNonNull(headerAccessor.getSessionAttributes()).put("username", chatMessage.getSender());
         headerAccessor.getSessionAttributes().put("chatName", chatMessage.getChatName());
-        logger.info("User {} has been added in chat {}" , chatMessage.getSender() , chatMessage.getChatName());
+        headerAccessor.getSessionAttributes().put("chatId", chatMessage.getChatId());
+
+        logger.info("User {} has been added in chat {}, chatId: {}" , chatMessage.getSender() , chatMessage.getChatName(), chatMessage.getChatId());
         usersOnlineList.add(chatMessage.getSender());
         headerAccessor.getSessionAttributes().put("usersInOnlineList", usersOnlineList);
 
         return chatMessage;
     }
 
-    @MessageMapping("/{chatName}.addInOnline")
-    @SendTo("/topic/{chatName}Room")
+    @MessageMapping("/{chatId}.addInOnline")
+    @SendTo("/topic/{chatId}Room")
     public ChatMessage addUserInOnlineList(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
 
         return chatMessage;

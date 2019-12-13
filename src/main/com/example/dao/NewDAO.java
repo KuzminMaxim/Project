@@ -32,7 +32,7 @@ public class NewDAO extends JdbcDaoSupport {
             assert getJdbcTemplate() != null;
 
             getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_SQL, objectType, objectType);
-            getJdbcTemplate().update(NewMapperDB.INSERT_DATE_OF_CREATION_SQL, objectType + "_date_of_creation");
+            /*getJdbcTemplate().update(NewMapperDB.INSERT_DATE_OF_CREATION_SQL, objectType + "_date_of_creation");*/
 
             for ( Object entry : attributesValues.keySet()) {
                 String key = (String) entry;
@@ -61,19 +61,11 @@ public class NewDAO extends JdbcDaoSupport {
                     }
                 }
             } else if (objectType.equals("event")){
-                Date date = new Date();
-                String currentTime = date.toString();
                 for ( Object entry : attributesValues.keySet()) {
                     String key = (String) entry;
-                    if (key.equals("event_name")){
+                    if (key.equals("event_id")){
                         getJdbcTemplate().update(NewMapperDB.SET_SOMETHING_SQL,
-                                attributesValues.get("event_name"), "cancelled", "chat_status");
-                        getJdbcTemplate().update(NewMapperDB.SET_SOMETHING_SQL,
-                                attributesValues.get("event_name"),
-                                (attributesValues.get("event_name") + " was cancelled at " + currentTime), "chat_name");
-                        getJdbcTemplate().update(NewMapperDB.SET_SOMETHING_SQL,
-                                attributesValues.get("event_name"),
-                                (attributesValues.get("event_name") + " was cancelled at " + currentTime), "message_chat_name");
+                                attributesValues.get("event_id"), "cancelled", "chat_status");
                     }
                 }
             }
@@ -89,14 +81,14 @@ public class NewDAO extends JdbcDaoSupport {
                     String key = (String) entry;
                     if (key.equals("event_participant")){
                         getJdbcTemplate().update(NewMapperDB.ADD_SOMETHING_SQL,
-                                attributesValues.get("event_name"), "event_name", key, attributesValues.get(key));
+                                attributesValues.get("event_id"), "event_id", key, attributesValues.get(key));
                         getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_REFERENCES_FOR_NEW_ELEMENTS,
-                                "event_name", attributesValues.get("event_name"), "event_participant", attributesValues.get("event_participant"));
+                                "event_id", attributesValues.get("event_id"), "event_participant", attributesValues.get("event_participant"));
                     } else if (key.equals("chat_participant")){
                         getJdbcTemplate().update(NewMapperDB.ADD_SOMETHING_SQL,
-                                attributesValues.get("chat_name"), "chat_name", key, attributesValues.get(key));
+                                attributesValues.get("chat_id"), "chat_id", key, attributesValues.get(key));
                         getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_REFERENCES_FOR_NEW_ELEMENTS,
-                                "chat_name", attributesValues.get("chat_name"), "chat_participant", attributesValues.get("chat_participant"));
+                                "chat_id", attributesValues.get("chat_id"), "chat_participant", attributesValues.get("chat_participant"));
                     }
                 }
         } catch (NullPointerException npe){
@@ -120,12 +112,11 @@ public class NewDAO extends JdbcDaoSupport {
                         EventModel eventModel = findUniqueRecordInDatabaseWhereThisNameIsThisAttributeOfParticularObjectRelatedToThisClass
                                 (EventModel.class, (String) attributesValues.get(key),
                                 "event_name_of_creator");
-                        System.out.println("eventModel.getNameOfEventCreator() in DELETE:" + eventModel.getNameOfEventCreator());
 
                         getJdbcTemplate().update(NewMapperDB.DELETE_SOMETHING_SQL,
                                 "event_name_of_creator", eventModel.getNameOfEventCreator());
-                    } else if (key.equals("user_name")
-                            || key.equals("event_name")){
+                    } else if (key.equals("user_id")
+                            || key.equals("event_id")){
                         assert getJdbcTemplate() != null;
                         getJdbcTemplate().update(NewMapperDB.DELETE_SOMETHING_SQL,
                                 key, attributesValues.get(key));
@@ -143,11 +134,11 @@ public class NewDAO extends JdbcDaoSupport {
                 if (key.equals("event_participant")){
                     assert getJdbcTemplate() != null;
                     getJdbcTemplate().update(NewMapperDB.DELETE_PARTICIPANT_FROM_EVENT,
-                            attributesValues.get("event_name"), attributesValues.get(key), attributesValues.get(key));
+                            attributesValues.get("event_id"), attributesValues.get(key), attributesValues.get(key));
                     getJdbcTemplate().update(NewMapperDB.DELETE_PARTICIPANT_FROM_CHAT,
-                            attributesValues.get("event_name"), attributesValues.get(key), attributesValues.get(key));
+                            attributesValues.get("event_id"), attributesValues.get(key), attributesValues.get(key));
                     getJdbcTemplate().update(NewMapperDB.DELETE_CREATOR_FROM_CHAT,
-                            attributesValues.get("event_name"), attributesValues.get(key), attributesValues.get(key));
+                            attributesValues.get("event_id"), attributesValues.get(key), attributesValues.get(key));
                 }
             }
         } catch (NullPointerException npe){
@@ -176,10 +167,11 @@ public class NewDAO extends JdbcDaoSupport {
                 } catch (NullPointerException ignored){ continue; }
                     annotation[i] = clazz.getDeclaredField(names[i]).getAnnotation(Attribute.class).id();
 
+
                 if (names[i].equals("chatParticipant")
                         || names[i].equals("eventParticipant")
-                            || names[i].equals("avatar")) {
-                    //System.out.println(names[i] + "!");
+                            || names[i].equals("avatar")
+                        || names[i].equals("id")) { //We do not select id, as this greatly slows down the speed of the request.
                     break exit;
                 } else {
                     queryForResultSet.append(annotation[i]).append(".value_text").append(" as ")
@@ -208,9 +200,9 @@ public class NewDAO extends JdbcDaoSupport {
 
                 if (names[i].equals("chatParticipant")
                         || names[i].equals("eventParticipant")
-                            || names[i].equals("avatar")){
+                            || names[i].equals("avatar")
+                        || names[i].equals("id")){//We do not select id, as this greatly slows down the speed of the request.
                     break exit;
-                    //System.out.println(names[i] + "!");
                 } else {
                     queryForResultSet.append("(select distinct params.value_text, params.object_id " +
                             "from params " +
@@ -245,9 +237,9 @@ public class NewDAO extends JdbcDaoSupport {
 
                 if (names[i].equals("chatParticipant")
                         || names[i].equals("eventParticipant")
-                            || names[i].equals("avatar")){
+                            || names[i].equals("avatar")
+                        || names[i].equals("id")){ //We do not select id, as this greatly slows down the speed of the request.
                     break exit;
-                    //System.out.println(names[i] + "!");
                 } else {
                     queryForResultSet.append(annotation[count]).append(".object_id").append(" = ")
                             .append(annotation[i]).append(".object_id");
@@ -263,7 +255,7 @@ public class NewDAO extends JdbcDaoSupport {
             }
         }
 
-        //System.out.println("queryForResultSet: " + queryForResultSet);
+        System.out.println("queryForResultSet: " + queryForResultSet);
 
         try (Connection con = DataSourceUtils.getConnection(Objects.requireNonNull(getDataSource()));
              Statement statement = con.createStatement()) {
@@ -284,10 +276,6 @@ public class NewDAO extends JdbcDaoSupport {
             e.printStackTrace();
         }
 
-
-
-
-        //System.out.println("listSize: " + list.size());
         return list;
     }
 
@@ -323,10 +311,10 @@ public class NewDAO extends JdbcDaoSupport {
 
                 if ((names[i].equals("avatar") && !names[i].equals(fieldOfName))
                         || (names[i].equals("eventParticipant") && !names[i].equals(fieldOfName))
-                        || (names[i].equals("chatParticipant") && !names[i].equals(fieldOfName))){
+                        || (names[i].equals("chatParticipant") && !names[i].equals(fieldOfName))
+                        || names[i].equals("id")){//We do not select id, as this greatly slows down the speed of the request.
                     break exit;
-                    //System.out.println(names[i] + "!");
-                }else {
+                } else {
                     queryForResultSet.append(annotation[i]).append(".value_text").append(" as ").append(fields[i].getName());
 
                     if (i < fields.length - 1){
@@ -355,16 +343,16 @@ public class NewDAO extends JdbcDaoSupport {
 
                     if ((names[i].equals("avatar") && !names[i].equals(fieldOfName))
                         || (names[i].equals("eventParticipant") && !names[i].equals(fieldOfName))
-                            || (names[i].equals("chatParticipant") && !names[i].equals(fieldOfName))){
+                            || (names[i].equals("chatParticipant") && !names[i].equals(fieldOfName))
+                            || names[i].equals("id")){//We do not select id, as this greatly slows down the speed of the request.
                         break exit;
-                        //System.out.println(names[i] + "!");
                     } else {
                     if (!annotation[i].equals(attribute)){
                             queryForResultSet.append("(select distinct params").append(".value_text")
                                     .append(", params.object_id " +
                                 "from params " +
-                                "join object on params.object_id = object.id " +
-                                "join attributes on attributes.id = params.attribute_id " +
+                                "inner join object on params.object_id = object.id " +
+                                "inner join attributes on attributes.id = params.attribute_id " +
                                 "where attributes.id = (select attributes.id from attributes where attributes.Attribute = ")
                                 .append("'")
                                 .append(annotation[i]).append("'").append(") and object.id IN " +
@@ -372,8 +360,8 @@ public class NewDAO extends JdbcDaoSupport {
                     } else {
                         queryForResultSet.append("(select distinct params.value_text, params.object_id " +
                                 "from params " +
-                                "join object on params.object_id = object.id " +
-                                "join attributes on params.attribute_id = attributes.id " +
+                                "inner join object on params.object_id = object.id " +
+                                "inner join attributes on params.attribute_id = attributes.id " +
                                 "where attributes.id = (select attributes.id from attributes where attributes.Attribute = '")
                                 .append(attribute).append("' and object.id IN " +
                                 "(select distinct params.object_id from params) " +
@@ -408,9 +396,9 @@ public class NewDAO extends JdbcDaoSupport {
 
                 if ((names[i].equals("avatar") && !names[i].equals(fieldOfName))
                         || (names[i].equals("eventParticipant") && !names[i].equals(fieldOfName))
-                        || (names[i].equals("chatParticipant") && !names[i].equals(fieldOfName))){
+                        || (names[i].equals("chatParticipant") && !names[i].equals(fieldOfName))
+                        || names[i].equals("id")){//We do not select id, as this greatly slows down the speed of the request.
                     break exit;
-                    //System.out.println(names[i] + "!");
                 } else {
                     queryForResultSet.append(annotation[count]).append(".object_id").append(" = ")
                             .append(annotation[i]).append(".object_id");
@@ -426,7 +414,6 @@ public class NewDAO extends JdbcDaoSupport {
             }
         }
 
-        //System.out.println("queryForResultSet: " + queryForResultSet);
         try (Connection con = DataSourceUtils.getConnection(Objects.requireNonNull(getDataSource()));
              Statement statement = con.createStatement()) {
 
@@ -445,8 +432,6 @@ public class NewDAO extends JdbcDaoSupport {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        //System.out.println("listSize: " + list.size());
 
         return list;
     }
@@ -488,7 +473,6 @@ public class NewDAO extends JdbcDaoSupport {
             } catch (NullPointerException | NoSuchFieldException ignored){}
 
         }
-        //System.out.println(queryForResultSet);
 
         try (Connection con = DataSourceUtils.getConnection(Objects.requireNonNull(getDataSource()));
              Statement statement = con.createStatement()) {

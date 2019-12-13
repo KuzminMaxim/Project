@@ -6,8 +6,14 @@ import com.example.api.ObjectType;
 @ObjectType(id = "chat")
 public class ChatModel {
 
+    @Attribute(id = "chat_date_of_creation")
+    private String chatDateOfCreation;
+
     @Attribute(id = "chat_name")
     private String chatName;
+
+    @Attribute(id = "chat_id")
+    private  String id;
 
     @Attribute(id = "chat_name_of_creator")
     private String chatNameOfCreator;
@@ -23,12 +29,26 @@ public class ChatModel {
         this.chatNameOfCreator = chatNameOfCreator;
     }
 
-    public ChatModel() {
-
-    }
+    public ChatModel() {}
 
     public ChatModel(String chatParticipant){
         this.chatParticipant = chatParticipant;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getChatDateOfCreation() {
+        return chatDateOfCreation;
+    }
+
+    public void setChatDateOfCreation(String chatDateOfCreation) {
+        this.chatDateOfCreation = chatDateOfCreation;
     }
 
     public String getChatName() {
