@@ -3,10 +3,14 @@ package com.example.model;
 import com.example.api.Attribute;
 import com.example.api.ObjectType;
 
+import java.util.Collection;
+
 @ObjectType(id = "messages")
 public class ChatMessage {
 
     private MessageType type;
+
+    private String[] usersOnline;
 
     @Attribute(id = "message_chat_id")
     private String chatId;
@@ -32,7 +36,7 @@ public class ChatMessage {
     }
 
     public enum MessageType {
-        CHAT, JOIN, LEAVE, DOWNLOAD
+        CHAT, JOIN, LEAVE
     }
 
     public String getChatId() {
@@ -57,6 +61,14 @@ public class ChatMessage {
 
     public void setType(MessageType type) {
         this.type = type;
+    }
+
+    public String[] getUsersOnline() {
+        return usersOnline;
+    }
+
+    public void setUsersOnline(String[] usersOnline) {
+        this.usersOnline = usersOnline;
     }
 
     public String getContent() {

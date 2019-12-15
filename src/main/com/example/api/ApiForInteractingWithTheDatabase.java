@@ -87,7 +87,7 @@ public class ApiForInteractingWithTheDatabase {
     }
 
     public <T> List <T> readAllWhereSomething(Class clazz, String name, String attribute) {
-        return dao.getAllRecordsFromTheDatabaseRelatedToThisClassObjectTypeAndThisNameIsAttribute(clazz, name, attribute);
+        return dao.getAllRecordsRelatedToThisClassObjectTypeAndThisNameIsAttribute(clazz, name, attribute);
     }
 
     public <T> T readSomethingOne(Class clazz, String name, String attribute){

@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.api.ApiForInteractingWithTheDatabase;
 import com.example.dao.ChatDAO;
 import com.example.model.ChatMessage;
 import com.example.model.ChatModel;
@@ -22,9 +23,15 @@ public class ChatController {
     @Autowired
     ChatDAO dao;
 
+    @Autowired
+    ApiForInteractingWithTheDatabase api;
+
     private static final Logger logger = LoggerFactory.getLogger(ChatController.class);
 
-    @GetMapping(value = "/openChat")
+    private static final String CHAT_ENDPOINT = "/openChat";
+    private static final String CHAT_ACCESS_ENDPOINT = "/chatChat";
+
+    @GetMapping(value = CHAT_ENDPOINT)
     public String viewMyChat(Model model, ChatModel chatModel){
         logger.debug("openChat");
 
@@ -33,7 +40,7 @@ public class ChatController {
         return "userInfoPage";
     }
 
-    @PostMapping(value = "/openChat")
+    @PostMapping(value = CHAT_ENDPOINT)
     public String openChat(Model model, Principal principal, ChatModel chatModel){
 
         return index(model, principal, chatModel);
@@ -41,7 +48,7 @@ public class ChatController {
 
 
 
-    @RequestMapping("/chatChat")
+    @RequestMapping(CHAT_ACCESS_ENDPOINT)
     public String index(Model model, Principal principal, ChatModel chatModel) {
 
 
@@ -55,6 +62,17 @@ public class ChatController {
 
         if (chatId == null){
             chatId = chatModel.getChatName()+chatModel.getChatDateOfCreation()+chatModel.getChatNameOfCreator();
+        }
+
+        List<ChatModel> check = api.readAllWhereSomething(ChatModel.class, chatId, "chat_id");
+        if (check.size() != 0){
+            for (ChatModel value : check) {
+                if (!value.getId().equals(chatId)) {
+                    return "redirect:/userInfo";
+                }
+            }
+        } else {
+            return "redirect:/userInfo";
         }
 
         model.addAttribute("chatId", chatId);

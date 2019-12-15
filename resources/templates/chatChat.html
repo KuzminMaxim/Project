@@ -14,12 +14,11 @@
             overflow: hidden;
         }
 
-        #login-page {
-            text-align: center;
-        }
-
         .nickname  {
             color:blue;margin-right:20px;
+        }
+        .nicknameOfParticipantOnline {
+            color: #112dff;margin-right:20px;
         }
         .currentDate  {
             margin-right:20px;
@@ -31,25 +30,6 @@
         .user-container {
             float: right;
             margin-right:5px;
-        }
-
-        #login-container {
-            background: #f4f6f6 ;
-            border: 2px solid #ccc;
-            width: 100%;
-            max-width: 500px;
-            display: inline-block;
-            margin-top: 42px;
-            vertical-align: middle;
-            position: relative;
-            padding: 35px 55px 35px;
-            min-height: 250px;
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            margin: 0 auto;
-            margin-top: -160px;
         }
 
 
@@ -166,37 +146,6 @@
         #listOfParticipants-container ul li p {
             margin: 0;
         }
-
-        #listOfOnline-container {
-            border: 2px solid #d5dbdb;
-            background-color:  #d5dbdb;
-            width: 20%;
-            float: right;
-            margin-top: 40px;
-            height: calc(100% - 60px);
-            max-height: 1000px;
-        }
-
-        #listOfOnline-container ul {
-            list-style-type: none;
-            background-color: #fff;
-            margin: 0;
-            overflow: auto;
-            overflow-y: scroll;
-            padding: 0 20px 0px 20px;
-            height: calc(100% - 150px);
-        }
-
-        #listOfOnline-container ul li {
-            line-height: 1.5rem;
-            padding: 10px 20px;
-            margin: 0;
-            border-bottom: 1px solid #f4f4f4;
-        }
-
-        #listOfOnline-container ul li p {
-            margin: 0;
-        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
     <script  src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
@@ -208,27 +157,18 @@
     </div>
 
     <hr/>
-    <ul id="participantArea">
+    <ul id="participantArea" class="participantAreaClass">
         <li th:each="participants : ${participants}">
-            <span id="nameOfParticipant" th:utext="${participants.chatParticipant}">...</span>
+            <span id="nameOfParticipant" class="nameOfParticipant" th:utext="${participants.chatParticipant}">...</span>
         </li>
     </ul>
 </div>
-
-<div id="listOfOnline-container">
-    <div class="listOfOnline-header">
-        <h3>List of online</h3>
-    </div>
-    <hr/>
-    <ul id="participantOnlineArea"></ul>
-</div>
-
 
 <div id="chat-container">
     <div class="chat-header">
         <div class="user-container">
             <span id="username" th:utext="${username}">...</span>
-            <a th:href="@{/userInfo}"> Logout from chat</a>
+            <a th:href="@{/userInfo}">Return to your personal account</a>
         </div>
         <h3><span id="chatName" th:utext="${chatName}">...</span></h3>
         <h6><span id="chatId" th:utext="${chatId}">...</span> </h6>
@@ -237,11 +177,13 @@
     <hr/>
 
     <div id="connecting">Connecting...</div>
+
     <ul id="messageArea">
         <li th:each="infoAboutOldMessages : ${infoAboutOldMessages}">
             <strong><span id="nickname" th:utext="${infoAboutOldMessages.sender}">..</span></strong>
             <i><span id="currentDateOld" th:utext="${infoAboutOldMessages.currentDate}">..</span></i>
             <span th:utext="${infoAboutOldMessages.content}">..</span>
+            <span th:utext="${usersInOnlineList}">...</span>
         </li>
     </ul>
 
@@ -263,7 +205,6 @@
     var messageInput = document.querySelector('#message');
     var messageArea = document.querySelector('#messageArea');
     var connectingElement = document.querySelector('#connecting');
-    var participantArea = document.querySelector('#participantOnlineArea');
 
 
 
@@ -271,36 +212,29 @@
     var username = null;
     var chatName = null;
     var chatId = null;
-    //var usersInOnlineList = null;
-
 
     function connect() {
         username = document.querySelector('#username').innerText.trim();
         chatName = document.getElementById('chatName').innerText;
         chatId = document.getElementById('chatId').innerText;
-        //usersInOnlineList = document.querySelector('#usersInOnlineList').innerText.trim();
 
         var socket = new SockJS('/ws/'+chatId);
+
         stompClient = Stomp.over(socket);
-
         stompClient.connect({}, onConnected, onError);
-
     }
 
-    // Connect to WebSocket Server.
     connect();
 
     function onConnected() {
-        // Subscribe to the Public Topic
         stompClient.subscribe('/topic/'+chatId+'Room', onMessageReceived);
-
-        // Tell your username to the server
         stompClient.send("/app/"+ chatId +".addUser",
             {},
-            JSON.stringify({sender: username, chatName:chatName, chatId:chatId, type: 'JOIN'})
+            JSON.stringify({sender: username, chatName:chatName, chatId:chatId, usersOnline: [] , type: 'JOIN'})
         );
 
         connectingElement.classList.add('hidden');
+
     }
 
 
@@ -319,6 +253,7 @@
                 content: messageInput.value,
                 type: 'CHAT',
                 chatName: chatName,
+                usersOnline: [],
                 chatId: chatId,
                 currentDate: document.createTextNode(' ' + now.getFullYear()+'.'+now.getMonth()+'.' + now.getDate() + ' '
                     + now.getHours() + ':' + now.getMinutes() + ' ').textContent
@@ -329,69 +264,32 @@
         event.preventDefault();
     }
 
-    function sendUserOnline(sender) {
-        var sendUser = {
-            content: sender,
-            chatName: chatName,
-            chatId: chatId
-        };
-        stompClient.send("/app/"+ chatId +".addInOnline", {}, JSON.stringify(sendUser));
-        return sender;
-    }
-
-
-
     function onMessageReceived(payload) {
         var message = JSON.parse(payload.body);
-        var online = JSON.parse(payload.body);
 
 
         var messageElement = document.createElement('li');
-        var onlineElement = document.createElement('li');
-
-        var textOnlineElement = document.createElement('span');
-
 
         if(message.type === 'JOIN') {
-            messageElement.classList.add('event-message');
-            message.content = message.sender + ' now in chat!';
-            online.content = message.sender;
-            //var messageStatus = document.createTextNode(usersInOnlineList);
-            //var messageStatus = document.createTextNode(sendUserOnline(online.content));
-            var messageStatus = document.createTextNode(online.content);
-            textOnlineElement.appendChild(messageStatus);
-            onlineElement.appendChild(textOnlineElement);
-            onlineElement.id = online.content + online.content;
-            onlineElement.className = "usersOnlineNow";
-            var x = document.getElementById("listOfOnline-container");
-            var y = x.getElementsByClassName("usersOnlineNow");
-
-            //console.log("send: " + sendUserOnline(online.content));
-
-
-
-
-            /*console.log("qqweqweqw: " + x.innerText);
-            console.log("2312312312: " + y);
-            console.log(y);
-            console.log(y.);
-            console.log(y.length);
-            console.log("CONSOLE<>LOG: " + document.getElementsByClassName("usersOnlineNow")[0]);
-            console.log("CONSOLE<>LOG: " + document.getElementsByClassName("usersOnlineNow").namedItem(online.content).valueOf());
-            console.log("CONSOLE<>LOG: " + document.getElementsByClassName("usersOnlineNow")[Symbol.iterator].name);*/
-            /*if (document.getElementsByClassName("usersOnlineNow").length !== 0){
-                sendUserOnline(document.getElementsByClassName("usersOnlineNow"))
-            }*/
-
-            participantArea.appendChild(onlineElement);
-        } else if (message.type === 'LEAVE') {
-            online.content = message.sender;
-            messageElement.classList.add('event-message');
-            message.content = message.sender + ' left chat!';
-            if (document.getElementById(online.content + online.content) !== null){
-                participantArea.removeChild(document.getElementById(online.content + online.content))
+            message.content = message.usersOnline;
+            for (let i = 0; i < message.content.length ; i++){
+                var  namesOfParticipant = document.querySelectorAll('#nameOfParticipant');
+                for (let j = 0; j < namesOfParticipant.length; j++){
+                    if (message.content[i] === namesOfParticipant.item(j).innerHTML){
+                        namesOfParticipant.item(j).classList.remove('nameOfParticipant');
+                        namesOfParticipant.item(j).classList.add('nicknameOfParticipantOnline');
+                    }
+                }
             }
-            stompClient.disconnect();
+
+        } else if (message.type === 'LEAVE') {
+            var  nicknameOfParticipantOnline = document.querySelectorAll('.nicknameOfParticipantOnline');
+            for (let j = 0; j < nicknameOfParticipantOnline.length; j++){
+                if (message.sender === nicknameOfParticipantOnline.item(j).innerHTML){
+                    nicknameOfParticipantOnline.item(j).classList.remove('nicknameOfParticipantOnline');
+                    nicknameOfParticipantOnline.item(j).classList.add('nameOfParticipant');
+                }
+            }
         } else {
             messageElement.classList.add('chat-message');
             var usernameElement = document.createElement('strong');
@@ -408,21 +306,19 @@
             usernameElement.appendChild(usernameText);
             messageElement.appendChild(usernameElement);
             messageElement.appendChild(currentDate);
-
         }
 
-        var textElement = document.createElement('span');
-        var messageText = document.createTextNode(message.content);
+        if (message.type === "CHAT"){
+            var textElement = document.createElement('span');
+            var messageText = document.createTextNode(message.content);
 
-        textElement.appendChild(messageText);
+            textElement.appendChild(messageText);
+            messageElement.appendChild(textElement);
 
-        messageElement.appendChild(textElement);
-
-        messageArea.appendChild(messageElement);
+            messageArea.appendChild(messageElement);
+        }
         messageArea.scrollTop = messageArea.scrollHeight;
-        participantArea.scrollTop = participantArea.scrollHeight;
     }
-
 
     messageForm.addEventListener('submit', sendMessage, true);
 </script>

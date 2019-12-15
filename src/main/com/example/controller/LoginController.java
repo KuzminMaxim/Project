@@ -74,6 +74,8 @@ public class LoginController {
                 String id = eventModel.getNameOfEvent() + eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator();
                 EventModel countOfParticipants = eventDAO.findCountOfParticipants(id);
 
+                eventModel.setDate(eventModel.getDate().replace("T", " "));
+
                 eventModel.setCountOfParticipant(countOfParticipants.getCountOfParticipant());
                 eventModel.setId(eventModel.getNameOfEvent() + eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator());
             }
@@ -85,6 +87,8 @@ public class LoginController {
             for (EventModel eventModel : eventsWhereParticipant) {
                 String id = eventModel.getNameOfEvent() + eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator();
                 EventModel countOfParticipants = eventDAO.findCountOfParticipants(id);
+
+                eventModel.setDate(eventModel.getDate().replace("T", " "));
 
                 eventModel.setCountOfParticipant(countOfParticipants.getCountOfParticipant());
                 eventModel.setId(eventModel.getNameOfEvent() + eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator());

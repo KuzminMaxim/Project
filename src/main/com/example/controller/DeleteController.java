@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequestMapping
 @Controller
 public class DeleteController {
@@ -44,7 +46,18 @@ public class DeleteController {
         }
 
         if (eventModel.getNameOfEvent() != null){
-            eventModel.setId(eventModel.getNameOfEvent() + eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator());
+            String eventId = eventModel.getNameOfEvent() + eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator();
+            eventModel.setId(eventId);
+            List<EventModel> check = api.readAllWhereSomething(EventModel.class, eventId, "event_id");
+            if (check.size() != 0){
+                for (EventModel value : check) {
+                    if (!value.getId().equals(eventId)) {
+                        return "redirect:/userInfo";
+                    }
+                }
+            } else {
+                return "redirect:/userInfo";
+            }
             api.delete(eventModel);
             api.update(eventModel);
             logger.info("Event {} was cancelled", eventModel.getNameOfEvent());

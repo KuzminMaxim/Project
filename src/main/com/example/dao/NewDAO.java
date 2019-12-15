@@ -279,7 +279,7 @@ public class NewDAO extends JdbcDaoSupport {
         return list;
     }
 
-    public <T> List<T> getAllRecordsFromTheDatabaseRelatedToThisClassObjectTypeAndThisNameIsAttribute(Class clazz, String name, String attribute) {
+    public <T> List<T> getAllRecordsRelatedToThisClassObjectTypeAndThisNameIsAttribute(Class clazz, String name, String attribute) {
 
         List<T> list= new ArrayList<T>();
 
@@ -312,7 +312,7 @@ public class NewDAO extends JdbcDaoSupport {
                 if ((names[i].equals("avatar") && !names[i].equals(fieldOfName))
                         || (names[i].equals("eventParticipant") && !names[i].equals(fieldOfName))
                         || (names[i].equals("chatParticipant") && !names[i].equals(fieldOfName))
-                        || names[i].equals("id")){//We do not select id, as this greatly slows down the speed of the request.
+                        || names[i].equals("id") && !names[i].equals(fieldOfName)){//We do not select id, as this greatly slows down the speed of the request.
                     break exit;
                 } else {
                     queryForResultSet.append(annotation[i]).append(".value_text").append(" as ").append(fields[i].getName());
@@ -344,7 +344,7 @@ public class NewDAO extends JdbcDaoSupport {
                     if ((names[i].equals("avatar") && !names[i].equals(fieldOfName))
                         || (names[i].equals("eventParticipant") && !names[i].equals(fieldOfName))
                             || (names[i].equals("chatParticipant") && !names[i].equals(fieldOfName))
-                            || names[i].equals("id")){//We do not select id, as this greatly slows down the speed of the request.
+                            || names[i].equals("id") && !names[i].equals(fieldOfName)){//We do not select id, as this greatly slows down the speed of the request.
                         break exit;
                     } else {
                     if (!annotation[i].equals(attribute)){
@@ -397,7 +397,7 @@ public class NewDAO extends JdbcDaoSupport {
                 if ((names[i].equals("avatar") && !names[i].equals(fieldOfName))
                         || (names[i].equals("eventParticipant") && !names[i].equals(fieldOfName))
                         || (names[i].equals("chatParticipant") && !names[i].equals(fieldOfName))
-                        || names[i].equals("id")){//We do not select id, as this greatly slows down the speed of the request.
+                        || names[i].equals("id") && !names[i].equals(fieldOfName)){//We do not select id, as this greatly slows down the speed of the request.
                     break exit;
                 } else {
                     queryForResultSet.append(annotation[count]).append(".object_id").append(" = ")

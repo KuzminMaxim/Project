@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.api.ApiForInteractingWithTheDatabase;
 import com.example.model.ChatMessage;
+import com.google.common.collect.Multimap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,6 @@ public class WebSocketController {
     ApiForInteractingWithTheDatabase api;
 
     private static final Logger logger = LoggerFactory.getLogger(WebSocketController.class);
-    public static List<String> usersOnlineList = new ArrayList<>();
 
     @MessageMapping("/{chatId}.sendMessage")
     @SendTo("/topic/{chatId}Room")
@@ -42,8 +42,7 @@ public class WebSocketController {
         headerAccessor.getSessionAttributes().put("chatId", chatMessage.getChatId());
 
         logger.info("User {} has been added in chat {}, chatId: {}" , chatMessage.getSender() , chatMessage.getChatName(), chatMessage.getChatId());
-        usersOnlineList.add(chatMessage.getSender());
-        headerAccessor.getSessionAttributes().put("usersInOnlineList", usersOnlineList);
+
 
         return chatMessage;
     }
