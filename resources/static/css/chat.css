@@ -1,0 +1,224 @@
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-weight: 400;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    line-height: 1.58;
+    color: #333333;
+    background-color: #284177;
+    height: 100%;
+}
+body:before {
+    height: 50%;
+    width: 100%;
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    background: #006BBD;
+    z-index: 0;
+}
+
+.nickname  {
+    color:#006BBD;margin-right:20px;
+}
+.nicknameOfParticipantOnline {
+    font-weight: 700;
+    font-style: italic;
+    color: #006BBD;margin-right:20px;
+}
+.currentDate  {
+    margin-right:20px;
+}
+.hidden {
+    display: none;
+}
+
+.user-container {
+    float: right;
+    margin-right:25px;
+}
+
+#listOfParticipants-container{
+    position: relative;
+    height: 100%;
+}
+
+#chat-container #messageForm {
+    padding: 20px;
+}
+
+#chat-container {
+    background-color:  #83CEEC ;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+
+    margin-top: 40px;
+    height: calc(90% - 20px);
+    position: relative;
+    float: left;
+    border-radius: 0px 70px 70px 0px;
+
+}
+
+#chat-container ul {
+    list-style-type: none;
+    background-color: #EDE8E4;
+    margin: 0;
+    overflow: auto;
+    padding: 0 20px 0px 20px;
+    height: calc(100% - 180px);
+}
+
+#chat-container ul li {
+    line-height: 1.5rem;
+    padding: 10px 20px;
+    margin: 0;
+    border-bottom: 1px solid #EDE8E4;
+}
+
+#chat-container ul li p {
+    margin: 0;
+}
+
+#chat-container .event-message {
+    width: 100%;
+    text-align: center;
+    clear: both;
+}
+
+#chat-container .event-message p {
+    color: #777;
+    font-size: 14px;
+    word-wrap: break-word;
+    width: 80%;
+}
+
+#chat-container .chat-message {
+    position: relative;
+}
+
+#messageForm .input-message  {
+    float: left;
+    width: 100%;
+}
+
+.connecting {
+    text-align: center;
+    color: #777;
+    width: 100%;
+}
+
+#chatName {
+    color:#284177;
+    text-align: center;
+    font-weight: 700;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 1.5rem;
+}
+
+#listOfParticipantsNames{
+    color:#284177;
+    margin: 15%;
+
+    text-align: right;
+    font-weight: 700;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 1.5rem;
+}
+
+#nickname  {
+    color:#006BBD;margin-right:20px;
+}
+
+#currentDateOld  {
+    margin-right:20px;
+}
+
+#listOfParticipants-container {
+    background-color:  #83CEEC;
+    width: 15%;
+    float: left;
+    margin-top: 40px;
+    margin-left: 40px;
+    height: calc(90% - 20px);
+    border-radius: 70px 0px 0px 70px;
+}
+
+#listOfParticipants-container ul {
+    list-style-type: none;
+    background-color: #EDE8E4;
+    margin: 0;
+    overflow: auto;
+    padding: 0px 20px 0px 20px;
+    height: calc(100% - 180px);
+}
+
+#listOfParticipants-container ul li {
+    line-height: 1.5rem;
+    padding: 10px 20px;
+    margin: 0;
+    border-bottom: 1px solid #EDE8E4;
+}
+
+#listOfParticipants-container ul li p {
+    margin: 0;
+}
+
+#message {
+    border: 0;
+    outline: 0;
+    outline-offset: 0;
+    padding-left: 0;
+    height: 40px;
+    width: 86%;
+    background-color: #EDE8E4;
+    border-radius: 70px 70px 70px 70px;
+}
+
+button {
+    box-shadow: none;
+    border: 1px solid transparent;
+    font-size: 14px;
+    outline: none;
+    line-height: 100%;
+    white-space: nowrap;
+    vertical-align: middle;
+    padding: 0.6rem 1rem;
+    border-radius: 2px;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    min-height: 38px;
+    opacity: 0.8;
+}
+
+button.default {
+    background-color: #006BBD;
+    color: #EDE8E4;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
+    border-radius: 70px 70px 70px 70px;
+    opacity: 0.8;
+}
+button.primary {
+    background-color: #284177;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
+    color: #EDE8E4;
+    border-radius: 70px 70px 70px 70px;
+    opacity: 0.8;
+}
+button:hover{
+    opacity: 1;
+}
