@@ -1,6 +1,6 @@
 package com.example.controller;
 
-import com.example.dao.NewUserDAO;
+import com.example.dao.UserDAO;
 import com.example.model.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +23,7 @@ import java.util.List;
 public class MyFileUploadController {
 
     @Autowired
-    private NewUserDAO newUserDAO;
+    private UserDAO userDAO;
 
     @RequestMapping(value = "/uploadOneFile", method = RequestMethod.GET)
     public String uploadOneFileHandler(Model model) {
@@ -41,12 +41,12 @@ public class MyFileUploadController {
 
 
 
-        return this.doUpload(request, model, myUploadForm, principal, newUserDAO);
+        return this.doUpload(request, model, myUploadForm, principal, userDAO);
 
     }
 
     private String doUpload(HttpServletRequest request, Model model, //
-                            UserModel myUploadForm, Principal principal, NewUserDAO newUserDAO) {
+                            UserModel myUploadForm, Principal principal, UserDAO userDAO) {
 
         //String uploadRootPath = request.getServletContext().getRealPath("usersAvatars");
         //String xxx = request.getServletContext().getServerInfo();
@@ -81,7 +81,7 @@ public class MyFileUploadController {
 
                     uploadedFiles.add(serverFile);
                     System.out.println("Write file: " + serverFile);
-                    newUserDAO.setAvatar(serverFile.getAbsolutePath(), principal.getName());
+                    userDAO.setAvatar(serverFile.getAbsolutePath(), principal.getName());
                 } catch (Exception e) {
                     System.out.println("Error Write file: " + name);
                     failedFiles.add(name);

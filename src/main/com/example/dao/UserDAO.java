@@ -11,14 +11,14 @@ import javax.sql.DataSource;
 
 @Repository
 @Transactional
-public class NewUserDAO extends JdbcDaoSupport{
+public class UserDAO extends JdbcDaoSupport{
 
     @Autowired
-    public NewUserDAO(DataSource dataSource) {
+    public UserDAO(DataSource dataSource) {
         this.setDataSource(dataSource);
     }
 
-    public NewUserDAO(){}
+    public UserDAO(){}
 
 
     public void setAvatar(String link, String loginedUser) {

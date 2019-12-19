@@ -1,6 +1,6 @@
 package com.example.api;
 
-import com.example.dao.NewDAO;
+import com.example.dao.AllModelsDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import java.util.Map;
 public class ApiForInteractingWithTheDatabase {
 
     @Autowired
-    private NewDAO dao;
+    private AllModelsDAO dao;
 
     public void save(Object object) {
         try {
@@ -34,7 +34,7 @@ public class ApiForInteractingWithTheDatabase {
         try {
             Class clazz = object.getClass();
             try {
-                insert(getAllAboutUsedClass(clazz, object), clazz);
+                insert(getAllAboutUsedClass(clazz, object));
             } catch (NoSuchFieldException | IllegalAccessException e){
                 e.printStackTrace();
             }
@@ -139,10 +139,9 @@ public class ApiForInteractingWithTheDatabase {
         }
     }
 
-    private <T> void insert(Map attributesValues, Class<T> clazz){
-        String objectType = clazz.getAnnotation(ObjectType.class).id();
+    private <T> void insert(Map attributesValues){
         try {
-            dao.addOneNewAttributesIntoObjectInDatabase(attributesValues, objectType);
+            dao.addOneNewAttributesIntoObjectInDatabase(attributesValues);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }

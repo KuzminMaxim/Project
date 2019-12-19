@@ -39,12 +39,13 @@ public class UserChangesController {
 
 
     @PostMapping(value = "/changePassword")
-    public String changePassword(UserModel registrationForm) {
+    public String changePassword(UserModel registrationForm, Principal principal) {
 
         if (registrationForm.getPassword().isEmpty()){
-            System.out.println("Password for user: '"+ registrationForm.getName() +"' was not changed.");
+            System.out.println("Password for user: '"+ principal.getName() +"' was not changed.");
             return "/error";
         } else{
+            registrationForm.setName(principal.getName());
             api.update(registrationForm);
             System.out.println("Password for user: '"+ registrationForm.getName() +"' was changed.");
         }

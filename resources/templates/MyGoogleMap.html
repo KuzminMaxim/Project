@@ -13,48 +13,35 @@
             box-sizing: border-box;
         }
         body {
-            font-family: Roboto, Helvetica, sans-serif;
-            background: #c7b39b url(../static/images/mapPicture.png);
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background: #83CEEC;
         }
         /* Fix the button on the left side of the page */
         .open-btn {
             display: flex;
             justify-content: left;
         }
-        /* Style and fix the button on the page */
-        .open-button {
-            background-color: #1c87c9;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            opacity: 0.8;
-            position: fixed;
-        }
-        /* Position the Popup form */
         .login-popup {
-            position: relative;
+            position: center;
             text-align: center;
             width: 100%;
+            border-radius: 70px 70px 70px 70px;
         }
-        /* Hide the Popup form */
         .form-popup {
             display: none;
             position: fixed;
-            left: 45%;
+            left: 50%;
             top:5%;
-            transform: translate(-45%,5%);
-            border: 2px solid #666;
+            transform: translate(-50%,5%);
             z-index: 9;
+            border-radius: 70px 70px 70px 70px;
         }
-        /* Styles for the form container */
         .form-container {
             max-width: 300px;
             padding: 20px;
             background-color: #fff;
+            border-radius: 70px 70px 70px 70px;
         }
-        /* Full-width for input fields */
         .form-container input[type=text], .form-container input[type=password],
         .form-container input[type=datetime-local] {
             width: 100%;
@@ -62,14 +49,14 @@
             margin: 5px 0 22px 0;
             border: none;
             background: #eee;
+            border-radius: 70px 70px 70px 70px;
         }
-        /* When the inputs get focus, do something */
         .form-container input[type=text]:focus, .form-container input[type=password]:focus,
         .form-container input[type=datetime-local]:focus {
             background-color: #ddd;
             outline: none;
+            border-radius: 70px 70px 70px 70px;
         }
-        /* Style submit/login button */
         .form-container .btn {
             background-color: #0017bf;
             color: #fff;
@@ -79,20 +66,20 @@
             width: 100%;
             margin-bottom:10px;
             opacity: 0.8;
+            border-radius: 70px 70px 70px 70px;
         }
-        /* Style cancel button */
         .form-container .cancel {
             background-color: #cc0016;
+            border-radius: 70px 70px 70px 70px;
         }
-        /* Hover effects for buttons */
-        .form-container .btn:hover, .open-button:hover {
+        .form-container .btn:hover{
             opacity: 1;
         }
         <!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--<!--
     </style>
 </head>
 <body>
-<th:block th:include="/_menu">..</th:block>
+<th:block th:include="/menu">..</th:block>
 <div style="padding:0px">
     <div id="map"></div>
 </div>
@@ -231,7 +218,7 @@
                             <strong>Name of event</strong>
                         </label>
                         <input type="text" id="nameOfEvent" placeholder="Name of event" th:field="*{nameOfEvent}" th:name="nameOfEvent"
-                               onKeyUp="document.getElementById('chatName').value = this.value;"  required>
+                               onKeyUp="document.getElementById('chatName').value = this.value;" maxlength="76"  required>
                         <span th:if="${#fields.hasErrors('nameOfEvent')}" th:errors="*{nameOfEvent}">...</span>
                     </td>
                 </tr>

@@ -5,7 +5,7 @@
 
     <style>
         body {
-            background: #c7b39b url(/images/mapPicture.png);
+            background: #83CEEC;
         }
         td span  {
             font-size:90%;
@@ -20,11 +20,12 @@
         .registration-container {
             max-width: 500px;
             padding: 50px;
-            background: #ccc;
+            background: #006BBD;
             position: fixed; top: 50%; left: 50%;
             -webkit-transform: translate(-50%, -50%);
             -ms-transform: translate(-50%, -50%);
             transform: translate(-50%, -50%);
+            border-radius: 70px 70px 70px 70px;
         }
         /* Full-width for input fields */
         .registration-container input[type=text], .registration-container input[type=password]{
@@ -32,57 +33,71 @@
             padding: 10px;
             margin: 5px 0 22px 0;
             border: none;
-            background: #eee;
+            background: #EDE8E4;
             position: center;
+            border-radius: 70px 70px 70px 70px;
         }
         /* When the inputs get focus, do something */
         .registration-container input[type=text]:focus, .form-container input[type=password]:focus{
-            background-color: #ddd;
+            background-color: #EDE8E4;
             outline: none;
+            border-radius: 70px 70px 70px 70px;
         }
         /* Style submit/login button */
         .registration-container .btn {
-            background-color: #0017bf;
-            color: #fff;
+            background-color: #284177;
+            color: #83CEEC;
             padding: 12px 20px;
             border: none;
             cursor: pointer;
             width: 100%;
             margin-bottom:10px;
             opacity: 0.8;
-        }
-        /* Style cancel button */
-        .registration-container .cancel {
-            background-color: #cc0016;
+            border-radius: 70px 70px 70px 70px;
         }
         /* Hover effects for buttons */
         .registration-container .btn:hover, .open-button:hover {
             opacity: 1;
         }
+        .formName{
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            width: 100%;
+            text-align: center;
+            font-weight: 900;
+            color: #83CEEC;
+        }
+        .nameLabel{
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            width: 100%;
+            text-align: center;
+            font-weight: 700;
+            color: #83CEEC;
+        }
     </style>
 </head>
 <body>
-<th:block th:include="/_menu">...</th:block>
+<th:block th:include="/menu">...</th:block>
 
 <div th:if="${errorMessage != null}"
      th:utext="${errorMessage}" class="error">...</div>
 
 <form th:action="@{/createUser}" th:object="${registrationForm}" onsubmit="checkFields()" method="POST" class="registration-container">
-    <h2>Registration</h2>
+    <div class="formName">Registration</div>
+    <br>
     <table>
         <tr>
             <td>
-                <label for="Nickname">
-                    <strong>Enter you name</strong>
+                <label for="Nickname" class="nameLabel">
+                    Enter you name
                 </label>
-                <input type="text" id="Nickname" placeholder="Nickname" th:field="*{name}" />
+                <input type="text" id="Nickname" placeholder="Nickname" th:field="*{name}" minlength="6"/>
                 <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}">...</span>
             </td>
         </tr>
         <tr>
             <td>
-                <label for="Email">
-                    <strong>Enter email</strong>
+                <label for="Email" class="nameLabel">
+                    Enter email
                 </label>
                 <input type="text" id="Email" placeholder="Email" th:field="*{email}" />
                 <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}">...</span>
@@ -90,16 +105,16 @@
         </tr>
         <tr>
             <td>
-                <label for="Password">
-                    <strong>Enter password</strong>
+                <label for="Password" class="nameLabel">
+                    Enter password
                 </label>
-                <input type="password" id="Password" placeholder="Password" th:field="*{password}" />
+                <input type="password" id="Password" placeholder="Password" th:field="*{password}" minlength="8"/>
                 <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">...</span>
             </td>
         </tr>
         <tr>
             <td>
-                <input type="submit" class="btn" value="Submit" />
+                <input type="submit" class="btn" value="Register" />
             </td>
         </tr>
     </table>

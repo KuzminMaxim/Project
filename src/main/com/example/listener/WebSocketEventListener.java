@@ -54,7 +54,7 @@ import java.util.Objects;
 
             Objects.requireNonNull(headerAccessor.getSessionAttributes()).put("chatRatioWithUsers",chatRatioWithUsers);
 
-            String[] usersOnline = chatRatioWithUsers.get(chatId).toArray(new String[chatRatioWithUsers.get(chatId).size()]);
+            String[] usersOnline = chatRatioWithUsers.get(chatId).toArray(new String[0]);
 
 
 
@@ -80,7 +80,7 @@ import java.util.Objects;
             if(username != null) {
                 logger.info("User {} was disconnected from chat {}", username, chatId);
                 chatRatioWithUsers.remove(chatId, username);
-                String[] usersOnline = chatRatioWithUsers.get(chatId).toArray(new String[chatRatioWithUsers.get(chatId).size()]);
+                String[] usersOnline = chatRatioWithUsers.get(chatId).toArray(new String[0]);
 
                 ChatMessage chatMessage = new ChatMessage();
                 chatMessage.setType(ChatMessage.MessageType.LEAVE);

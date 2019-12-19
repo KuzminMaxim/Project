@@ -13,10 +13,10 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class NewEventDAO extends JdbcDaoSupport{
+public class EventDAO extends JdbcDaoSupport{
 
     @Autowired
-    public NewEventDAO(DataSource dataSource) {
+    public EventDAO(DataSource dataSource) {
         this.setDataSource(dataSource);
     }
 

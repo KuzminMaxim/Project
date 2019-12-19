@@ -18,21 +18,20 @@ import java.sql.Statement;
 import java.util.*;
 
 @Repository
-public class NewDAO extends JdbcDaoSupport {
+public class AllModelsDAO extends JdbcDaoSupport {
 
     @Autowired
-    public NewDAO(DataSource dataSource) {
+    public AllModelsDAO(DataSource dataSource) {
         this.setDataSource(dataSource);
     }
 
-    public NewDAO() {}
+    public AllModelsDAO() {}
 
     public void createNewObjectInDatabase(Map attributesValues, String objectType) {
         try {
             assert getJdbcTemplate() != null;
 
             getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_SQL, objectType, objectType);
-            /*getJdbcTemplate().update(NewMapperDB.INSERT_DATE_OF_CREATION_SQL, objectType + "_date_of_creation");*/
 
             for ( Object entry : attributesValues.keySet()) {
                 String key = (String) entry;
@@ -74,7 +73,7 @@ public class NewDAO extends JdbcDaoSupport {
         }
     }
 
-    public void addOneNewAttributesIntoObjectInDatabase(Map attributesValues, String objectType) {
+    public void addOneNewAttributesIntoObjectInDatabase(Map attributesValues) {
         try {
             assert getJdbcTemplate() != null;
                 for ( Object entry : attributesValues.keySet()) {
@@ -254,8 +253,6 @@ public class NewDAO extends JdbcDaoSupport {
                 e.printStackTrace();
             }
         }
-
-        System.out.println("queryForResultSet: " + queryForResultSet);
 
         try (Connection con = DataSourceUtils.getConnection(Objects.requireNonNull(getDataSource()));
              Statement statement = con.createStatement()) {

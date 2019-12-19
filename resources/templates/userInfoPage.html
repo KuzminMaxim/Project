@@ -8,17 +8,23 @@
     </script>
     <style>
         body {
-            background: #c7b39b;
+            background: #83CEEC;
+            /*font-weight: 400;*/
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 1rem;
+            color: #284177;
         }
         table {
             border-spacing: 0 10px;
-            font-family: 'Open Sans', sans-serif;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             font-weight: bold;
+            border-radius: 70px 70px 70px 70px;
+            width: 100%;
         }
         th {
             padding: 10px 20px;
-            background: #0017bf;
-            color: #c7b39b;
+            background: #284177;
+            color: #83CEEC;
             border-right: 2px solid;
             font-size: 0.9em;
         }
@@ -27,22 +33,57 @@
             padding: 10px;
             font-size: 14px;
             text-align: center;
-            border-top: 2px solid #0017bf;
-            border-bottom: 2px solid #0017bf;
-            border-right: 2px solid #0017bf;
-            border-left: 2px solid #0017bf;
+            border-top: 2px solid #284177;
+            border-bottom: 2px solid #284177;
+            border-right: 2px solid #284177;
+            border-left: 2px solid #284177;
+        }
+        .left {
+            border-radius: 60px 0px 0px 0px;
+        }
+        .right {
+            border-radius: 0px 60px 0px 0px;
         }
         .allTable .btn {
-            background-color: #0017bf;
-            color: #c7b39b;
+            background-color: #284177;
+            color: #83CEEC;
             padding: 10px 10px;
             border: none;
             cursor: pointer;
             width: 100%;
             margin-bottom:10px;
-            opacity: 0.8;
+            opacity: 0.95;
+            border-radius: 70px 70px 70px 70px;
         }
         .allTable .btn:hover{
+            opacity: 1;
+        }
+        .heading{
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            text-align: center;
+            color: #284177;
+            width: 100%;
+        }
+        .namingOfPage{
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            width: 100%;
+            text-align: center;
+            font-weight: 900;
+            color: #284177;
+        }
+        button.primary {
+            background-color: #284177;
+            color: #83CEEC;
+            padding: 10px 10px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom:10px;
+            opacity: 0.95;
+            border-radius: 70px 70px 70px 70px;
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
+        }
+        button:hover{
             opacity: 1;
         }
     </style>
@@ -61,30 +102,40 @@
     });
 </script>
 
-<th:block th:include="/_menu">..</th:block>
-<h2>User Info Page</h2>
-<h3>Welcome, <span th:utext="${#request.userPrincipal.name}">..</span></h3>
-<img th:src="@{photo}" alt="Sorry, no photo "/>
-<br/><br/>
-<div th:if="${userInfo != null}">
-    <a th:if="${#request.userPrincipal != null}" th:href="@{/changePassword}">Change password page</a>
-    <a th:if="${#request.userPrincipal != null}" th:href="@{/setAvatar}">Set avatar</a>
-    <a th:if="${#request.userPrincipal != null}" th:href="@{/uploadOneFile}">uploadOneFile</a>
-</div>
+<th:block th:include="/menu">..</th:block>
 
-<div th:if="${eventsWhereCreator != null}">
-    <h3>Events created by me</h3>
+<div class="namingOfPage">
+    My personal account
+    <br>
+    Welcome, <span th:utext="${#request.userPrincipal.name}">..</span>
+</div>
+<!--<img th:src="@{photo}" alt="Sorry, no photo "/>-->
+<br>
+<div  th:if="${userInfo != null}">
+    <form th:action="@{/changePassword}">
+        <button type="submit" class="primary">Change your password</button>
+    </form>
+    <form th:action="@{/uploadOneFile}">
+        <button type="submit" class="primary">Set your avatar</button>
+    </form>
+    <!--<a th:if="${#request.userPrincipal != null}" th:href="@{/changePassword}">Change password page</a>
+    <a th:if="${#request.userPrincipal != null}" th:href="@{/setAvatar}">Set avatar</a>
+    <a th:if="${#request.userPrincipal != null}" th:href="@{/uploadOneFile}">uploadOneFile</a>-->
+</div>
+<br>
+<div class="eventsWhereCreator" th:if="${eventsWhereCreator != null}">
 <table id="eventsWhereCreatorTable" class="allTable">
+    <caption class="heading">Events created by me</caption>
     <thead>
     <tr>
-        <th>Cancel this event</th>
+        <th class="left">Cancel this event</th>
         <th>Chat</th>
         <th>View on map</th>
         <th>Date of event creation</th>
         <th>Name of Event</th>
         <th>Description of event</th>
         <th>Date and time of event</th>
-        <th>Count of participant</th>
+        <th class="right">Count of participant</th>
     </tr>
     </thead>
     <tbody>
@@ -117,19 +168,19 @@
 </table>
 </div>
 
-<div th:if="${eventsWhereParticipant != null}">
-    <h3>Events witch i joined</h3>
+<div class="eventsWhereParticipant" th:if="${eventsWhereParticipant != null}">
 <table id="eventsWhereParticipantTable" class="allTable">
+    <caption class="heading">Events witch i joined</caption>
     <thead>
     <tr>
-        <th>Exit from this event</th>
+        <th class="left">Exit from this event</th>
         <th>Chat</th>
         <th>View on map</th>
         <th>Date of event creation</th>
         <th>Name of Event</th>
         <th>Description of event</th>
         <th>Date and time of event</th>
-        <th>Count of participant</th>
+        <th class="right">Count of participant</th>
     </tr>
     </thead>
     <tbody>
@@ -162,15 +213,15 @@
 </table>
 </div>
 
-<div th:if="${cancelledChats != null}">
-    <h3>Events that have been canceled</h3>
+<div class="cancelledChats" th:if="${cancelledChats != null}">
         <table id="cancelledChatsTable" class="allTable">
+            <caption class="heading">Events that have been canceled</caption>
             <thead>
             <tr>
-                <th>Exit from this chat</th>
+                <th class="left">Exit from this chat</th>
                 <th>Chat</th>
                 <th>Name of event</th>
-                <th>Count of participant</th>
+                <th class="right">Count of participant</th>
             </tr>
             </thead>
             <tbody>

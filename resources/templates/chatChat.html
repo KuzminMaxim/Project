@@ -14,11 +14,35 @@
             overflow: hidden;
         }
 
+        body {
+            margin: 0;
+            padding: 0;
+            font-weight: 400;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 1rem;
+            line-height: 1.58;
+            color: #333333;
+            background-color: #284177;
+            height: 100%;
+        }
+        body:before {
+            height: 50%;
+            width: 100%;
+            position: absolute;
+            content: "";
+            top: 0;
+            left: 0;
+            background: #006BBD;
+            z-index: 0;
+        }
+
         .nickname  {
-            color:blue;margin-right:20px;
+            color:#006BBD;margin-right:20px;
         }
         .nicknameOfParticipantOnline {
-            color: #112dff;margin-right:20px;
+            font-weight: 700;
+            font-style: italic;
+            color: #006BBD;margin-right:20px;
         }
         .currentDate  {
             margin-right:20px;
@@ -29,11 +53,10 @@
 
         .user-container {
             float: right;
-            margin-right:5px;
+            margin-right:25px;
         }
 
-
-        #chat-container {
+        #listOfParticipants-container{
             position: relative;
             height: 100%;
         }
@@ -43,38 +66,33 @@
         }
 
         #chat-container {
-            border: 2px solid #d5dbdb;
-            background-color:  #d5dbdb ;
-            max-width: 800px;
+            background-color:  #83CEEC ;
+            width: 80%;
             margin-left: auto;
             margin-right: auto;
 
             margin-top: 40px;
-            height: calc(100% - 60px);
-            max-height: 1000px;
+            height: calc(90% - 20px);
             position: relative;
+            float: left;
+            border-radius: 0px 70px 70px 0px;
 
         }
 
         #chat-container ul {
             list-style-type: none;
-            background-color: #fff;
+            background-color: #EDE8E4;
             margin: 0;
             overflow: auto;
-            overflow-y: scroll;
             padding: 0 20px 0px 20px;
-            height: calc(100% - 150px);
-        }
-
-        #chat-container #messageForm {
-            padding: 20px;
+            height: calc(100% - 180px);
         }
 
         #chat-container ul li {
             line-height: 1.5rem;
             padding: 10px 20px;
             margin: 0;
-            border-bottom: 1px solid #f4f4f4;
+            border-bottom: 1px solid #EDE8E4;
         }
 
         #chat-container ul li p {
@@ -91,6 +109,7 @@
             color: #777;
             font-size: 14px;
             word-wrap: break-word;
+            width: 80%;
         }
 
         #chat-container .chat-message {
@@ -99,7 +118,7 @@
 
         #messageForm .input-message  {
             float: left;
-            width: calc(100% - 85px);
+            width: 100%;
         }
 
         .connecting {
@@ -108,8 +127,26 @@
             width: 100%;
         }
 
+        #chatName {
+            color:#284177;
+            text-align: center;
+            font-weight: 700;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 1.5rem;
+        }
+
+        #listOfParticipantsNames{
+            color:#284177;
+            margin: 15%;
+
+            text-align: right;
+            font-weight: 700;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 1.5rem;
+        }
+
         #nickname  {
-            color:blue;margin-right:20px;
+            color:#006BBD;margin-right:20px;
         }
 
         #currentDateOld  {
@@ -117,35 +154,80 @@
         }
 
          #listOfParticipants-container {
-             border: 2px solid #d5dbdb;
-             background-color:  #d5dbdb;
-             width: 20%;
+             background-color:  #83CEEC;
+             width: 15%;
              float: left;
              margin-top: 40px;
-             height: calc(100% - 60px);
-             max-height: 1000px;
+             margin-left: 40px;
+             height: calc(90% - 20px);
+             border-radius: 70px 0px 0px 70px;
          }
 
         #listOfParticipants-container ul {
             list-style-type: none;
-            background-color: #fff;
+            background-color: #EDE8E4;
             margin: 0;
             overflow: auto;
-            overflow-y: scroll;
-            padding: 0 20px 0px 20px;
-            height: calc(100% - 150px);
+            padding: 0px 20px 0px 20px;
+            height: calc(100% - 180px);
         }
 
         #listOfParticipants-container ul li {
             line-height: 1.5rem;
             padding: 10px 20px;
             margin: 0;
-            border-bottom: 1px solid #f4f4f4;
+            border-bottom: 1px solid #EDE8E4;
         }
 
         #listOfParticipants-container ul li p {
             margin: 0;
         }
+
+        #message {
+            border: 0;
+            outline: 0;
+            outline-offset: 0;
+            padding-left: 0;
+            height: 40px;
+            width: 86%;
+            background-color: #EDE8E4;
+            border-radius: 70px 70px 70px 70px;
+        }
+
+        button {
+            box-shadow: none;
+            border: 1px solid transparent;
+            font-size: 14px;
+            outline: none;
+            line-height: 100%;
+            white-space: nowrap;
+            vertical-align: middle;
+            padding: 0.6rem 1rem;
+            border-radius: 2px;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            min-height: 38px;
+            opacity: 0.8;
+        }
+
+        button.default {
+            background-color: #006BBD;
+            color: #EDE8E4;
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
+            border-radius: 70px 70px 70px 70px;
+            opacity: 0.8;
+        }
+        button.primary {
+            background-color: #284177;
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
+            color: #EDE8E4;
+            border-radius: 70px 70px 70px 70px;
+            opacity: 0.8;
+        }
+        button:hover{
+            opacity: 1;
+        }
+
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
     <script  src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
@@ -153,12 +235,16 @@
 <body>
 <div id="listOfParticipants-container">
     <div class="listOfParticipants-header">
-        <h3>List of participants</h3>
+        <h3><span id="listOfParticipantsNames">
+            Participants
+        </span></h3>
     </div>
 
     <hr/>
     <ul id="participantArea" class="participantAreaClass">
         <li th:each="participants : ${participants}">
+            <!--<span th:id="${participants.chatParticipant}" class="participantIndicatorOnline"></span>
+            <span th:id="${participants.chatParticipant}" class="participantIndicator"></span>-->
             <span id="nameOfParticipant" class="nameOfParticipant" th:utext="${participants.chatParticipant}">...</span>
         </li>
     </ul>
@@ -168,10 +254,12 @@
     <div class="chat-header">
         <div class="user-container">
             <span id="username" th:utext="${username}">...</span>
-            <a th:href="@{/userInfo}">Return to your personal account</a>
+            <form th:action="@{/userInfo}">
+                <button type="submit" class="primary">Return to your personal account</button>
+            </form>
         </div>
         <h3><span id="chatName" th:utext="${chatName}">...</span></h3>
-        <h6><span id="chatId" th:utext="${chatId}">...</span> </h6>
+        <span id="chatId" th:utext="${chatId}">...</span>
     </div>
 
     <hr/>
@@ -190,8 +278,8 @@
     <form id="messageForm" name="messageForm">
         <div class="input-message">
             <input type="text" id="message" autocomplete="off"
-                   placeholder="Type a message..."/>
-            <button type="submit">Send</button>
+                   placeholder=" Type a message..."/>
+            <button type="submit" class="default">Send message</button>
         </div>
     </form>
 </div>
@@ -200,6 +288,7 @@
     'use strict';
 
     document.getElementById('chatId').style.display='none';
+    document.getElementById('username').style.display='none';
 
     var messageForm = document.querySelector('#messageForm');
     var messageInput = document.querySelector('#message');

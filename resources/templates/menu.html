@@ -1,0 +1,46 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <style>
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #284177;
+            opacity: 0.8;
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            display: block;
+            color: #83CEEC;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover {
+            background-color: #006BBD;
+        }
+    </style>
+</head>
+<body>
+
+<ul th:if="${#request.userPrincipal == null}">
+    <li><a class="active" th:href="@{/welcome}">Welcome</a></li>
+    <li><a th:href="@{/createUser}">Registration</a></li>
+    <li><a th:href="@{/login}">Login</a></li>
+</ul>
+<ul th:if="${#request.userPrincipal != null}">
+    <li><a th:href="@{/userInfo}">My home page</a></li>
+    <li><a th:href="@{/createEvent}">Map</a></li>
+    <li><a  th:href="@{/logout}">Logout</a></li>
+    <li><a th:if="${#request.isUserInRole('ROLE_ADMIN')}"  th:href="@{/admin}">Admin page</a></li>
+</ul>
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.api.ApiForInteractingWithTheDatabase;
-import com.example.dao.NewEventDAO;
+import com.example.dao.EventDAO;
 import com.example.model.EventModel;
 import com.example.model.UserModel;
 import com.example.utils.WebUtils;
@@ -21,7 +21,7 @@ import java.util.List;
 public class LoginController {
 
     @Autowired
-    NewEventDAO eventDAO;
+    EventDAO eventDAO;
 
     @Autowired
     ApiForInteractingWithTheDatabase api;

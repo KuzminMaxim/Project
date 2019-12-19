@@ -4,7 +4,7 @@
     <title th:utext="${title}">...</title>
     <style>
         body {
-            background: #c7b39b;
+            background: #83CEEC;
         }
     </style>
     <!--<style th:src="@{static/Welcome.css}" rel ="stylesheet"/>-->
@@ -13,8 +13,7 @@
 
 <body>
 
-<!-- Include _menu.html -->
-<th:block th:include="/_menu"></th:block>
+<th:block th:include="/menu">..</th:block>
 
 <h2>Message : <span th:utext="${message}"></span></h2>
 
