@@ -4,6 +4,8 @@ import com.example.api.ApiForInteractingWithTheDatabase;
 import com.example.model.UserModel;
 import com.example.validation.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,6 +27,9 @@ public class RegistrationController {
 
     @Autowired
     private ApiForInteractingWithTheDatabase api;
+
+    @Autowired
+    public JavaMailSender emailSender;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder) {
@@ -68,9 +73,22 @@ public class RegistrationController {
 
             registrationForm.setId(newIdForUser);
             api.save(registrationForm);
+
+
+            SimpleMailMessage message = new SimpleMailMessage();
+
+            message.setTo(registrationForm.getEmail());
+            message.setSubject("Greeting");
+            message.setText("Welcome to the \"Events on the map\" application. We are glad that you are with us!");
+
+            this.emailSender.send(message);
+
+
             try {
+
                 request.login(registrationForm.getName(),registrationForm.getDecryptedPassword());
                 return "userInfoPage";
+
             } catch (ServletException e){
                 System.out.println("Fail authentication");
             }
