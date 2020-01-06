@@ -65,4 +65,75 @@ public class EventMapperNewDB {
             "(select distinct params.object_id from params))  as event_participant\n" +
             "where event_name.object_id = event_participant.object_id";
 
+    /*public static final String FIND_COUNT_OF_NEW_MESSAGES_FOR_THIS_EVENT = "" +
+            "select count(message_content.value_text) as messages\n" +
+            "from\n" +
+            "(select distinct params.value_text, params.object_id\n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'message_chat_id')\n" +
+            "and params.value_text = ?\n" +
+            "and object.id IN\n" +
+            "(select distinct params.object_id from params)) as chat_name,\n" +
+            "(select distinct params.value_text, params.object_id\n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'message_content')\n" +
+            "and object.id IN\n" +
+            "(select distinct params.object_id from params))\n" +
+            "as message_content, \n" +
+            "(select distinct params.value_text, params.object_id\n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'message_time_of_send')\n" +
+            "and object.id IN\n" +
+            "(select distinct params.object_id from params)\n" +
+            "and params.value_text > ?)\n" +
+            "as message_time_of_send\n" +
+            "where chat_name.object_id = message_content.object_id\n" +
+            "and chat_name.object_id = message_time_of_send.object_id";*/
+
+    public static final String FIND_COUNT_OF_NEW_MESSAGES_FOR_THIS_EVENT = "" +
+            "select count(message_content.value_text) as messages\n" +
+            "from\n" +
+            "(select distinct params.value_text, params.object_id\n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'message_chat_id')\n" +
+            "and params.value_text = ?\n" +
+            "and object.id IN\n" +
+            "(select distinct params.object_id from params)) as chat_name,\n" +
+            "(select distinct params.value_text, params.object_id\n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'message_content')\n" +
+            "and object.id IN\n" +
+            "(select distinct params.object_id from params))\n" +
+            "as message_content, \n" +
+            "(select distinct params.value_text, params.object_id\n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'message_time_of_send')\n" +
+            "and object.id IN\n" +
+            "(select distinct params.object_id from params)\n" +
+            "and params.value_text > ?)\n" +
+            "as message_time_of_send,\n" +
+            "(select distinct params.value_text, params.object_id\n" +
+            "from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "join attributes on attributes.id = params.attribute_id\n" +
+            "where attributes.id = (select attributes.id from attributes where attributes.Attribute = 'message_name_of_sender')\n" +
+            "and object.id IN\n" +
+            "(select distinct params.object_id from params)\n" +
+            ") as message_name_of_sender\n" +
+            "where chat_name.object_id = message_content.object_id\n" +
+            "and chat_name.object_id = message_time_of_send.object_id\n" +
+            "and chat_name.object_id = message_name_of_sender.object_id";
+
 }

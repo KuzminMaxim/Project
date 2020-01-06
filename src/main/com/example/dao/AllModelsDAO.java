@@ -1,8 +1,9 @@
 package com.example.dao;
 
 import com.example.api.Attribute;
-import com.example.model.EventModel;
 import com.example.mapper.NewMapperDB;
+import com.example.model.EventModel;
+import com.example.model.UserLogoutChatModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.jdbc.datasource.DataSourceUtils;
@@ -15,7 +16,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Repository
 public class AllModelsDAO extends JdbcDaoSupport {
@@ -67,6 +71,42 @@ public class AllModelsDAO extends JdbcDaoSupport {
                                 attributesValues.get("event_id"), "cancelled", "chat_status");
                     }
                 }
+            } else if (objectType.equals("chat")){
+                for (Object entry : attributesValues.keySet()){
+                    String key = (String) entry;
+                    if (key.equals("user_logout_chat_time")){
+                        String timeOfLastLogout = "";
+                        List<UserLogoutChatModel> list = getAllRecordsRelatedToThisClassObjectTypeAndThisNameIsAttribute(UserLogoutChatModel.class, (String) attributesValues.get("logout_user_name"), "logout_user_name");
+                        for (UserLogoutChatModel userLogoutChatModel : list){
+                            if (attributesValues.get("logout_chat_id").equals(userLogoutChatModel.getChatId())){
+                                if (attributesValues.get("logout_user_name").equals(userLogoutChatModel.getUserName())){
+
+                                    /*System.out.println();
+                                    System.out.println("Old user logout Time: " + userLogoutChatModel.getUserLogoutTime());
+                                    System.out.println("Username at Old logout: " + userLogoutChatModel.getUserLogoutTime().substring(24));
+                                    System.out.println("Current username: " + attributesValues.get("logout_user_name"));
+                                    System.out.println();
+                                    System.out.println("Old logout time: " + userLogoutChatModel.getUserLogoutTime().substring(0, 23));
+                                    System.out.println("Current logout time: " + attributesValues.get("user_logout_chat_time"));
+                                    System.out.println();*/
+
+                                    if (userLogoutChatModel.getUserLogoutTime().substring(24).equals(attributesValues.get("logout_user_name"))){
+                                        timeOfLastLogout = userLogoutChatModel.getUserLogoutTime();
+                                        /*System.out.println("chatId in cycle: "+userLogoutChatModel.getChatId());
+                                        System.out.println("userName in cycle: "+userLogoutChatModel.getUserName());
+                                        System.out.println("userLogoutChatModel.getUserLogoutTime() in cycle: " + userLogoutChatModel.getUserLogoutTime());
+                                        System.out.println("timeOfLastLogout in cycle: " + timeOfLastLogout);*/
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        //System.out.println("timeOfLastLogout " + timeOfLastLogout);
+                        getJdbcTemplate().update(NewMapperDB.SET_TIME_OF_LOGOUT_SQL,
+                                attributesValues.get("logout_chat_id"), attributesValues.get("logout_user_name"), "logout_user_name",
+                                attributesValues.get(key) + " " + attributesValues.get("logout_user_name"), key, timeOfLastLogout);
+                    }
+                }
             }
         } catch (NullPointerException npe){
             npe.printStackTrace();
@@ -88,10 +128,23 @@ public class AllModelsDAO extends JdbcDaoSupport {
                                 attributesValues.get("chat_id"), "chat_id", key, attributesValues.get(key));
                         getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_REFERENCES_FOR_NEW_ELEMENTS,
                                 "chat_id", attributesValues.get("chat_id"), "chat_participant", attributesValues.get("chat_participant"));
+                    } else if (key.equals("user_logout_chat_time")){
+                        getJdbcTemplate().update(NewMapperDB.ADD_SOMETHING_SQL,
+                                attributesValues.get("logout_chat_id"), "chat_id", "logout_chat_id", attributesValues.get("logout_chat_id"));
+                        getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_REFERENCES_FOR_NEW_ELEMENTS,
+                                "chat_id", attributesValues.get("logout_chat_id"), "logout_chat_id", attributesValues.get("logout_chat_id"));
+                        getJdbcTemplate().update(NewMapperDB.ADD_SOMETHING_SQL,
+                                attributesValues.get("logout_chat_id"), "chat_id", key, attributesValues.get(key) + " " + attributesValues.get("logout_user_name"));
+                        getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_REFERENCES_FOR_NEW_ELEMENTS,
+                                "chat_id", attributesValues.get("logout_chat_id"), "user_logout_chat_time", attributesValues.get("user_logout_chat_time") + " " + attributesValues.get("logout_user_name"));
+                        getJdbcTemplate().update(NewMapperDB.ADD_SOMETHING_SQL,
+                                attributesValues.get("logout_chat_id"), "chat_id", "logout_user_name", attributesValues.get("logout_user_name"));
+                        getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_REFERENCES_FOR_NEW_ELEMENTS,
+                                "chat_id", attributesValues.get("logout_chat_id"), "logout_user_name", attributesValues.get("logout_user_name"));
                     }
                 }
-        } catch (NullPointerException npe){
-            npe.printStackTrace();
+        } catch (NullPointerException e){
+            e.printStackTrace();
         }
     }
 

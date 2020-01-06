@@ -55,7 +55,8 @@
         <th>Name of Event</th>
         <th>Description of event</th>
         <th>Date and time of event</th>
-        <th class="right">Count of participant</th>
+        <th>Count of participant</th>
+        <th class="right">Count of new messages</th>
     </tr>
     </thead>
     <tbody>
@@ -82,6 +83,7 @@
         <td th:utext="${eventsWhereCreator.descriptionOfEvent}">..</td>
         <td th:utext="${eventsWhereCreator.date}">..</td>
         <td th:utext="${eventsWhereCreator.countOfParticipant}">..</td>
+        <td th:utext="${eventsWhereCreator.countOfNewMessages}">..</td>
     </tr>
     </tbody>
 
@@ -100,7 +102,8 @@
         <th>Name of Event</th>
         <th>Description of event</th>
         <th>Date and time of event</th>
-        <th class="right">Count of participant</th>
+        <th>Count of participant</th>
+        <th class="right">Count of new messages</th>
     </tr>
     </thead>
     <tbody>
@@ -128,6 +131,7 @@
         <td th:utext="${eventsWhereParticipant.descriptionOfEvent}">..</td>
         <td th:utext="${eventsWhereParticipant.date}">..</td>
         <td th:utext="${eventsWhereParticipant.countOfParticipant}">..</td>
+        <td th:utext="${eventsWhereParticipant.countOfNewMessages}">..</td>
     </tr>
     </tbody>
 </table>

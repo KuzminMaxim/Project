@@ -17,13 +17,13 @@ public class NewMapperDB {
             "limit 1)";
 
     public static final String CREATE_OBJECT_REFERENCES_FOR_NEW_ELEMENTS = "" +
-            "update params\n" +
-            "Set params.object_references = \n" +
-            "(select * from (select params.object_id from params\n" +
-            "where params.attribute_id = (select attributes.id from attributes where attributes.Attribute = ?)\n" +
-            "and params.value_text = ?) as params1)" +
-            "where params.attribute_id = (select attributes.id from attributes where attributes.Attribute = ?)" +
-            "and params.value_text = ?" +
+            "update params\n " +
+            "Set params.object_references = \n " +
+            "(select * from (select params.object_id from params \n" +
+            "where params.attribute_id = (select attributes.id from attributes where attributes.Attribute = ?) \n" +
+            "and params.value_text = ?) as params1) " +
+            "where params.attribute_id = (select attributes.id from attributes where attributes.Attribute = ?) " +
+            "and params.value_text = ? " +
             "and params.object_references is NULL";
 
     public static final String SET_SOMETHING_SQL = "UPDATE params, \n" +
@@ -37,6 +37,24 @@ public class NewMapperDB {
             "(select attributes.id from attributes where attributes.Attribute = ?)\n" +
             "AND params.object_id = a.object_id\n" +
             "AND params.attribute_id = b.attribute_id";
+
+    public static final String SET_TIME_OF_LOGOUT_SQL = "UPDATE params,\n" +
+            "(select distinct params.object_id from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "where params.value_text = ?) a,\n" +
+            "(select distinct params.object_id, params.value_text from params\n" +
+            "join object on params.object_id = object.id\n" +
+            "where params.value_text = ?\n" +
+            "and params.attribute_id = (select attributes.id from attributes where attributes.Attribute = ?)) b,\n" +
+            "(select distinct params.attribute_id from params\n" +
+            "join attributes on params.attribute_id = attributes.id) c\n" +
+            "SET params.value_text = ? \n" +
+            "WHERE params.attribute_id =\n" +
+            "(select attributes.id from attributes where attributes.Attribute = ?)\n" +
+            "AND params.value_text = ?\n" +
+            "AND params.object_id = a.object_id\n" +
+            "AND params.object_id = b.object_id\n" +
+            "AND params.attribute_id = c.attribute_id";
 
     public static final String ADD_SOMETHING_SQL = "insert into params(object_id, attribute_id, value_text)\n" +
             "values \n" +

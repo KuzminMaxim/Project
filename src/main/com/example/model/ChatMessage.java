@@ -39,6 +39,7 @@ public class ChatMessage {
         CHAT, JOIN, LEAVE
     }
 
+
     public String getChatId() {
         return chatId;
     }

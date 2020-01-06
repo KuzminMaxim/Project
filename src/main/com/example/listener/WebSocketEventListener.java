@@ -1,6 +1,8 @@
 package com.example.listener;
 
+import com.example.api.ApiForInteractingWithTheDatabase;
 import com.example.model.ChatMessage;
+import com.example.model.UserLogoutChatModel;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import org.slf4j.Logger;
@@ -14,7 +16,9 @@ import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
+import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Component
@@ -27,6 +31,9 @@ import java.util.Objects;
 
         @Autowired
         private static Multimap<String, String> chatRatioWithUsers = ArrayListMultimap.create();
+
+        @Autowired
+        private ApiForInteractingWithTheDatabase api;
 
         @EventListener
         public void handleWebSocketConnectListener(SessionConnectedEvent event) {
@@ -71,7 +78,7 @@ import java.util.Objects;
         public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
             StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
-            String username = (String) headerAccessor.getSessionAttributes().get("username");
+            String username = (String) Objects.requireNonNull(headerAccessor.getSessionAttributes()).get("username");
             String chatName = (String) headerAccessor.getSessionAttributes().get("chatName");
             String chatId = (String) headerAccessor.getSessionAttributes().get("chatId");
 
@@ -88,6 +95,47 @@ import java.util.Objects;
                 chatMessage.setChatName(chatName);
                 chatMessage.setChatId(chatId);
                 chatMessage.setUsersOnline(usersOnline);
+
+                UserLogoutChatModel logoutChatModel = new UserLogoutChatModel();
+
+                logoutChatModel.setChatId(chatMessage.getChatId());
+                logoutChatModel.setUserName(chatMessage.getSender());
+                Timestamp ts = new Timestamp(date.getTime());
+                String currentDate = ts.toString();
+
+                if (currentDate.length() == 22){
+                    currentDate  = currentDate + "0";
+                }
+                else if (currentDate.length() == 21){
+                    currentDate  = currentDate + "00";
+                }
+                else if (currentDate.length() == 20){
+                    currentDate  = currentDate + "00";
+                }
+
+                logoutChatModel.setUserLogoutTime(currentDate);
+
+                List<UserLogoutChatModel> list = api.readAllWhereSomething(UserLogoutChatModel.class, username, "logout_user_name");
+
+                if (list.size() == 0){
+                    api.add(logoutChatModel);
+                } else {
+                    boolean check = true;
+                    for (UserLogoutChatModel userLogoutChatModel : list) {
+                        if (userLogoutChatModel.getChatId().equals(chatId)){
+                            if (userLogoutChatModel.getUserName().equals(username)){
+                                System.out.println("username: " + username);
+                                System.out.println("userLogoutChatModel.getUserName(): " + userLogoutChatModel.getUserName());
+                                api.update(logoutChatModel);
+                                check = false;
+                                break;
+                            }
+                        }
+                    }
+                    if (check){
+                        api.add(logoutChatModel);
+                    }
+                }
 
                 messagingTemplate.convertAndSend("/topic/"+ chatId +"Room", chatMessage);
             }

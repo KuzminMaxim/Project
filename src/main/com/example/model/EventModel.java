@@ -8,6 +8,8 @@ public class EventModel {
 
     private int countOfParticipant;
 
+    private String countOfNewMessages;
+
     @Attribute(id = "event_name")
     private String nameOfEvent;
 
@@ -37,6 +39,10 @@ public class EventModel {
 
     public EventModel(){}
 
+    public EventModel(String countOfNewMessages){
+        this.countOfNewMessages = countOfNewMessages;
+    }
+
     public EventModel(int countOfParticipant) {
         this.countOfParticipant = countOfParticipant;
     }
@@ -44,6 +50,14 @@ public class EventModel {
     public EventModel(String id, String nameOfEvent) {
         this.id = id;
         this.nameOfEvent = nameOfEvent;
+    }
+
+    public String getCountOfNewMessages() {
+        return countOfNewMessages;
+    }
+
+    public void setCountOfNewMessages(String countOfNewMessages) {
+        this.countOfNewMessages = countOfNewMessages;
     }
 
     public int getCountOfParticipant() {

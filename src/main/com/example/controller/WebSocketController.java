@@ -13,6 +13,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 @RequestMapping
@@ -27,6 +28,10 @@ public class WebSocketController {
     @MessageMapping("/{chatId}.sendMessage")
     @SendTo("/topic/{chatId}Room")
     public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
+
+        Date date = new Date();
+        Timestamp currentDate = new Timestamp(date.getTime());
+        chatMessage.setCurrentDate(currentDate.toString());
 
         api.save(chatMessage);
 
