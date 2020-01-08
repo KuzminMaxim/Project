@@ -110,7 +110,7 @@ import java.util.Objects;
                     currentDate  = currentDate + "00";
                 }
                 else if (currentDate.length() == 20){
-                    currentDate  = currentDate + "00";
+                    currentDate  = currentDate + "000";
                 }
 
                 logoutChatModel.setUserLogoutTime(currentDate);

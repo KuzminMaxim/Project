@@ -81,27 +81,13 @@ public class AllModelsDAO extends JdbcDaoSupport {
                             if (attributesValues.get("logout_chat_id").equals(userLogoutChatModel.getChatId())){
                                 if (attributesValues.get("logout_user_name").equals(userLogoutChatModel.getUserName())){
 
-                                    /*System.out.println();
-                                    System.out.println("Old user logout Time: " + userLogoutChatModel.getUserLogoutTime());
-                                    System.out.println("Username at Old logout: " + userLogoutChatModel.getUserLogoutTime().substring(24));
-                                    System.out.println("Current username: " + attributesValues.get("logout_user_name"));
-                                    System.out.println();
-                                    System.out.println("Old logout time: " + userLogoutChatModel.getUserLogoutTime().substring(0, 23));
-                                    System.out.println("Current logout time: " + attributesValues.get("user_logout_chat_time"));
-                                    System.out.println();*/
-
                                     if (userLogoutChatModel.getUserLogoutTime().substring(24).equals(attributesValues.get("logout_user_name"))){
                                         timeOfLastLogout = userLogoutChatModel.getUserLogoutTime();
-                                        /*System.out.println("chatId in cycle: "+userLogoutChatModel.getChatId());
-                                        System.out.println("userName in cycle: "+userLogoutChatModel.getUserName());
-                                        System.out.println("userLogoutChatModel.getUserLogoutTime() in cycle: " + userLogoutChatModel.getUserLogoutTime());
-                                        System.out.println("timeOfLastLogout in cycle: " + timeOfLastLogout);*/
                                         break;
                                     }
                                 }
                             }
                         }
-                        //System.out.println("timeOfLastLogout " + timeOfLastLogout);
                         getJdbcTemplate().update(NewMapperDB.SET_TIME_OF_LOGOUT_SQL,
                                 attributesValues.get("logout_chat_id"), attributesValues.get("logout_user_name"), "logout_user_name",
                                 attributesValues.get(key) + " " + attributesValues.get("logout_user_name"), key, timeOfLastLogout);

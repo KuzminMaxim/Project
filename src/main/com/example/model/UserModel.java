@@ -9,14 +9,15 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserModel {
 
     //Rename
+    private String resetToken;
+
+    private String decryptedPassword;
 
     @Attribute(id = "user_name")
     private String name;
 
     @Attribute(id = "user_password")
     private String password;
-
-    private String decryptedPassword;
 
     @Attribute(id = "user_avatar")
     private MultipartFile[] avatar;
@@ -47,6 +48,14 @@ public class UserModel {
         //this.id = id;
         this.name = name;
         this.password = password;
+    }
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
     }
 
     public String getId() {

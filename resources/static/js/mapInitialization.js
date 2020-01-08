@@ -31,16 +31,26 @@ function initMap() {
         center: myLatlng
     });
 
+
+
     infoWindow = new google.maps.InfoWindow;
 
-    var oldMarker, i;
+    var i;
 
     for (i = 0; i < locations.length; i++) {
-        oldMarker = new google.maps.Marker({
+        var oldMarker = locations.map(function(location, i){
+            return new google.maps.Marker({
+                title : (locations[i][0]),
+                position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                map: map
+            });
+        });
+        /*oldMarker = new google.maps.Marker({
             title : (locations[i][0]),
             position: new google.maps.LatLng(locations[i][1], locations[i][2]),
             map: map
-        });
+        });*/
+
         google.maps.event.addListener(oldMarker, 'click', (function (oldMarker, i) {
             return function () {
                 infoWindow.setContent("Description: " + locations[i][3] + '<br>' + "Date: " + locations[i][4]
@@ -59,6 +69,9 @@ function initMap() {
             }
         })(oldMarker, i));
     }
+
+    var markerCluster = new MarkerClusterer(map, oldMarker,
+        {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 
 
     if (navigator.geolocation) {
@@ -98,7 +111,8 @@ function initMap() {
 
     marker.addListener('click', function (e) {
         openForm();
-    })
+    });
+
 }
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
     infoWindow.setPosition(pos);
