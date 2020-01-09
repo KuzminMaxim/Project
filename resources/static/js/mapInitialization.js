@@ -35,21 +35,23 @@ function initMap() {
 
     infoWindow = new google.maps.InfoWindow;
 
-    var i;
+    var oldMarker, i;
 
     for (i = 0; i < locations.length; i++) {
-        var oldMarker = locations.map(function(location, i){
+        ////////////////////////////!!!!!//////////////////////////
+        /*oldMarker = locations.map(function(location, i){
             return new google.maps.Marker({
                 title : (locations[i][0]),
                 position: new google.maps.LatLng(locations[i][1], locations[i][2]),
                 map: map
             });
-        });
-        /*oldMarker = new google.maps.Marker({
+        });*/
+        /////////////////////////////////////////////////////////
+         oldMarker = new google.maps.Marker({
             title : (locations[i][0]),
             position: new google.maps.LatLng(locations[i][1], locations[i][2]),
             map: map
-        });*/
+        });
 
         google.maps.event.addListener(oldMarker, 'click', (function (oldMarker, i) {
             return function () {

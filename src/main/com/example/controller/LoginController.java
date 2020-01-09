@@ -181,8 +181,6 @@ public class LoginController {
         model.addAttribute("registrationForm", registrationForm);
         model.addAttribute("eventForm", eventModel);
 
-
-
         return "userInfoPage";
     }
 

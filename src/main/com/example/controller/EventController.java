@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -43,6 +44,18 @@ public class EventController {
         if (target.getClass() == EventModel.class) {
             dataBinder.setValidator(eventValidator);
         }
+    }
+
+    @PostMapping(value = "/getLinkToEvent")
+    public String getLinkToEvent(Model model, EventModel eventModel, HttpServletRequest request){
+
+        String linkToEvent = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() +
+                "/createEvent?latitude=" + eventModel.getLatitude() +
+                "&longitude=" + eventModel.getLongitude();
+
+        model.addAttribute("nameOfEventToLink", eventModel.getNameOfEvent());
+        model.addAttribute("linkToEvent", linkToEvent);
+        return "userInfoPage";
     }
 
 

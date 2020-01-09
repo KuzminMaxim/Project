@@ -124,8 +124,6 @@ import java.util.Objects;
                     for (UserLogoutChatModel userLogoutChatModel : list) {
                         if (userLogoutChatModel.getChatId().equals(chatId)){
                             if (userLogoutChatModel.getUserName().equals(username)){
-                                System.out.println("username: " + username);
-                                System.out.println("userLogoutChatModel.getUserName(): " + userLogoutChatModel.getUserName());
                                 api.update(logoutChatModel);
                                 check = false;
                                 break;

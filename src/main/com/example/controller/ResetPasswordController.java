@@ -89,6 +89,7 @@ public class ResetPasswordController {
             model.addAttribute("resetToken", token);
             UserModel form = new UserModel();
             model.addAttribute("form", form);
+            model.addAttribute("username", userFromToken.getName());
         } else {
             model.addAttribute("errorMessage", "Oops!  This is an invalid password reset link.");
         }
@@ -99,22 +100,28 @@ public class ResetPasswordController {
     @PostMapping(value = "/reset")
     public String setNewPassword(UserModel userModel, Model model) {
 
-        UserModel userFromToken = currentTokenMap.get(userModel.getResetToken());
-
-        if (userFromToken != null){
-            currentTokenMap.remove(userModel.getResetToken());
-
-            userModel.setId(userFromToken.getName() + userFromToken.getEmail());
-            userModel.setEmail(userFromToken.getEmail());
-            userModel.setRole(userFromToken.getRole());
-            userModel.setName(userFromToken.getName());
-
-            api.update(userModel);
-
-            return "redirect:/login";
-        } else {
-            model.addAttribute("errorMessage", "Oops!  This is an invalid password reset link.");
+        if (userModel.getPassword().isEmpty()){
+            model.addAttribute("errorMessage", "Password field is empty." +
+                    "Please, follow the steps to reset your password again.");
             return "resetPasswordFromToken";
+        } else {
+            UserModel userFromToken = currentTokenMap.get(userModel.getResetToken());
+
+            if (userFromToken != null){
+                currentTokenMap.remove(userModel.getResetToken());
+
+                userModel.setId(userFromToken.getName() + userFromToken.getEmail());
+                userModel.setEmail(userFromToken.getEmail());
+                userModel.setRole(userFromToken.getRole());
+                userModel.setName(userFromToken.getName());
+
+                api.update(userModel);
+
+                return "redirect:/login";
+            } else {
+                model.addAttribute("errorMessage", "Oops!  This is an invalid password reset link.");
+                return "resetPasswordFromToken";
+            }
         }
     }
 
