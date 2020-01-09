@@ -42,7 +42,6 @@ public class ChatController {
 
     @PostMapping(value = CHAT_ENDPOINT)
     public String openChat(Model model, Principal principal, ChatModel chatModel){
-
         return index(model, principal, chatModel);
     }
 
@@ -50,7 +49,6 @@ public class ChatController {
 
     @RequestMapping(CHAT_ACCESS_ENDPOINT)
     public String index(Model model, Principal principal, ChatModel chatModel) {
-
 
         String name = principal.getName();
         model.addAttribute("username", name);

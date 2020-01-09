@@ -10,26 +10,62 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
+import java.util.List;
 
 @RequestMapping
 @Controller
 public class JoinController {
 
     @Autowired
-    private ApiForInteractingWithTheDatabase apiForInteractingWithTheDatabase;
+    private ApiForInteractingWithTheDatabase api;
+
+    @Autowired
+    ChatController chatController;
 
     @PostMapping(value = "/joinToEvent")
-    public String CreateUser(EventModel eventModel, Principal principal, Model model, ChatModel chatModel) {
-        if (eventModel.getNameOfEventCreator().equals(principal.getName())){
-            String errorOfJoin = "You is creator of this event!";
-            model.addAttribute("errorOfJoin", errorOfJoin);
-            return "MyGoogleMap";
-        } else {
+    public String joinToEvent(EventModel eventModel, Principal principal, Model model, ChatModel chatModel) {
+
+        List<EventModel> eventsWhereParticipant = api.readAllWhereSomething(EventModel.class, principal.getName(), "event_participant");
+
+        for (EventModel participant : eventsWhereParticipant) {
+
+            String id = participant.getNameOfEvent() +
+                    participant.getEventDateOfCreation() + participant.getNameOfEventCreator();
+
+            String chatId = eventModel.getNameOfEvent() +
+                    eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator();
+
+            participant.setId(id);
+            chatModel.setId(chatId);
+
+            if (participant.getId().equals(chatId)) {
+                 return chatController.openChat(model, principal, chatModel);
+            }
+        }
+
+        List<EventModel> eventsWhereCreator = api.readAllWhereSomething(EventModel.class, principal.getName(), "event_name_of_creator");
+
+        for (EventModel participant : eventsWhereCreator) {
+
+            String id = participant.getNameOfEvent() +
+                    participant.getEventDateOfCreation() + participant.getNameOfEventCreator();
+
+            String chatId = eventModel.getNameOfEvent() +
+                    eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator();
+
+            participant.setId(id);
+            chatModel.setId(chatId);
+
+            if (participant.getId().equals(chatId)) {
+                 return chatController.openChat(model, principal, chatModel);
+            }
+        }
+
             eventModel.setId(eventModel.getNameOfEvent() + eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator());
             chatModel.setId(eventModel.getNameOfEvent() + eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator());
-            apiForInteractingWithTheDatabase.add(eventModel);
-            apiForInteractingWithTheDatabase.add(chatModel);
-        }
+            api.add(eventModel);
+            api.add(chatModel);
+
         return "redirect:/userInfo";
     }
 
