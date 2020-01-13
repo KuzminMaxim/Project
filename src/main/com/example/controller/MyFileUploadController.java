@@ -5,9 +5,10 @@ import com.example.model.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,16 +26,23 @@ public class MyFileUploadController {
     @Autowired
     private UserDAO userDAO;
 
-    @RequestMapping(value = "/uploadOneFile", method = RequestMethod.GET)
-    public String uploadOneFileHandler(Model model) {
+    @GetMapping(value = "/uploadOneFile")
+    public String uploadOneFileHandler(Model model, Principal principal) {
 
         UserModel myUploadForm = new UserModel();
         model.addAttribute("myUploadForm", myUploadForm);
 
+        String avatarPath = userDAO.getAvatarPath(principal.getName());
+
+        if (avatarPath != null){
+            String avatarForTh = avatarPath.substring(65);
+            model.addAttribute("avatarExists", avatarForTh);
+        }
+
         return "uploadOneFile";
     }
 
-    @RequestMapping(value = "/uploadOneFile", method = RequestMethod.POST)
+    @PostMapping(value = "/uploadOneFile")
     public String uploadOneFileHandlerPOST(HttpServletRequest request, //
                                            Model model, //
                                            @ModelAttribute("myUploadForm") UserModel myUploadForm, Principal principal) {
@@ -48,14 +56,10 @@ public class MyFileUploadController {
     private String doUpload(HttpServletRequest request, Model model, //
                             UserModel myUploadForm, Principal principal, UserDAO userDAO) {
 
-        //String uploadRootPath = request.getServletContext().getRealPath("usersAvatars");
-        //String xxx = request.getServletContext().getServerInfo();
-        //System.out.println("getContextPath: "+xxx);
-        String uploadRootPath = "C:\\Users\\Максим\\AppData\\Local\\Temp\\usersAvatars";
+        String uploadRootPath = "C:\\Users\\Максим\\IdeaProjects\\MainProject\\resources\\static\\uploads\\avatars";
         System.out.println("uploadRootPath=" + uploadRootPath);
 
         File uploadRootDir = new File(uploadRootPath);
-        // Create directory if it not exists.
         if (!uploadRootDir.exists()) {
             uploadRootDir.mkdirs();
         }
@@ -73,7 +77,7 @@ public class MyFileUploadController {
             if (name != null && name.length() > 0) {
                 try {
                     File serverFile = new File(uploadRootDir.getAbsolutePath() + File.separator +
-                            principal.getName() + "%" + name);
+                            principal.getName() + name);
 
                     BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
                     stream.write(fileData.getBytes());
@@ -81,7 +85,13 @@ public class MyFileUploadController {
 
                     uploadedFiles.add(serverFile);
                     System.out.println("Write file: " + serverFile);
-                    userDAO.setAvatar(serverFile.getAbsolutePath(), principal.getName());
+
+                    if (userDAO.getAvatarPath(principal.getName()) == null){
+                        userDAO.addAvatar(serverFile.getAbsolutePath(), principal.getName());
+                    } else {
+                        userDAO.setAvatar(serverFile.getAbsolutePath(), principal.getName());
+                    }
+
                 } catch (Exception e) {
                     System.out.println("Error Write file: " + name);
                     failedFiles.add(name);
@@ -90,7 +100,6 @@ public class MyFileUploadController {
             }
         }
 
-        //model.addAttribute("description", description);
         model.addAttribute("uploadedFiles", uploadedFiles);
         model.addAttribute("failedFiles", failedFiles);
         return "uploadResult";

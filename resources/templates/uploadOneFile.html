@@ -14,9 +14,13 @@
 <body>
 <th:block th:include="/menu">...</th:block>
 
-<h3>Upload One File:</h3>
+<div th:if="${avatarExists != null}">
+    <img th:src="@{${avatarExists}}" alt="No image"/>
+</div>
 
-<!-- MyUploadForm -->
+
+
+<h3>Upload One File:</h3>
 
 <form th:object="${myUploadForm}" method="POST"
       action="" enctype="multipart/form-data">
