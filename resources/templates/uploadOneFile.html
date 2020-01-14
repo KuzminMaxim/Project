@@ -8,26 +8,43 @@
         body {
             background: #83CEEC;
         }
+        .images {
+            width: 100px;
+            height: 100px;
+            position: center;
+        }
+        .avatar-container {
+            max-width: 500px;
+            padding: 50px;
+            background: #006BBD;
+            position: fixed; top: 20%; left: 5%;
+            -webkit-transform: translate(-25%, -25%);
+            -ms-transform: translate(-25%, -25%);
+            transform: translate(-25%, -25%);
+            border-radius: 70px 70px 70px 70px;
+        }
     </style>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/registrationPage.css}"/>
 </head>
 
 <body>
 <th:block th:include="/menu">...</th:block>
 
-<div th:if="${avatarExists != null}">
-    <img th:src="@{${avatarExists}}" alt="No image"/>
+<div class="avatar-container">
+    <div class="formName">Current avatar</div>
+    <br>
+    <img th:if="${avatarExists != null}" th:src="@{${avatarExists}}" alt="No image" class="images"/>
+    <img th:if="${avatarExists == null}" th:src="@{/avatars/defaultAvatar.png}" alt="No image" class="images"/>
 </div>
 
-
-
-<h3>Upload One File:</h3>
-
-<form th:object="${myUploadForm}" method="POST"
+<form class="registration-container" th:object="${myUploadForm}" method="POST"
       action="" enctype="multipart/form-data">
-    <br/><br/>
-    File to upload: <input th:field="*{avatar}" type="file"/>
-    <br />
-    <input type="submit" value="Upload">
+    <div class="formName">Set new avatar</div>
+    <br>
+    <input th:field="*{avatar}" type="file" />
+    <br>
+    <br>
+    <input type="submit" value="Upload" class="btn">
 </form>
 
 </body>

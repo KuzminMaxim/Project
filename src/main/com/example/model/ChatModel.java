@@ -6,6 +6,8 @@ import com.example.api.ObjectType;
 @ObjectType(id = "chat")
 public class ChatModel {
 
+    private String userAvatar;
+
     @Attribute(id = "chat_date_of_creation")
     private String chatDateOfCreation;
 
@@ -81,5 +83,13 @@ public class ChatModel {
 
     public void setChatStatus(String chatStatus) {
         this.chatStatus = chatStatus;
+    }
+
+    public String getUserAvatar() {
+        return userAvatar;
+    }
+
+    public void setUserAvatar(String userAvatar) {
+        this.userAvatar = userAvatar;
     }
 }

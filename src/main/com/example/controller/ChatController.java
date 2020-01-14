@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.api.ApiForInteractingWithTheDatabase;
 import com.example.dao.ChatDAO;
+import com.example.dao.UserDAO;
 import com.example.model.ChatMessage;
 import com.example.model.ChatModel;
 import org.slf4j.Logger;
@@ -22,6 +23,9 @@ public class ChatController {
 
     @Autowired
     ChatDAO dao;
+
+    @Autowired
+    UserDAO userDAO;
 
     @Autowired
     ApiForInteractingWithTheDatabase api;
@@ -79,6 +83,15 @@ public class ChatController {
         model.addAttribute("infoAboutOldMessages", list);
 
         List<ChatModel> participants = dao.findAllParticipants(chatId);
+        for (ChatModel participant : participants) {
+            String userAvatar = userDAO.getAvatarPath(participant.getChatParticipant());
+            if (userAvatar != null) {
+                participant.setUserAvatar(userAvatar.substring(65));
+                System.out.println(userAvatar.substring(65));
+            } else {
+                participant.setUserAvatar("\\avatars\\defaultAvatar.png");
+            }
+        }
         model.addAttribute("participants", participants);
 
 

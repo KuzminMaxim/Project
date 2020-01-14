@@ -18,6 +18,7 @@
     <ul id="participantArea" class="participantAreaClass">
         <li th:each="participants : ${participants}">
             <span id="nameOfParticipant" class="nameOfParticipant" th:utext="${participants.chatParticipant}">...</span>
+            <img th:src="@{${participants.userAvatar}}" alt="No image" class="images"/>
         </li>
     </ul>
 </div>

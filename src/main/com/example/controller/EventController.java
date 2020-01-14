@@ -49,9 +49,9 @@ public class EventController {
     @PostMapping(value = "/getLinkToEvent")
     public String getLinkToEvent(Model model, EventModel eventModel, HttpServletRequest request){
 
-        String linkToEvent = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() +
+        String linkToEvent = "<a href=\"" + request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() +
                 "/createEvent?latitude=" + eventModel.getLatitude() +
-                "&longitude=" + eventModel.getLongitude();
+                "&longitude=" + eventModel.getLongitude() + "\">" + eventModel.getNameOfEvent() + "</a>";
 
         model.addAttribute("nameOfEventToLink", eventModel.getNameOfEvent());
         model.addAttribute("linkToEvent", linkToEvent);
