@@ -45,8 +45,7 @@ public class MyFileUploadController {
 
     private String doUpload(UserModel myUploadForm, Principal principal, UserDAO userDAO) {
 
-        String uploadRootPath = "C:\\Users\\Максим\\IdeaProjects\\MainProject\\resources\\static\\uploads\\avatars";
-        System.out.println("uploadRootPath=" + uploadRootPath);
+        String uploadRootPath = "C:\\Users\\Максим\\IdeaProjects\\MainProject\\resources\\uploads\\static\\avatars";
 
         File uploadRootDir = new File(uploadRootPath);
 
@@ -55,7 +54,6 @@ public class MyFileUploadController {
         for (MultipartFile fileData : fileDatas) {
 
             String name = fileData.getOriginalFilename();
-            System.out.println("Client File Name = " + name);
 
             if (name != null && name.length() > 0) {
                 try {
@@ -66,8 +64,6 @@ public class MyFileUploadController {
                     stream.write(fileData.getBytes());
                     stream.close();
 
-                    System.out.println("Write file: " + serverFile);
-
                     if (userDAO.getAvatarPath(principal.getName()) == null){
                         userDAO.addAvatar(serverFile.getAbsolutePath(), principal.getName());
                     } else {
@@ -75,7 +71,6 @@ public class MyFileUploadController {
                     }
 
                 } catch (Exception e) {
-                    System.out.println("Error Write file: " + name);
                     e.printStackTrace();
                 }
 

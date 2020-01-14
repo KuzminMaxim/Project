@@ -41,6 +41,8 @@ body:before {
     margin-right:20px;
 }
 .nicknameOfParticipantOnline {
+    padding-left: 20px;
+    background-repeat:no-repeat;
     background-size: contain;
     background-image: url(http://icons.iconarchive.com/icons/oxygen-icons.org/oxygen/256/Status-user-online-icon.png);
 }

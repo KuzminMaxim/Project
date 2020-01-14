@@ -39,7 +39,11 @@
 
 <form class="registration-container" th:object="${myUploadForm}" method="POST"
       action="" enctype="multipart/form-data">
-    <div class="formName">Set new avatar</div>
+    <div class="formName">
+        Set new avatar
+    <br>
+        Max size: 1MB
+    </div>
     <br>
     <input th:field="*{avatar}" type="file" />
     <br>

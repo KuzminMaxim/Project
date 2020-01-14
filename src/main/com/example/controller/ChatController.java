@@ -87,7 +87,6 @@ public class ChatController {
             String userAvatar = userDAO.getAvatarPath(participant.getChatParticipant());
             if (userAvatar != null) {
                 participant.setUserAvatar(userAvatar.substring(65));
-                System.out.println(userAvatar.substring(65));
             } else {
                 participant.setUserAvatar("\\avatars\\defaultAvatar.png");
             }

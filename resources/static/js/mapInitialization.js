@@ -37,27 +37,25 @@ function initMap() {
 
     var oldMarker, i;
 
+    var markersForCluster = [];
+
     for (i = 0; i < locations.length; i++) {
-        ////////////////////////////!!!!!//////////////////////////
-        /*oldMarker = locations.map(function(location, i){
-            return new google.maps.Marker({
-                title : (locations[i][0]),
-                position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-                map: map
-            });
-        });*/
-        /////////////////////////////////////////////////////////
          oldMarker = new google.maps.Marker({
             title : (locations[i][0]),
             position: new google.maps.LatLng(locations[i][1], locations[i][2]),
             map: map
         });
 
+        var geocoder = new google.maps.Geocoder;
         google.maps.event.addListener(oldMarker, 'click', (function (oldMarker, i) {
             return function () {
+
+                //var address = geocodeLatLng(geocoder, locations[i][1], locations[i][2]);
+
                 infoWindow.setContent("Description: " + locations[i][3] + '<br>' + "Date: " + locations[i][4]
-                    + '<br>' + "Date of creation: " + locations[i][6]);
+                    + '<br>' + "Date of creation: " + locations[i][6] + '<br>' + "Address: ");
                 infoWindow.open(map, oldMarker);
+
             }
         })(oldMarker, i));
         google.maps.event.addListener(oldMarker, 'dblclick', (function (oldMarker, i) {
@@ -70,9 +68,10 @@ function initMap() {
                 openOldForm();
             }
         })(oldMarker, i));
+        markersForCluster.push(oldMarker);
     }
 
-    var markerCluster = new MarkerClusterer(map, oldMarker,
+    var markerCluster = new MarkerClusterer(map, markersForCluster,
         {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
 
 
@@ -122,4 +121,21 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
         'Error: The Geolocation service failed.' :
         'Error: Your browser doesn\'t support geolocation.');
     infoWindow.open(map);
+}
+
+function geocodeLatLng(geocoder, latitude, longitude) {
+    var latlng = {lat: parseFloat(latitude), lng: parseFloat(longitude)};
+    geocoder.geocode({'location': latlng}, function(results, status) {
+        alert(status);
+        alert(results);
+        if (status === 'OK') {
+            if (results[0]) {
+                return results[0].formatted_address;
+            } else {
+                window.alert('No results found');
+            }
+        } else {
+            window.alert('Geocoder failed due to: ' + status);
+        }
+    });
 }

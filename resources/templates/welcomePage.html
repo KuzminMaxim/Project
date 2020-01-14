@@ -6,6 +6,14 @@
         body {
             background: #83CEEC;
         }
+        .formName{
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            width: 100%;
+            text-align: center;
+            font-weight: 900;
+            color: #284177;
+            position: fixed; top: 50%; 
+        }
     </style>
 </head>
 
@@ -13,7 +21,7 @@
 
 <th:block th:include="/menu">..</th:block>
 
-<h2>Message : <span th:utext="${message}"></span></h2>
+<span class="formName" th:utext="${message}">...</span>
 
 </body>
 </html>

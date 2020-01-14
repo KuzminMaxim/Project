@@ -29,7 +29,7 @@ public class WebConfiguration implements WebMvcConfigurer {
                 .addResourceLocations(
                         "classpath:/static/css/",
                         "classpath:/static/js/",
-                        "classpath:/static/uploads/avatars/");
+                        "classpath:/uploads/static/avatars/");
     }
 
 }
