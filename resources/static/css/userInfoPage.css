@@ -1,6 +1,5 @@
 body {
     background: #83CEEC;
-    /*font-weight: 400;*/
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 1rem;
     color: #284177;
@@ -9,9 +8,8 @@ table {
     border-spacing: 0 10px;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: bold;
-    border-radius: 70px 70px 70px 70px;
-    width: 100%;
 }
+
 th {
     padding: 10px 20px;
     background: #284177;
@@ -24,11 +22,48 @@ td {
     padding: 10px;
     font-size: 14px;
     text-align: center;
-    border-top: 2px solid #284177;
-    border-bottom: 2px solid #284177;
-    border-right: 2px solid #284177;
-    border-left: 2px solid #284177;
 }
+
+.eventsWhereParticipantNotHidden td:nth-child(1), .eventsWhereCreatorNotHidden td:nth-child(1) {
+    border-top-left-radius: 70px;
+}
+
+.eventsWhereParticipantNotHidden td:nth-child(5), .eventsWhereCreatorNotHidden td:nth-child(5) {
+    border-top-right-radius: 70px;
+}
+
+.eventsWhereParticipantNotHidden td:nth-child(1), .eventsWhereCreatorNotHidden td:nth-child(1) {
+    border-bottom-left-radius: 70px;
+}
+
+.eventsWhereParticipantNotHidden td:nth-child(5), .eventsWhereCreatorNotHidden td:nth-child(5) {
+    border-bottom-right-radius: 70px;
+}
+
+.cancelledChatsNotHidden td:nth-child(1) {
+    border-bottom-left-radius: 70px;
+}
+
+.cancelledChatsNotHidden td:nth-child(1) {
+    border-top-left-radius: 70px;
+}
+
+.cancelledChatsNotHidden td:nth-child(2) {
+    border-bottom-right-radius: 70px;
+}
+
+.cancelledChatsNotHidden td:nth-child(2) {
+    border-top-right-radius: 70px;
+}
+
+.tableHeaderNotHidden th {
+    border-radius: 70px;
+}
+
+tr {
+    background: #83CEEC;
+}
+
 .left {
     border-radius: 60px 0px 0px 0px;
 }
@@ -46,15 +81,18 @@ td {
     opacity: 0.95;
     border-radius: 70px 70px 70px 70px;
 }
+
 .allTable .btn:hover{
     opacity: 1;
 }
+
 .heading{
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     text-align: center;
     color: #284177;
     width: 100%;
 }
+
 .namingOfPage{
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     width: 100%;
@@ -62,6 +100,7 @@ td {
     font-weight: 900;
     color: #284177;
 }
+
 button.primary {
     background-color: #284177;
     color: #83CEEC;
@@ -74,6 +113,109 @@ button.primary {
     border-radius: 70px 70px 70px 70px;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
 }
+
 button:hover{
     opacity: 1;
+}
+
+.selectInput {
+    font-size: 14px;
+    color: #83CEEC;
+    background: #284177;
+    padding: 5px;
+    border-radius: 70px 70px 70px 70px;
+}
+
+.selectInput, .selectBtn{
+    display: flex;
+    width: 15%;
+    margin: auto;
+    height:35px;
+}
+
+.selectBtn {
+    background-color: #284177;
+    color: #83CEEC;
+    padding: 10px 10px;
+    border: none;
+    cursor: pointer;
+    margin-bottom:10px;
+    opacity: 0.95;
+    border-radius: 70px 70px 70px 70px;
+}
+
+.tableHeaderHidden{
+    display: none;
+}
+
+.tableHeaderNotHidden{
+    display: contents;
+}
+
+.eventsWhereCreatorHidden, .eventsWhereParticipantHidden, .cancelledChatsHidden {
+    display: none;
+}
+
+.eventsWhereCreatorNotHidden, .eventsWhereParticipantNotHidden, .cancelledChatsNotHidden {
+    display: contents;
+}
+
+
+#eventsWhereCreatorTable, #eventsWhereParticipantTable {
+    width: 40%;
+    margin: auto;
+}
+
+#cancelledChatsTable {
+    width: 30%;
+    margin: auto;
+}
+
+.ChatButton {
+    background-color: #284177;
+    color: #83CEEC;
+    padding: 10px 10px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom:10px;
+    opacity: 0.95;
+    border-radius: 70px 70px 70px 70px;
+}
+
+.eventDateOfCreation {
+    display: none;
+}
+
+.groupOfFirstCol {
+    display: flex;
+}
+
+
+.nameOfEvent, .countOfParticipant, .countOfNewMessages {
+    padding: inherit;
+}
+
+.nameOfEvent {
+    width:100%;
+}
+
+.countOfParticipant {
+    border-radius: 25px;
+    border: 1px solid #284177;
+    height: 10px;
+    width: 15px;
+}
+
+.countOfNewMessages {
+    color: #284177;
+}
+
+.countOfParticipant, .countOfNewMessages {
+    font-size: 10px;
+    vertical-align: top;
+}
+
+.timeOfEvent {
+
 }

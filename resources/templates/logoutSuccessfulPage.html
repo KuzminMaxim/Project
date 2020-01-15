@@ -6,14 +6,21 @@
         body {
             background: #83CEEC;
         }
+        .formName{
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            width: 100%;
+            text-align: center;
+            font-weight: 900;
+            color: #284177;
+            position: fixed; top: 50%;
+        }
     </style>
 </head>
 
 <body>
-<!-- Include _menu.html -->
 <th:block th:include="/menu"></th:block>
 
-<h1>Logout Successful!</h1>
+<span class="formName" th:text="'Logout successful!'"/>
 </body>
 
 </html>

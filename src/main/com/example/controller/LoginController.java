@@ -6,6 +6,8 @@ import com.example.model.EventModel;
 import com.example.model.UserLogoutChatModel;
 import com.example.model.UserModel;
 import com.example.utils.WebUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
@@ -26,6 +28,8 @@ public class LoginController {
 
     @Autowired
     ApiForInteractingWithTheDatabase api;
+
+    private static final Logger logger = LoggerFactory.getLogger(ChatController.class);
 
     @GetMapping(value = { "/", "/welcome" })
     public String welcomePage(Model model) {
@@ -53,7 +57,7 @@ public class LoginController {
     @GetMapping(value = "/logoutSuccessful")
     public String logoutSuccessfulPage(Model model) {
         model.addAttribute("title", "Logout");
-        System.out.println("User logged out");
+        logger.info("User logged out!");
         return "logoutSuccessfulPage";
     }
 
@@ -61,7 +65,7 @@ public class LoginController {
     public String userInfo(Model model, Principal principal) {
 
         String userName = principal.getName();
-        System.out.println("Username: " + userName);
+        logger.info("User {} logged in!", userName);
         User loginedUser = (User) ((Authentication) principal).getPrincipal();
         String userInfo = WebUtils.toString(loginedUser);
         model.addAttribute("userInfo", userInfo);

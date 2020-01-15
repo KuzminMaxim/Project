@@ -58,8 +58,6 @@ function sendMessage(event) {
             usersOnline: [],
             chatId: chatId,
             currentDate: ''
-            /*document.createTextNode(' ' + now.getFullYear()+'.'+now.getMonth()+'.' + now.getDate() + ' '
-                + now.getHours() + ':' + now.getMinutes() + ' ').textContent*/
         };
         stompClient.send("/app/"+ chatId +".sendMessage", {}, JSON.stringify(chatMessage));
         messageInput.value = '';

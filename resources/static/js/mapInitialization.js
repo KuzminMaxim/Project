@@ -50,7 +50,7 @@ function initMap() {
         google.maps.event.addListener(oldMarker, 'click', (function (oldMarker, i) {
             return function () {
 
-                //var address = geocodeLatLng(geocoder, locations[i][1], locations[i][2]);
+                var address = geocodeLatLng(geocoder, locations[i][1], locations[i][2]);
 
                 infoWindow.setContent("Description: " + locations[i][3] + '<br>' + "Date: " + locations[i][4]
                     + '<br>' + "Date of creation: " + locations[i][6] + '<br>' + "Address: ");
