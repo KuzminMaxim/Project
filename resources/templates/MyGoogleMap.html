@@ -7,6 +7,9 @@
 </head>
 <body>
 <th:block th:include="/menu">..</th:block>
+
+<input id="pac-input" class="controls" type="text" placeholder="Search Box">
+
 <div style="padding:0">
     <div id="map"></div>
 </div>
@@ -14,7 +17,7 @@
 <script type="text/javascript" th:src="@{/js/mapInitialization.js}"></script>
 <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfOlryc_A5QyGcHyOSE54lO6PVQVd1P0U&callback=initMap"
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfOlryc_A5QyGcHyOSE54lO6PVQVd1P0U&libraries=places&callback=initMap"
         async defer></script>
 
 <div class="login-popup">
