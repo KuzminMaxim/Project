@@ -4,6 +4,7 @@ import com.example.api.ApiForInteractingWithTheDatabase;
 import com.example.model.ChatModel;
 import com.example.model.EventModel;
 import com.example.model.UserModel;
+import com.example.service.EventService;
 import com.example.validation.EventValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,9 @@ public class EventController {
     @Autowired
     private EventValidator eventValidator;
 
+    @Autowired
+    private EventService eventService;
+
     private static final Logger logger = LoggerFactory.getLogger(EventController.class);
 
     @InitBinder
@@ -49,12 +53,8 @@ public class EventController {
     @PostMapping(value = "/getLinkToEvent")
     public String getLinkToEvent(Model model, EventModel eventModel, HttpServletRequest request){
 
-        String linkToEvent = "<a href=\"" + request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() +
-                "/createEvent?latitude=" + eventModel.getLatitude() +
-                "&longitude=" + eventModel.getLongitude() + "\">" + eventModel.getNameOfEvent() + "</a>";
+        eventService.preparingLinkToEvent(model, eventModel, request);
 
-        model.addAttribute("nameOfEventToLink", eventModel.getNameOfEvent());
-        model.addAttribute("linkToEvent", linkToEvent);
         return "userInfoPage";
     }
 
@@ -72,44 +72,7 @@ public class EventController {
     public String createEvent(Model model, @RequestParam(required = false) String latitude) {
         logger.debug("Create event, method = GET");
 
-        EventModel form = new EventModel();
-        ChatModel chatModel = new ChatModel();
-        model.addAttribute("eventModel", form);
-        model.addAttribute("chatModel", chatModel);
-
-        List<EventModel> testList;
-
-        if (latitude == null){
-            testList = apiForInteractingWithTheDatabase.readAll(EventModel.class);
-        } else {
-            testList = apiForInteractingWithTheDatabase
-                    .readAllWhereSomething(EventModel.class, latitude, "event_lat");
-        }
-
-            String[] eventName = new String[testList.toArray().length];
-            Double[] eventLat = new Double[testList.toArray().length];
-            Double[] eventLng = new Double[testList.toArray().length];
-            String[] eventDescription = new String[testList.toArray().length];
-            String[] dates = new String[testList.toArray().length];
-            String[] eventNameOfCreator = new String[testList.toArray().length];
-            String[] dateOfCreation = new String[testList.toArray().length];
-            int n = 0;
-            for (int i = 0; i < testList.toArray().length; i++, n++){
-                eventName[n] = testList.get(i).getNameOfEvent();
-                eventLat[n] = Double.valueOf(testList.get(i).getLatitude());
-                eventLng[n] = Double.valueOf(testList.get(i).getLongitude());
-                eventDescription[n] = testList.get(i).getDescriptionOfEvent();
-                dates[n] = testList.get(i).getDate().replace("T", " ");
-                eventNameOfCreator[n] = testList.get(i).getNameOfEventCreator();
-                dateOfCreation[n] = testList.get(i).getEventDateOfCreation();
-            }
-            model.addAttribute("eventName", eventName);
-            model.addAttribute("eventLat", eventLat);
-            model.addAttribute("eventLng", eventLng);
-            model.addAttribute("eventDescript", eventDescription);
-            model.addAttribute("eventDate", dates);
-            model.addAttribute("eventNameOfCreator", eventNameOfCreator);
-            model.addAttribute("dateOfCreation", dateOfCreation);
+        eventService.preparingGetEvent(latitude, model);
 
         return "MyGoogleMap";
     }
@@ -118,36 +81,21 @@ public class EventController {
     public String createNewEvent(Model model, @ModelAttribute("eventForm") @Validated EventModel eventModel,
                              BindingResult result, ChatModel chatModel) {
 
-        Date date = new Date();
-        Timestamp ts = new Timestamp(date.getTime());
-        String dateOfCreation = ts.toString();
-
-        String newIdForEventAndChat = eventModel.getNameOfEvent() + dateOfCreation + eventModel.getNameOfEventCreator();
-
-        logger.debug("Create event, method = POST");
-        logger.info("result.hasErrors {}", result.hasErrors());
         if (result.hasErrors()) {
-            List<EventModel> eventName = apiForInteractingWithTheDatabase.readAll(EventModel.class);
-            model.addAttribute("eventInfo", eventName);
+            eventService.resultHasErrors(model);
             return "MyGoogleMap";
         }
         try {
-
-            eventModel.setId(newIdForEventAndChat);
-            eventModel.setEventDateOfCreation(dateOfCreation);
-            chatModel.setId(newIdForEventAndChat);
-            chatModel.setChatDateOfCreation(dateOfCreation);
-
-            apiForInteractingWithTheDatabase.save(eventModel);
-            apiForInteractingWithTheDatabase.save(chatModel);
-            logger.info("Event {} and chat {} was created", eventModel.getNameOfEvent(), chatModel.getChatName());
-
+            eventService.preparingPostEvent(eventModel, chatModel);
         } catch (Exception e){
+
             logger.error("Unknown error", e);
             List<EventModel> eventName = apiForInteractingWithTheDatabase.readAll(EventModel.class);
             model.addAttribute("eventInfo", eventName);
             model.addAttribute("errorMessage", "Error: " + e.getMessage());
+
             return "/createEvent";
+
         }
         return "redirect:/userInfo";
     }

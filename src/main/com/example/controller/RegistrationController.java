@@ -2,10 +2,9 @@ package com.example.controller;
 
 import com.example.api.ApiForInteractingWithTheDatabase;
 import com.example.model.UserModel;
+import com.example.service.RegistrationService;
 import com.example.validation.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,7 +28,7 @@ public class RegistrationController {
     private ApiForInteractingWithTheDatabase api;
 
     @Autowired
-    public JavaMailSender emailSender;
+    private RegistrationService registrationService;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder) {
@@ -73,16 +72,7 @@ public class RegistrationController {
 
             registrationForm.setId(newIdForUser);
             api.save(registrationForm);
-
-
-            SimpleMailMessage message = new SimpleMailMessage();
-
-            message.setTo(registrationForm.getEmail());
-            message.setSubject("Greeting");
-            message.setText("Welcome to the \"Events on the map\" application. We are glad that you are with us!");
-
-            this.emailSender.send(message);
-
+            registrationService.sendEmail(registrationForm);
 
             try {
 
@@ -93,9 +83,11 @@ public class RegistrationController {
                 System.out.println("Fail authentication");
             }
         } catch (Exception e) {
+
             List<UserModel> username = api.readAll(UserModel.class);
             model.addAttribute("userInfo", username);
             model.addAttribute("errorMessage", "Error: " + e.getMessage());
+
             return "registrationPage";
         }
 
