@@ -1,7 +1,5 @@
 package com.example.controller;
 
-import java.security.Principal;
-
 import com.example.api.ApiForInteractingWithTheDatabase;
 import com.example.model.UserModel;
 import com.example.utils.WebUtils;
@@ -13,7 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.security.Principal;
 
 
 @RequestMapping

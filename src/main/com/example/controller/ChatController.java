@@ -86,9 +86,9 @@ public class ChatController {
         for (ChatModel participant : participants) {
             String userAvatar = userDAO.getAvatarPath(participant.getChatParticipant());
             if (userAvatar != null) {
-                participant.setUserAvatar(userAvatar.substring(65));
+                participant.setUserAvatar(userAvatar.substring(40));
             } else {
-                participant.setUserAvatar("\\avatars\\defaultAvatar.png");
+                participant.setUserAvatar("\\uploads\\defaultAvatar.png");
             }
         }
         model.addAttribute("participants", participants);

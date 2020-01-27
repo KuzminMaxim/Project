@@ -8,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 @ObjectType(id = "users")
 public class UserModel {
 
-    //Rename
     private String resetToken;
 
     private String decryptedPassword;

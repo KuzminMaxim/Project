@@ -34,7 +34,7 @@
     <div class="formName">Current avatar</div>
     <br>
     <img th:if="${avatarExists != null}" th:src="@{${avatarExists}}" alt="No image" class="images"/>
-    <img th:if="${avatarExists == null}" th:src="@{/avatars/defaultAvatar.png}" alt="No image" class="images"/>
+    <img th:if="${avatarExists == null}" th:src="@{/uploads/defaultAvatar.png}" alt="No image" class="images"/>
 </div>
 
 <form class="registration-container" th:object="${myUploadForm}" method="POST"

@@ -25,11 +25,11 @@ public class WebConfiguration implements WebMvcConfigurer {
         registry.addResourceHandler(
                 "/css/**",
                 "/js/**",
-                "/avatars/**")
+                "/uploads/**")
                 .addResourceLocations(
                         "classpath:/static/css/",
                         "classpath:/static/js/",
-                        "classpath:/uploads/static/avatars/");
+                        "file:uploads/");
     }
 
 }

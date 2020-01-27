@@ -15,7 +15,7 @@ body {
     transform: translate(-50%, -50%);
     border-radius: 70px 70px 70px 70px;
 }
-/* Full-width for input fields */
+
 .login-container input[type=text], .login-container input[type=password]{
     width: 100%;
     padding: 10px;
@@ -25,13 +25,13 @@ body {
     position: center;
     border-radius: 70px 70px 70px 70px;
 }
-/* When the inputs get focus, do something */
+
 .login-container input[type=text]:focus, .login-container input[type=password]:focus{
     background-color: #EDE8E4;
     outline: none;
     border-radius: 70px 70px 70px 70px;
 }
-/* Style submit/login button */
+
 .login-container .btn {
     background-color: #284177;
     color: #83CEEC;

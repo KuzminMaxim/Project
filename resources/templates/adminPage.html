@@ -9,7 +9,6 @@
     </style>
 </head>
 <body>
-<!-- Include _menu.html -->
 <th:block th:include="/menu"></th:block>
 
 <h2>Admin Page</h2>
@@ -19,12 +18,10 @@
 
 <br/><br/>
 
-<div th:if="${userInfo != null}" th:utext="${userInfo}"></div>
 <p>
     <br><br>
     <a th:href="@{/viewRegisterUser}">View registered user</a>
     <a th:href="@{/viewAllEvents}">View all events</a>
-    <a th:href="@{/deleteSomething}">Delete something</a>
 </p>
 </body>
 

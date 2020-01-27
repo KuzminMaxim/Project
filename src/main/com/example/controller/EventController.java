@@ -3,7 +3,6 @@ package com.example.controller;
 import com.example.api.ApiForInteractingWithTheDatabase;
 import com.example.model.ChatModel;
 import com.example.model.EventModel;
-import com.example.model.UserModel;
 import com.example.service.EventService;
 import com.example.validation.EventValidator;
 import org.slf4j.Logger;
@@ -17,10 +16,6 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RequestMapping

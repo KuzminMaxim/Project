@@ -26,7 +26,7 @@ public class MyFileUploadService {
         String avatarPath = userDAO.getAvatarPath(principal.getName());
 
         if (avatarPath != null){
-            String avatarForTh = avatarPath.substring(65);
+            String avatarForTh = avatarPath.substring(40);
             model.addAttribute("avatarExists", avatarForTh);
         }
 
@@ -34,7 +34,7 @@ public class MyFileUploadService {
 
     public void preparingToDoUpload(UserModel myUploadForm, Principal principal){
 
-        String uploadRootPath = "C:\\Users\\Максим\\IdeaProjects\\MainProject\\resources\\uploads\\static\\avatars";
+        String uploadRootPath = "C:\\Users\\Максим\\IdeaProjects\\MainProject\\uploads";
 
         File uploadRootDir = new File(uploadRootPath);
 

@@ -48,7 +48,6 @@ function onError(error) {
 
 function sendMessage(event) {
     var messageContent = messageInput.value.trim();
-    var now = new Date();
     if(messageContent && stompClient) {
         var chatMessage = {
             sender: username,
@@ -99,7 +98,7 @@ function onMessageReceived(payload) {
 
         var now = new Date();
         var currentDate = document.createElement('i');
-        var currentDateText = document.createTextNode(' ' + now.getFullYear()+'.' + now.getMonth()+'.' + now.getDate() + ' '
+        var currentDateText = document.createTextNode(' ' + now.getFullYear()+'-' + (now.getMonth()+1)+'-' + now.getDate() + ' '
             + now.getHours() + ':' + now.getMinutes() + ' ');
         currentDate.appendChild(currentDateText);
         currentDate.classList.add('currentDate');

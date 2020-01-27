@@ -3,8 +3,6 @@ package com.example.model;
 import com.example.api.Attribute;
 import com.example.api.ObjectType;
 
-import java.util.Collection;
-
 @ObjectType(id = "messages")
 public class ChatMessage {
 
