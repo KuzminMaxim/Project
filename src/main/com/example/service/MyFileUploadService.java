@@ -45,22 +45,31 @@ public class MyFileUploadService {
             String name = fileData.getOriginalFilename();
 
             if (name != null && name.length() > 0) {
-                try {
-                    File serverFile = new File(uploadRootDir.getAbsolutePath() + File.separator +
-                            principal.getName() + name);
 
-                    BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
-                    stream.write(fileData.getBytes());
-                    stream.close();
+                String fileExtentions = ".jpg,.png";
+                int lastIndexOfName = name.lastIndexOf('.');
+                String extentions = name.substring(lastIndexOfName);
 
-                    if (userDAO.getAvatarPath(principal.getName()) == null){
-                        userDAO.addAvatar(serverFile.getAbsolutePath(), principal.getName());
-                    } else {
-                        userDAO.setAvatar(serverFile.getAbsolutePath(), principal.getName());
+                if (fileExtentions.contains(extentions)){
+
+                    try {
+                        File serverFile = new File(uploadRootDir.getAbsolutePath() + File.separator +
+                                principal.getName() + name);
+
+                        BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile));
+                        stream.write(fileData.getBytes());
+                        stream.close();
+
+                        if (userDAO.getAvatarPath(principal.getName()) == null){
+                            userDAO.addAvatar(serverFile.getAbsolutePath(), principal.getName());
+                        } else {
+                            userDAO.setAvatar(serverFile.getAbsolutePath(), principal.getName());
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
 
             }
