@@ -76,23 +76,36 @@ public class EventController {
     public String createNewEvent(Model model, @ModelAttribute("eventForm") @Validated EventModel eventModel,
                              BindingResult result, ChatModel chatModel) {
 
-        if (result.hasErrors()) {
-            eventService.resultHasErrors(model);
-            return "MyGoogleMap";
+        if (fieldIsValid(eventModel.getNameOfEvent())){
+            if (result.hasErrors()) {
+                eventService.resultHasErrors(model);
+                return "error";
+            }
+            try {
+                eventService.preparingPostEvent(eventModel, chatModel);
+            } catch (Exception e){
+
+                logger.error("Unknown error", e);
+                List<EventModel> eventName = apiForInteractingWithTheDatabase.readAll(EventModel.class);
+                model.addAttribute("eventInfo", eventName);
+                model.addAttribute("errorMessage", "Error: " + e.getMessage());
+
+                return "error";
+
+            }
+        } else {
+            model.addAttribute("eventInfo", eventModel.getNameOfEvent() + " contains invalid characters");
+            logger.info("Name {} is not valid", eventModel.getNameOfEvent());
+
+            return "error";
         }
-        try {
-            eventService.preparingPostEvent(eventModel, chatModel);
-        } catch (Exception e){
 
-            logger.error("Unknown error", e);
-            List<EventModel> eventName = apiForInteractingWithTheDatabase.readAll(EventModel.class);
-            model.addAttribute("eventInfo", eventName);
-            model.addAttribute("errorMessage", "Error: " + e.getMessage());
 
-            return "/createEvent";
-
-        }
         return "redirect:/userInfo";
+    }
+
+    private boolean fieldIsValid(String field){
+        return field.matches("[а-яА-Яa-zA-Z0-9]+");
     }
 
 }

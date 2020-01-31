@@ -24,5 +24,12 @@ public class EventValidator implements Validator {
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "nameOfEvent", "NotEmpty.eventForm.nameOfEvent");
 
+        if (!fieldIsValid(eventModel.getNameOfEvent())){
+            errors.rejectValue("nameOfEvent", "Pattern.eventModel.name");
+        }
+    }
+
+    private boolean fieldIsValid(String field){
+        return field.matches("[а-яА-Яa-zA-Z0-9]+");
     }
 }

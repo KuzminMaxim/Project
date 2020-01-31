@@ -27,24 +27,33 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-        List<UserModel> appUser = api.readAllWhereSomething(UserModel.class, name, "user_name");
 
-        if (appUser.size() == 0){
+        if (fieldIsValid(name)){
+            List<UserModel> appUser = api.readAllWhereSomething(UserModel.class, name, "user_name");
+
+            if (appUser.size() == 0){
                 logger.info("User {} not found!", name);
                 throw new UsernameNotFoundException("User " + name + " was not found in the database");
+            }
+
+            String roleName = appUser.get(0).getRole();
+
+            List<GrantedAuthority> grantList = new ArrayList<>();
+
+            if (roleName != null){
+                GrantedAuthority authority = new SimpleGrantedAuthority(roleName);
+                grantList.add(authority);
+            }
+
+            return new User(appUser.get(0).getName(),
+                    appUser.get(0).getPassword(), grantList);
         }
+        logger.info("Incorrect name: {}", name);
+        throw new UsernameNotFoundException("User " + name + " was not found in the database");
+    }
 
-        String roleName = appUser.get(0).getRole();
-
-        List<GrantedAuthority> grantList = new ArrayList<>();
-
-        if (roleName != null){
-            GrantedAuthority authority = new SimpleGrantedAuthority(roleName);
-            grantList.add(authority);
-        }
-
-        return new User(appUser.get(0).getName(),
-                appUser.get(0).getPassword(), grantList);
+    private boolean fieldIsValid(String name){
+        return name.matches("[а-яА-Яa-zA-Z0-9]+");
     }
 
 }

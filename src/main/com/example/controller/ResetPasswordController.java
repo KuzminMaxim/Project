@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.api.ApiForInteractingWithTheDatabase;
 import com.example.model.UserModel;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,6 +20,8 @@ import java.util.UUID;
 
 @Controller
 public class ResetPasswordController {
+
+    private EmailValidator emailValidator = EmailValidator.getInstance();
 
     @Autowired
     private ApiForInteractingWithTheDatabase api;
@@ -41,38 +44,44 @@ public class ResetPasswordController {
 
         String userEmail = userModel.getEmail();
 
-        System.out.println("EMAIL: " + userEmail);
-        List<UserModel> userFromDBList = api.readAllWhereSomething(UserModel.class, userEmail, "user_email");
-        UserModel userFromDB = new UserModel();
-
-        for (UserModel value : userFromDBList) {
-            userFromDB.setName(value.getName());
-            userFromDB.setPassword(value.getPassword());
-            userFromDB.setRole(value.getRole());
-            userFromDB.setEmail(value.getEmail());
-        }
-
-        if (userFromDBList.isEmpty()){
-            model.addAttribute("errorMessage", "We didn't find an account for that e-mail address.");
+        if (!this.emailValidator.isValid(userEmail)){
+            model.addAttribute("errorMessage", "This e-mail: " + userEmail + " is invalid");
         } else {
 
-            System.out.println("NAME: " + userFromDB.getName());
+            System.out.println("EMAIL: " + userEmail);
+            List<UserModel> userFromDBList = api.readAllWhereSomething(UserModel.class, userEmail, "user_email");
+            UserModel userFromDB = new UserModel();
 
-            userFromDB.setResetToken(UUID.randomUUID().toString());
-            currentTokenMap.put(userFromDB.getResetToken(), userFromDB);
+            for (UserModel value : userFromDBList) {
+                userFromDB.setName(value.getName());
+                userFromDB.setPassword(value.getPassword());
+                userFromDB.setRole(value.getRole());
+                userFromDB.setEmail(value.getEmail());
+            }
 
-            SimpleMailMessage passwordResetEmail = new SimpleMailMessage();
-            String appUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+            if (userFromDBList.isEmpty()){
+                model.addAttribute("errorMessage", "We didn't find an account for that e-mail address.");
+            } else {
 
-            passwordResetEmail.setTo(userEmail);
-            passwordResetEmail.setSubject("Reset password");
+                System.out.println("NAME: " + userFromDB.getName());
 
-            passwordResetEmail.setText("To reset your password, click the link below:\n" + appUrl
-                    + "/reset?token=" + userFromDB.getResetToken());
+                userFromDB.setResetToken(UUID.randomUUID().toString());
+                currentTokenMap.put(userFromDB.getResetToken(), userFromDB);
 
-            this.emailSender.send(passwordResetEmail);
+                SimpleMailMessage passwordResetEmail = new SimpleMailMessage();
+                String appUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
 
-            model.addAttribute("successMessage", "A password reset link has been sent to " + userEmail);
+                passwordResetEmail.setTo(userEmail);
+                passwordResetEmail.setSubject("Reset password");
+
+                passwordResetEmail.setText("To reset your password, click the link below:\n" + appUrl
+                        + "/reset?token=" + userFromDB.getResetToken());
+
+                this.emailSender.send(passwordResetEmail);
+
+                model.addAttribute("successMessage", "A password reset link has been sent to " + userEmail);
+
+            }
 
         }
 
@@ -100,29 +109,37 @@ public class ResetPasswordController {
     @PostMapping(value = "/reset")
     public String setNewPassword(UserModel userModel, Model model) {
 
-        if (userModel.getPassword().isEmpty()){
+        if (userModel.getDecryptedPassword().isEmpty()){
             model.addAttribute("errorMessage", "Password field is empty." +
                     "Please, follow the steps to reset your password again.");
             return "resetPasswordFromToken";
         } else {
-            UserModel userFromToken = currentTokenMap.get(userModel.getResetToken());
+            if (fieldIsValid(userModel.getDecryptedPassword())){
+                UserModel userFromToken = currentTokenMap.get(userModel.getResetToken());
 
-            if (userFromToken != null){
-                currentTokenMap.remove(userModel.getResetToken());
+                if (userFromToken != null){
+                    currentTokenMap.remove(userModel.getResetToken());
 
-                userModel.setId(userFromToken.getName() + userFromToken.getEmail());
-                userModel.setEmail(userFromToken.getEmail());
-                userModel.setRole(userFromToken.getRole());
-                userModel.setName(userFromToken.getName());
+                    userModel.setId(userFromToken.getName() + userFromToken.getEmail());
+                    userModel.setEmail(userFromToken.getEmail());
+                    userModel.setRole(userFromToken.getRole());
+                    userModel.setName(userFromToken.getName());
 
-                api.update(userModel);
+                    api.update(userModel);
 
-                return "redirect:/login";
-            } else {
-                model.addAttribute("errorMessage", "Oops!  This is an invalid password reset link.");
-                return "resetPasswordFromToken";
+                    return "redirect:/login";
+                } else {
+                    model.addAttribute("errorMessage", "Oops!  This is an invalid password reset link.");
+                    return "resetPasswordFromToken";
+                }
             }
+            model.addAttribute("errorMessage", "New password is invalid!");
+            return "resetPasswordFromToken";
         }
+    }
+
+    private boolean fieldIsValid(String name){
+        return name.matches("[а-яА-Яa-zA-Z0-9]+") && name.length() > 6;
     }
 
 }

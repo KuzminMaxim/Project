@@ -33,7 +33,6 @@ public class UserValidator implements Validator {
         if (!this.emailValidator.isValid(registrationForm.getEmail())) {
             errors.rejectValue("email", "Pattern.registrationForm.email");
         } else if (registrationForm.getEmail() != null) {
-
             UserModel userDAOEmail = api.readSomethingOne(UserModel.class, registrationForm.getEmail(), "user_email");
 
             if (userDAOEmail != null) {
@@ -43,12 +42,38 @@ public class UserValidator implements Validator {
 
         if (!errors.hasFieldErrors("name")) {
 
-            UserModel dbUser = api.readSomethingOne(UserModel.class, registrationForm.getName(), "user_name");
+            if (fieldIsValid(registrationForm.getName())){
 
-            if (dbUser != null) {
-                errors.rejectValue("name", "Duplicate.registrationForm.name");
+                UserModel dbUser = api.readSomethingOne(UserModel.class, registrationForm.getName(), "user_name");
+
+                if (dbUser != null) {
+                    errors.rejectValue("name", "Duplicate.registrationForm.name");
+                }
+
+            } else errors.rejectValue("name", "Pattern.registrationForm.name");
+            if (fieldLengthIsValid(registrationForm.getName())){
+                errors.rejectValue("name","Pattern.registrationForm.length");
             }
         }
+        if (registrationForm.getDecryptedPassword() != null){
+
+            if (!fieldIsValid(registrationForm.getDecryptedPassword())){
+                errors.rejectValue("password", "Pattern.registrationForm.password");
+            }
+
+            if (fieldLengthIsValid(registrationForm.getDecryptedPassword())){
+                errors.rejectValue("password","Pattern.registrationForm.length");
+            }
+
+        }
+    }
+
+    private boolean fieldIsValid(String name){
+        return name.matches("[а-яА-Яa-zA-Z0-9]+");
+    }
+
+    private boolean fieldLengthIsValid(String field){
+        return field.length() <= 6;
     }
 
 }

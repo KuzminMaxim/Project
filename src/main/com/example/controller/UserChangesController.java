@@ -38,17 +38,30 @@ public class UserChangesController {
 
 
     @PostMapping(value = "/changePassword")
-    public String changePassword(UserModel registrationForm, Principal principal) {
+    public String changePassword(UserModel registrationForm, Principal principal, Model model) {
 
         if (registrationForm.getPassword().isEmpty()){
+            model.addAttribute("error", "New password is empty");
             System.out.println("Password for user: '"+ principal.getName() +"' was not changed.");
-            return "/error";
-        } else{
-            registrationForm.setName(principal.getName());
-            api.update(registrationForm);
-            System.out.println("Password for user: '"+ registrationForm.getName() +"' was changed.");
+        } else {
+            if (passwordIsValid(registrationForm.getDecryptedPassword())){
+                registrationForm.setName(principal.getName());
+                api.update(registrationForm);
+                System.out.println("Password for user: '"+ registrationForm.getName() +"' was changed.");
+                model.addAttribute("success", "Password was changed");
+                model.addAttribute("registrationForm", registrationForm);
+                return "changePasswordPage";
+            } else {
+                System.out.println("New password is incorrect!");
+                model.addAttribute("error", "New password is incorrect");
+            }
         }
-        return "redirect:/userInfo";
+        model.addAttribute("registrationForm", registrationForm);
+        return "changePasswordPage";
+    }
+
+    private boolean passwordIsValid(String password){
+        return password.matches("[а-яА-Яa-zA-Z0-9]+") && password.length() > 6;
     }
 
     @GetMapping(value = "/setAvatar")

@@ -80,7 +80,7 @@ public class EventService {
 
     public void resultHasErrors(Model model){
         List<EventModel> eventName = apiForInteractingWithTheDatabase.readAll(EventModel.class);
-        model.addAttribute("eventInfo", eventName);
+        model.addAttribute("eventInfo", "Field contains invalid characters");
     }
 
     private void saveEventInDB(EventModel eventModel, ChatModel chatModel, String newIdForEventAndChat, String dateOfCreation){

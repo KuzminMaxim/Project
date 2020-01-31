@@ -13,5 +13,6 @@
 <body>
 <th:block th:include="/menu"></th:block>
 <h2 style="color: red;"> Error </h2>
+<span th:if="${eventInfo != null}" th:utext="${eventInfo}"/>
 </body>
 </html>
