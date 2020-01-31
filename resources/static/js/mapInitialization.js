@@ -141,14 +141,21 @@ function initMap() {
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
-            var pos = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
-
-            infoWindow.setPosition(pos);
-            infoWindow.setContent('Location found.');
-            infoWindow.open(map);
+            var pos;
+            if (locations.length === 1){
+                pos = {
+                    lat: parseFloat(locations[0][1]),
+                    lng: parseFloat(locations[0][2])
+                };
+            } else {
+                 pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                infoWindow.setPosition(pos);
+                infoWindow.setContent('Location found.');
+                infoWindow.open(map);
+            }
             map.setCenter(pos);
         }, function() {
             handleLocationError(true, infoWindow, map.getCenter());
