@@ -84,10 +84,22 @@ function onMessageReceived(payload) {
 
     } else if (message.type === 'LEAVE') {
         var  nicknameOfParticipantOnline = document.querySelectorAll('.nicknameOfParticipantOnline');
+
+        var arr = message.usersOnline;
+        let countOfWindow = 0;
+        for (let i = 0; i < arr.length; ++i)
+        {
+            if (arr[i] === message.sender){
+                countOfWindow++
+            } else {countOfWindow = 0}
+        }
+
         for (let j = 0; j < nicknameOfParticipantOnline.length; j++){
             if (message.sender === nicknameOfParticipantOnline.item(j).innerHTML){
-                nicknameOfParticipantOnline.item(j).classList.remove('nicknameOfParticipantOnline');
-                nicknameOfParticipantOnline.item(j).classList.add('nameOfParticipant');
+                if (countOfWindow === 0){
+                    nicknameOfParticipantOnline.item(j).classList.remove('nicknameOfParticipantOnline');
+                    nicknameOfParticipantOnline.item(j).classList.add('nameOfParticipant');
+                }
             }
         }
     } else {
