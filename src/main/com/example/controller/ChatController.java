@@ -66,14 +66,25 @@ public class ChatController {
             chatId = chatModel.getChatName()+chatModel.getChatDateOfCreation()+chatModel.getChatNameOfCreator();
         }
 
-        List<ChatModel> check = api.readAllWhereSomething(ChatModel.class, chatId, "chat_id");
-        if (check.size() != 0){
-            for (ChatModel value : check) {
+        List<ChatModel> checkChat = api.readAllWhereSomething(ChatModel.class, chatId, "chat_id");
+        if (checkChat.size() != 0){
+            for (ChatModel value : checkChat) {
                 if (!value.getId().equals(chatId)) {
                     return "redirect:/userInfo";
                 }
             }
         } else {
+            return "redirect:/userInfo";
+        }
+
+        List<ChatModel> checkParticipant = dao.findAllParticipants(chatId);
+        boolean success = false;
+        for (ChatModel value : checkParticipant){
+            if (value.getChatParticipant().equals(principal.getName())){
+                success = true;
+            }
+        }
+        if (!success){
             return "redirect:/userInfo";
         }
 
