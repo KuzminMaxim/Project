@@ -66,9 +66,17 @@ public class AllModelsDAO extends JdbcDaoSupport {
             } else if (objectType.equals("event")){
                 for ( Object entry : attributesValues.keySet()) {
                     String key = (String) entry;
-                    if (key.equals("event_id")){
+                    if (key.equals("event_status") && attributesValues.get(key).equals("cancelled")){
+                        getJdbcTemplate().update(NewMapperDB.SET_SOMETHING_SQL,
+                                attributesValues.get("event_id"), "cancelled", "event_status");
                         getJdbcTemplate().update(NewMapperDB.SET_SOMETHING_SQL,
                                 attributesValues.get("event_id"), "cancelled", "chat_status");
+                    }
+                    else if (key.equals("event_status") && attributesValues.get(key) == "complete"){
+                        getJdbcTemplate().update(NewMapperDB.SET_SOMETHING_SQL,
+                                attributesValues.get("event_id"), "complete", "event_status");
+                        getJdbcTemplate().update(NewMapperDB.SET_SOMETHING_SQL,
+                                attributesValues.get("event_id"), "complete", "chat_status");
                     }
                 }
             } else if (objectType.equals("chat")){

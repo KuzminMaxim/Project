@@ -45,6 +45,14 @@ public class EventController {
         }
     }
 
+    @PostMapping(value = "/completeEvent")
+    public String completeEvent(EventModel eventModel){
+
+        eventService.preparingCompleteEvent(eventModel);
+
+        return "userInfoPage";
+    }
+
     @PostMapping(value = "/getLinkToEvent")
     public String getLinkToEvent(Model model, EventModel eventModel, HttpServletRequest request){
 

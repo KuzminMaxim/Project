@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,6 +31,9 @@ public class LoginService {
 
     public void preparingToGetUserPage(Model model, Principal principal){
 
+        List<EventModel> allEventsWhereCreator = api.readAllWhereSomething(EventModel.class, principal.getName(), "event_name_of_creator");
+        List<EventModel> allEventsWhereParticipant = api.readAllWhereSomething(EventModel.class, principal.getName(), "event_participant");
+
         String userName = principal.getName();
         logger.info("User {} logged in!", userName);
         User loginedUser = (User) ((Authentication) principal).getPrincipal();
@@ -38,35 +42,46 @@ public class LoginService {
 
         String name = principal.getName();
 
-        List<EventModel> eventsWhereCreator = api.readAllWhereSomething(EventModel.class, principal.getName(), "event_name_of_creator");
+        List<EventModel> eventsWhereCreator = new ArrayList<>(allEventsWhereCreator);
         if (!eventsWhereCreator.isEmpty()){
 
             for (int i = 0; i < eventsWhereCreator.size(); i++){
-                String id = eventsWhereCreator.get(i).getNameOfEvent() +
-                        eventsWhereCreator.get(i).getEventDateOfCreation() + eventsWhereCreator.get(i).getNameOfEventCreator();
-                List <UserLogoutChatModel> userLogoutChatModels = api.readAll(UserLogoutChatModel.class);
-                String logoutTime = "";
-                for (UserLogoutChatModel userLogoutChatModel : userLogoutChatModels) {
+                String status = eventsWhereCreator.get(i).getEventStatus();
+                if (!status.equals("active")){
+                    eventsWhereCreator.remove(i);
+                    i--;
+                }
+            }
 
-                    String chatId = eventsWhereCreator.get(i).getNameOfEvent() +
+            for (int i = 0; i < eventsWhereCreator.size(); i++){
+
+                    String id = eventsWhereCreator.get(i).getNameOfEvent() +
                             eventsWhereCreator.get(i).getEventDateOfCreation() + eventsWhereCreator.get(i).getNameOfEventCreator();
+                    List <UserLogoutChatModel> userLogoutChatModels = api.readAll(UserLogoutChatModel.class);
+                    String logoutTime = "";
+                    for (UserLogoutChatModel userLogoutChatModel : userLogoutChatModels) {
 
-                    eventsWhereCreator.get(i).setId(chatId);
+                        String chatId = eventsWhereCreator.get(i).getNameOfEvent() +
+                                eventsWhereCreator.get(i).getEventDateOfCreation() + eventsWhereCreator.get(i).getNameOfEventCreator();
 
-                    if (userLogoutChatModel.getUserLogoutTime().substring(24).equals(principal.getName())
-                            && userLogoutChatModel.getChatId().equals(chatId)) {
+                        eventsWhereCreator.get(i).setId(chatId);
 
-                        logoutTime = userLogoutChatModel.getUserLogoutTime();
+                        if (userLogoutChatModel.getUserLogoutTime().substring(24).equals(principal.getName())
+                                && userLogoutChatModel.getChatId().equals(chatId)) {
 
-                        if (userLogoutChatModels.size() != 0){
+                            logoutTime = userLogoutChatModel.getUserLogoutTime();
 
-                            if (i < userLogoutChatModels.size()){
+                            if (userLogoutChatModels.size() != 0){
 
-                                if (principal.getName().equals(eventsWhereCreator.get(i).getNameOfEventCreator()) &&
-                                        eventsWhereCreator.get(i).getId().equals(userLogoutChatModel.getChatId())){
-                                    EventModel countOfNewMessages = eventDAO.findCountOfNewMessagesAfterLogout(chatId, logoutTime);
-                                    eventsWhereCreator.get(i).setCountOfNewMessages(countOfNewMessages.getCountOfNewMessages());
-                                    break;
+                                if (i < userLogoutChatModels.size()){
+
+                                    if (principal.getName().equals(eventsWhereCreator.get(i).getNameOfEventCreator()) &&
+                                            eventsWhereCreator.get(i).getId().equals(userLogoutChatModel.getChatId())){
+                                        EventModel countOfNewMessages = eventDAO.findCountOfNewMessagesAfterLogout(chatId, logoutTime);
+                                        eventsWhereCreator.get(i).setCountOfNewMessages(countOfNewMessages.getCountOfNewMessages());
+                                        break;
+                                    }
+
                                 }
 
                             }
@@ -74,19 +89,26 @@ public class LoginService {
                         }
 
                     }
+                    EventModel countOfParticipants = eventDAO.findCountOfParticipants(id);
+                    eventsWhereCreator.get(i).setDate(eventsWhereCreator.get(i).getDate().replace("T", " "));
+                    eventsWhereCreator.get(i).setCountOfParticipant(countOfParticipants.getCountOfParticipant());
 
                 }
-                EventModel countOfParticipants = eventDAO.findCountOfParticipants(id);
-                eventsWhereCreator.get(i).setDate(eventsWhereCreator.get(i).getDate().replace("T", " "));
-                eventsWhereCreator.get(i).setCountOfParticipant(countOfParticipants.getCountOfParticipant());
-            }
             model.addAttribute("eventsWhereCreator", eventsWhereCreator);
 
         }
 
-        List<EventModel> eventsWhereParticipant = api.readAllWhereSomething(EventModel.class, principal.getName(), "event_participant");
+        List<EventModel> eventsWhereParticipant = new ArrayList<>(allEventsWhereParticipant);
 
         if (!eventsWhereParticipant.isEmpty()){
+
+            for (int i = 0; i < eventsWhereParticipant.size(); i++){
+                String status = eventsWhereParticipant.get(i).getEventStatus();
+                if (!status.equals("active")){
+                    eventsWhereParticipant.remove(i);
+                    i--;
+                }
+            }
 
             for (int i = 0; i < eventsWhereParticipant.size(); i++){
 
@@ -144,6 +166,16 @@ public class LoginService {
             }
             model.addAttribute("cancelledChats", cancelledChats);
         }
+
+        List<EventModel> completedChats = eventDAO.findCompletedChats(name);
+        if (!completedChats.isEmpty()){
+            for (EventModel completedChat : completedChats) {
+                EventModel countOfParticipants = eventDAO.findCountOfParticipants(completedChat.getId());
+                completedChat.setCountOfParticipant(countOfParticipants.getCountOfParticipant());
+            }
+            model.addAttribute("completedEvents", completedChats);
+        }
+
 
         UserModel registrationForm = new UserModel();
         EventModel eventModel = new EventModel();

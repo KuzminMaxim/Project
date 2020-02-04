@@ -58,7 +58,7 @@ public class DeleteController {
             } else {
                 return "redirect:/userInfo";
             }
-            api.delete(eventModel);
+            eventModel.setEventStatus("cancelled");
             api.update(eventModel);
             logger.info("Event {} was cancelled", eventModel.getNameOfEvent());
         }

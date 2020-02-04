@@ -46,15 +46,19 @@ public class EventService {
         String[] dates = new String[testList.toArray().length];
         String[] eventNameOfCreator = new String[testList.toArray().length];
         String[] dateOfCreation = new String[testList.toArray().length];
+        String[] eventStatus = new String[testList.toArray().length];
         int n = 0;
         for (int i = 0; i < testList.toArray().length; i++, n++){
-            eventName[n] = testList.get(i).getNameOfEvent();
-            eventLat[n] = Double.valueOf(testList.get(i).getLatitude());
-            eventLng[n] = Double.valueOf(testList.get(i).getLongitude());
-            eventDescription[n] = testList.get(i).getDescriptionOfEvent();
-            dates[n] = testList.get(i).getDate().replace("T", " ");
-            eventNameOfCreator[n] = testList.get(i).getNameOfEventCreator();
-            dateOfCreation[n] = testList.get(i).getEventDateOfCreation();
+            eventStatus[n] = testList.get(i).getEventStatus();
+            if (eventStatus[n].equals("active")){
+                eventName[n] = testList.get(i).getNameOfEvent();
+                eventLat[n] = Double.valueOf(testList.get(i).getLatitude());
+                eventLng[n] = Double.valueOf(testList.get(i).getLongitude());
+                eventDescription[n] = testList.get(i).getDescriptionOfEvent();
+                dates[n] = testList.get(i).getDate().replace("T", " ");
+                eventNameOfCreator[n] = testList.get(i).getNameOfEventCreator();
+                dateOfCreation[n] = testList.get(i).getEventDateOfCreation();
+            }
         }
 
         model.addAttribute("eventName", eventName);
@@ -103,6 +107,16 @@ public class EventService {
         model.addAttribute("nameOfEventToLink", eventModel.getNameOfEvent());
         model.addAttribute("linkToEvent", linkToEvent);
 
+    }
+
+    public void preparingCompleteEvent(EventModel eventModel){
+
+        String newIdForEventAndChat = eventModel.getNameOfEvent() + eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator();
+
+        eventModel.setId(newIdForEventAndChat);
+        eventModel.setEventStatus("complete");
+
+        apiForInteractingWithTheDatabase.update(eventModel);
     }
 
 }

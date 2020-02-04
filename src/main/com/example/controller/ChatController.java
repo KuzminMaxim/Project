@@ -66,14 +66,10 @@ public class ChatController {
             chatId = chatModel.getChatName()+chatModel.getChatDateOfCreation()+chatModel.getChatNameOfCreator();
         }
 
-        List<ChatModel> checkChat = api.readAllWhereSomething(ChatModel.class, chatId, "chat_id");
-        if (checkChat.size() != 0){
-            for (ChatModel value : checkChat) {
-                if (!value.getId().equals(chatId)) {
-                    return "redirect:/userInfo";
-                }
-            }
-        } else {
+
+        ChatModel check = api.readSomethingOne(ChatModel.class, chatId, "chat_id");
+
+        if (!check.getId().equals(chatId) || check.getId().isEmpty()){
             return "redirect:/userInfo";
         }
 

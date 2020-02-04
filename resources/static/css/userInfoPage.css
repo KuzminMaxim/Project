@@ -152,11 +152,11 @@ button:hover{
     display: contents;
 }
 
-.eventsWhereCreatorHidden, .eventsWhereParticipantHidden, .cancelledChatsHidden {
+.eventsWhereCreatorHidden, .eventsWhereParticipantHidden, .cancelledChatsHidden, .completedEventsHidden {
     display: none;
 }
 
-.eventsWhereCreatorNotHidden, .eventsWhereParticipantNotHidden, .cancelledChatsNotHidden {
+.eventsWhereCreatorNotHidden, .eventsWhereParticipantNotHidden, .cancelledChatsNotHidden, .completedEventsNotHidden {
     display: contents;
 }
 
@@ -166,7 +166,7 @@ button:hover{
     margin: auto;
 }
 
-#cancelledChatsTable {
+#cancelledChatsTable, #completedEventsTable {
     width: 30%;
     margin: auto;
 }

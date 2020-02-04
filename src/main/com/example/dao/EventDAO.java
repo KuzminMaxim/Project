@@ -33,6 +33,19 @@ public class EventDAO extends JdbcDaoSupport{
         });
     }
 
+    public List<EventModel> findCompletedChats(String name) throws NullPointerException{
+        String sql = EventMapperNewDB.SELECT_COMPLETED_CHATS;
+        Object[] params = new Object[] {name};
+        assert this.getJdbcTemplate() != null;
+        return this.getJdbcTemplate().query(sql, params, (resultSet, i) -> {
+
+            String nameOfEvent = resultSet.getString("chat_name");
+            String id = resultSet.getString("chat_id");
+
+            return new EventModel(id, nameOfEvent);
+        });
+    }
+
     public EventModel findCountOfParticipants(String id) {
         String sql = EventMapperNewDB.FIND_COUNT_OF_PARTICIPANTS_FOR_THIS_EVENT;
         Object[] params = new Object[] {id};

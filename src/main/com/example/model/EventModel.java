@@ -37,6 +37,9 @@ public class EventModel {
     @Attribute(id = "event_time")
     private String date;
 
+    @Attribute(id = "event_status")
+    private String eventStatus = "active";
+
     public EventModel(){}
 
     public EventModel(String countOfNewMessages){
@@ -138,5 +141,13 @@ public class EventModel {
 
     public void setNameOfEventCreator(String nameOfEventCreator) {
         this.nameOfEventCreator = nameOfEventCreator;
+    }
+
+    public String getEventStatus() {
+        return eventStatus;
+    }
+
+    public void setEventStatus(String eventStatus) {
+        this.eventStatus = eventStatus;
     }
 }

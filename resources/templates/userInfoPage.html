@@ -52,6 +52,7 @@
             <option value="eventsWhereCreatorHidden">Events created by me</option>
             <option value="eventsWhereParticipantHidden">Events which i joined</option>
             <option value="cancelledChatsHidden">Events that have been canceled</option>
+            <option value="completedEventsHidden">Events that have been completed</option>
         </select>
             <input class="selectBtn" type="submit" value="Select"></p>
     </form>
@@ -70,6 +71,7 @@
         <th class="left">Event</th>
         <th>Description</th>
         <th>Links</th>
+        <th class>Complete event</th>
         <th class="right">Cancel event</th>
     </tr>
     </thead>
@@ -104,6 +106,12 @@
                 <input type="submit" class="btn" value="Get link">
             </form>
         </td>
+        <td class="fifthCol"> <form  th:object="${eventModel}" method="post">
+            <input type="hidden" th:name="nameOfEvent" th:value="${eventsWhereCreator.nameOfEvent}" readonly/>
+            <input type="hidden" th:name="eventDateOfCreation" th:value="${eventsWhereCreator.eventDateOfCreation}" readonly>
+            <input type="hidden" th:name="nameOfEventCreator" th:value="${eventsWhereCreator.nameOfEventCreator}" readonly>
+            <input type="submit" class="btn"  th:formaction="completeEvent" th:formmethod="post" value="Complete">
+        </form> </td>
         <td class="fifthCol"> <form  th:object="${eventModel}" method="post">
             <input type="hidden" th:name="nameOfEvent" th:value="${eventsWhereCreator.nameOfEvent}" readonly/>
             <input type="hidden" th:name="eventDateOfCreation" th:value="${eventsWhereCreator.eventDateOfCreation}" readonly>
@@ -182,37 +190,76 @@
             <input type="submit" class="ChatButton" value="Filter">
         </form>
     </div>
-        <table id="cancelledChatsTable" class="allTable">
-            <thead>
-            <tr class="tableHeaderHidden">
-                <th class="left">Exit from this chat</th>
-                <th class="right">Chat</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="cancelledChats : ${cancelledChats}">
-                <td> <form th:each="cancelledChats : ${cancelledChats}" th:object="${eventModel}" method="post">
-                    <input type="hidden" th:name="nameOfEvent" th:value="${cancelledChats.nameOfEvent}" readonly/>
-                    <input type="hidden" th:name="eventParticipant" th:value="${#request.userPrincipal.name}" readonly/>
-                    <input type="hidden" th:name="id" th:value="${cancelledChats.id}" readonly>
-                    <input type="submit" class="btn" th:formaction="deleteParticipantFromEvent" th:formmethod="post" value="Exit from this chat">
-                </form> </td>
-                <td>
+    <table id="cancelledChatsTable" class="allTable">
+        <thead>
+        <tr class="tableHeaderHidden">
+            <th class="left">Exit from this chat</th>
+            <th class="right">Chat</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="cancelledChats : ${cancelledChats}">
+            <td> <form th:each="cancelledChats : ${cancelledChats}" th:object="${eventModel}" method="post">
+                <input type="hidden" th:name="nameOfEvent" th:value="${cancelledChats.nameOfEvent}" readonly/>
+                <input type="hidden" th:name="eventParticipant" th:value="${#request.userPrincipal.name}" readonly/>
+                <input type="hidden" th:name="id" th:value="${cancelledChats.id}" readonly>
+                <input type="submit" class="btn" th:formaction="deleteParticipantFromEvent" th:formmethod="post" value="Exit from this chat">
+            </form> </td>
+            <td>
 
-                    <div class="groupOfFirstCol">
-                        <div class="countOfParticipant" th:utext="${cancelledChats.countOfParticipant}"/>
-                        <div class="nameOfEvent">
-                            <form th:each="cancelledChats : ${cancelledChats}" th:object="${chatModel}">
-                                <input type="hidden" th:name="chatName" th:value="${cancelledChats.nameOfEvent}" readonly>
-                                <input type="hidden" th:name="id" th:value="${cancelledChats.id}" readonly>
-                                <input type="submit" class="btn" th:formaction="openChat" th:formmethod="post" th:value="${cancelledChats.nameOfEvent}">
-                            </form>
-                        </div>
+                <div class="groupOfFirstCol">
+                    <div class="countOfParticipant" th:utext="${cancelledChats.countOfParticipant}"/>
+                    <div class="nameOfEvent">
+                        <form th:each="cancelledChats : ${cancelledChats}" th:object="${chatModel}">
+                            <input type="hidden" th:name="chatName" th:value="${cancelledChats.nameOfEvent}" readonly>
+                            <input type="hidden" th:name="id" th:value="${cancelledChats.id}" readonly>
+                            <input type="submit" class="btn" th:formaction="openChat" th:formmethod="post" th:value="${cancelledChats.nameOfEvent}">
+                        </form>
                     </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="completedEventsHidden" th:if="${completedEvents != null}">
+    <div class="namingOfPage">
+        <form action="javascript:void(0);" onsubmit="getFilterColumn()">
+            <input type="submit" class="ChatButton" value="Filter">
+        </form>
+    </div>
+    <table id="completedEventsTable" class="allTable">
+        <thead>
+        <tr class="tableHeaderHidden">
+            <th class="left">Event</th>
+            <th class="right">Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="completedEvents : ${completedEvents}">
+            <td> <form th:each="completedEvents : ${completedEvents}" th:object="${eventModel}" method="post">
+                <input type="hidden" th:name="nameOfEvent" th:value="${completedEvents.nameOfEvent}" readonly/>
+                <input type="hidden" th:name="eventParticipant" th:value="${#request.userPrincipal.name}" readonly/>
+                <input type="hidden" th:name="id" th:value="${completedEvents.id}" readonly>
+                <input type="submit" class="btn" th:formaction="deleteParticipantFromEvent" th:formmethod="post" value="Exit from this chat">
+            </form> </td>
+            <td>
+
+                <div class="groupOfFirstCol">
+                    <div class="countOfParticipant" th:utext="${completedEvents.countOfParticipant}"/>
+                    <div class="nameOfEvent">
+                        <form th:each="completedEvents : ${completedEvents}" th:object="${chatModel}">
+                            <input type="hidden" th:name="chatName" th:value="${completedEvents.nameOfEvent}" readonly>
+                            <input type="hidden" th:name="id" th:value="${completedEvents.id}" readonly>
+                            <input type="submit" class="btn" th:formaction="openChat" th:formmethod="post" th:value="${completedEvents.nameOfEvent}">
+                        </form>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
 </body>
