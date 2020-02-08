@@ -21,7 +21,8 @@ function initMap() {
         var dates = document.getElementsByClassName("eventDates")[x].innerHTML;
         var eventNamesOfCreator = document.getElementsByClassName("eventNamesOfCreator")[x].innerHTML;
         var eventDatesOfCreation = document.getElementsByClassName("eventDatesOfCreation")[x].innerHTML;
-        locations.push([names, lat, lng, descript, dates, eventNamesOfCreator, eventDatesOfCreation]);
+        var eventIds = document.getElementsByClassName("eventAllId")[x].innerHTML;
+        locations.push([names, lat, lng, descript, dates, eventNamesOfCreator, eventDatesOfCreation, eventIds]);
     }
 
 
@@ -124,11 +125,7 @@ function initMap() {
         })(oldMarker, i));
         google.maps.event.addListener(oldMarker, 'dblclick', (function (oldMarker, i) {
             return function () {
-                document.getElementById('nameOfOldEvent').value = locations[i][0];
-                document.getElementById('nameOfOldChat').value = locations[i][0];
-                document.getElementById('eventNamesOfCreator').value = locations[i][5];
-                document.getElementById('descriptionOfThisEvent').value = locations[i][3];
-                document.getElementById('dateOfCreation').value = locations[i][6];
+                document.getElementById('thisEventId').value = locations[i][7];
                 openOldForm();
             }
         })(oldMarker, i));

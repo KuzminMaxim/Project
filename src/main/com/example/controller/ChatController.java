@@ -5,6 +5,7 @@ import com.example.dao.ChatDAO;
 import com.example.dao.UserDAO;
 import com.example.model.ChatMessage;
 import com.example.model.ChatModel;
+import com.example.model.EventModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,23 +55,34 @@ public class ChatController {
     @RequestMapping(CHAT_ACCESS_ENDPOINT)
     public String index(Model model, Principal principal, ChatModel chatModel) {
 
-        String name = principal.getName();
-        model.addAttribute("username", name);
-
-        String chatName = chatModel.getChatName();
-        model.addAttribute("chatName", chatName);
+        String username = principal.getName();
+        model.addAttribute("username", username);
 
         String chatId = chatModel.getId();
 
-        if (chatId == null){
-            chatId = chatModel.getChatName()+chatModel.getChatDateOfCreation()+chatModel.getChatNameOfCreator();
-        }
-
-
         ChatModel check = api.readSomethingOne(ChatModel.class, chatId, "chat_id");
 
-        if (!check.getId().equals(chatId) || check.getId().isEmpty()){
+        try {
+            if (!check.getId().equals(chatId)){
+                return "redirect:/userInfo";
+            }
+        } catch (NullPointerException ignored){
             return "redirect:/userInfo";
+        }
+
+        List<ChatModel> currentChat =
+                api.readAllWhereSomething(ChatModel.class, chatId, "chat_id");
+
+        if (currentChat.size() == 0){
+            List<EventModel> currentEvent =
+                    api.readAllWhereSomething(EventModel.class, Integer.toString(Integer.parseInt(chatId) - 1), "event_id");
+            for (EventModel current : currentEvent){
+                model.addAttribute("chatName", current.getNameOfEvent());
+            }
+        } else {
+            for (ChatModel current : currentChat){
+                model.addAttribute("chatName", current.getChatName());
+            }
         }
 
         List<ChatModel> checkParticipant = dao.findAllParticipants(chatId);

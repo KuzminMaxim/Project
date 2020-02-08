@@ -45,7 +45,27 @@ public class AllModelsDAO extends JdbcDaoSupport {
                 }
             }
 
+            createIdForObjectInDatabase(attributesValues);
+
             getJdbcTemplate().update(NewMapperDB.CREATE_OBJECT_REFERENCES);
+
+        } catch (NullPointerException npe){
+            npe.printStackTrace();
+        }
+    }
+
+    private void createIdForObjectInDatabase(Map attributesValues) {
+        try {
+            assert getJdbcTemplate() != null;
+
+            for ( Object entry : attributesValues.keySet()) {
+                String key = (String) entry;
+                if (key.equals("user_id")
+                        || key.equals("event_id")
+                            || key.equals("chat_id")){
+                    getJdbcTemplate().update(NewMapperDB.INSERT_ID_SQL, key);
+                }
+            }
 
         } catch (NullPointerException npe){
             npe.printStackTrace();
@@ -66,17 +86,18 @@ public class AllModelsDAO extends JdbcDaoSupport {
             } else if (objectType.equals("event")){
                 for ( Object entry : attributesValues.keySet()) {
                     String key = (String) entry;
+                    String chatId = Integer.toString(Integer.parseInt((String) attributesValues.get("event_id")) + 1);
                     if (key.equals("event_status") && attributesValues.get(key).equals("cancelled")){
                         getJdbcTemplate().update(NewMapperDB.SET_SOMETHING_SQL,
                                 attributesValues.get("event_id"), "cancelled", "event_status");
                         getJdbcTemplate().update(NewMapperDB.SET_SOMETHING_SQL,
-                                attributesValues.get("event_id"), "cancelled", "chat_status");
+                                chatId, "cancelled", "chat_status");
                     }
                     else if (key.equals("event_status") && attributesValues.get(key) == "complete"){
                         getJdbcTemplate().update(NewMapperDB.SET_SOMETHING_SQL,
                                 attributesValues.get("event_id"), "complete", "event_status");
                         getJdbcTemplate().update(NewMapperDB.SET_SOMETHING_SQL,
-                                attributesValues.get("event_id"), "complete", "chat_status");
+                                chatId, "complete", "chat_status");
                     }
                 }
             } else if (objectType.equals("chat")){
@@ -225,6 +246,15 @@ public class AllModelsDAO extends JdbcDaoSupport {
                     if (i < fields.length - 1){
                         queryForResultSet.append(", ");
                     } else {
+
+                        if (clazz.getSimpleName().equals("UserModel")
+                                || clazz.getSimpleName().equals("EventModel")
+                                    || clazz.getSimpleName().equals("ChatModel")){
+                            queryForResultSet.append(", ").append(annotation[i]).append(".object_id").append(" as id");
+                        } else if (clazz.getSimpleName().equals("ChatMessage")){
+                            queryForResultSet.append(", ").append(annotation[i]).append(".object_id").append(" as chatId");
+                        }
+
                         queryForResultSet.append(" FROM ");
                     }
                 }
@@ -364,6 +394,15 @@ public class AllModelsDAO extends JdbcDaoSupport {
                     if (i < fields.length - 1){
                         queryForResultSet.append(", ");
                     } else {
+
+                        if (clazz.getSimpleName().equals("UserModel")
+                                || clazz.getSimpleName().equals("EventModel")
+                                    || clazz.getSimpleName().equals("ChatModel")){
+                            queryForResultSet.append(", ").append(annotation[i]).append(".object_id").append(" as id");
+                        } else if (clazz.getSimpleName().equals("ChatMessage")){
+                            queryForResultSet.append(", ").append(annotation[i]).append(".object_id").append(" as chatId");
+                        }
+
                         queryForResultSet.append(" FROM ");
                     }
                 }
@@ -549,7 +588,8 @@ public class AllModelsDAO extends JdbcDaoSupport {
             field.setAccessible(true);
             try {
                 if (field.getType() != Double.class){
-                    Object value = rst.getObject(name);
+                    Object someValue = rst.getObject(name);
+                    String value = someValue.toString();
                     field.set(object, value);
                 } else {
                     Object value = rst.getDouble(name);

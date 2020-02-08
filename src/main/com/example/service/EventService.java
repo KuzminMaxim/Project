@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +24,7 @@ public class EventService {
 
     private static final Logger logger = LoggerFactory.getLogger(EventController.class);
 
-    public void preparingGetEvent(String latitude, Model model){
+    public void preparingGetEvent(String id, Model model){
 
         EventModel form = new EventModel();
         ChatModel chatModel = new ChatModel();
@@ -32,11 +33,11 @@ public class EventService {
 
         List<EventModel> testList;
 
-        if (latitude == null){
+        if (id == null){
             testList = apiForInteractingWithTheDatabase.readAll(EventModel.class);
         } else {
             testList = apiForInteractingWithTheDatabase
-                    .readAllWhereSomething(EventModel.class, latitude, "event_lat");
+                    .readAllWhereSomething(EventModel.class, id, "event_id");
         }
 
         String[] eventName = new String[testList.toArray().length];
@@ -47,6 +48,8 @@ public class EventService {
         String[] eventNameOfCreator = new String[testList.toArray().length];
         String[] dateOfCreation = new String[testList.toArray().length];
         String[] eventStatus = new String[testList.toArray().length];
+        String[] eventId = new String[testList.toArray().length];
+
         int n = 0;
         for (int i = 0; i < testList.toArray().length; i++, n++){
             eventStatus[n] = testList.get(i).getEventStatus();
@@ -58,6 +61,7 @@ public class EventService {
                 dates[n] = testList.get(i).getDate().replace("T", " ");
                 eventNameOfCreator[n] = testList.get(i).getNameOfEventCreator();
                 dateOfCreation[n] = testList.get(i).getEventDateOfCreation();
+                eventId[n] = testList.get(i).getId();
             }
         }
 
@@ -68,18 +72,21 @@ public class EventService {
         model.addAttribute("eventDate", dates);
         model.addAttribute("eventNameOfCreator", eventNameOfCreator);
         model.addAttribute("dateOfCreation", dateOfCreation);
-
+        model.addAttribute("eventId", eventId);
     }
 
-    public void preparingPostEvent(EventModel eventModel, ChatModel chatModel){
+    public void preparingPostEvent(EventModel eventModel, ChatModel chatModel, Principal principal){
 
         Date date = new Date();
         Timestamp ts = new Timestamp(date.getTime());
         String dateOfCreation = ts.toString();
 
-        String newIdForEventAndChat = eventModel.getNameOfEvent() + dateOfCreation + eventModel.getNameOfEventCreator();
+        String nameOfCreator = principal.getName();
 
-        saveEventInDB(eventModel, chatModel, newIdForEventAndChat, dateOfCreation);
+        eventModel.setNameOfEventCreator(nameOfCreator);
+        chatModel.setChatNameOfCreator(nameOfCreator);
+
+        saveEventInDB(eventModel, chatModel, dateOfCreation);
     }
 
     public void resultHasErrors(Model model){
@@ -87,10 +94,8 @@ public class EventService {
         model.addAttribute("eventInfo", "Field contains invalid characters");
     }
 
-    private void saveEventInDB(EventModel eventModel, ChatModel chatModel, String newIdForEventAndChat, String dateOfCreation){
-        eventModel.setId(newIdForEventAndChat);
+    private void saveEventInDB(EventModel eventModel, ChatModel chatModel, String dateOfCreation){
         eventModel.setEventDateOfCreation(dateOfCreation);
-        chatModel.setId(newIdForEventAndChat);
         chatModel.setChatDateOfCreation(dateOfCreation);
 
         apiForInteractingWithTheDatabase.save(eventModel);
@@ -100,20 +105,23 @@ public class EventService {
 
     public void preparingLinkToEvent(Model model, EventModel eventModel, HttpServletRequest request){
 
-        String linkToEvent = "<a href=\"" + request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() +
-                "/createEvent?latitude=" + eventModel.getLatitude() +
-                "&longitude=" + eventModel.getLongitude() + "\">" + eventModel.getNameOfEvent() + "</a>";
+        List<EventModel> event = apiForInteractingWithTheDatabase
+                .readAllWhereSomething(EventModel.class, eventModel.getId(), "event_id");
 
-        model.addAttribute("nameOfEventToLink", eventModel.getNameOfEvent());
+        for (EventModel link : event){
+            model.addAttribute("nameOfEventToLink", link.getNameOfEvent());
+        }
+
+        String linkToEvent = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() +
+                "/createEvent?id=" + eventModel.getId();
+
+
         model.addAttribute("linkToEvent", linkToEvent);
 
     }
 
     public void preparingCompleteEvent(EventModel eventModel){
 
-        String newIdForEventAndChat = eventModel.getNameOfEvent() + eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator();
-
-        eventModel.setId(newIdForEventAndChat);
         eventModel.setEventStatus("complete");
 
         apiForInteractingWithTheDatabase.update(eventModel);

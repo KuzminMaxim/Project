@@ -25,20 +25,22 @@ public class JoinController {
     @PostMapping(value = "/joinToEvent")
     public String joinToEvent(EventModel eventModel, Principal principal, Model model, ChatModel chatModel) {
 
-        List<EventModel> eventsWhereParticipant = api.readAllWhereSomething(EventModel.class, principal.getName(), "event_participant");
+        String eventParticipant = principal.getName();
+        eventModel.setEventParticipant(eventParticipant);
+        chatModel.setChatParticipant(eventParticipant);
+        chatModel.setId(Integer.toString(Integer.parseInt(eventModel.getId()) + 1));
+
+        System.out.println("!!! + chatModel.getId() + !!!:" + chatModel.getId());
+
+        List<EventModel> eventsWhereParticipant = api.readAllWhereSomething(EventModel.class, eventParticipant, "event_participant");
 
         for (EventModel participant : eventsWhereParticipant) {
 
-            String id = participant.getNameOfEvent() +
-                    participant.getEventDateOfCreation() + participant.getNameOfEventCreator();
 
-            String chatId = eventModel.getNameOfEvent() +
-                    eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator();
+            System.out.println("participant.getId(): " + participant.getId());
+            System.out.println("chatModel.getId(): " + chatModel.getId());
 
-            participant.setId(id);
-            chatModel.setId(chatId);
-
-            if (participant.getId().equals(chatId)) {
+            if (Integer.toString(Integer.parseInt(participant.getId()) + 1).equals(chatModel.getId())) {
                  return chatController.openChat(model, principal, chatModel);
             }
         }
@@ -47,22 +49,16 @@ public class JoinController {
 
         for (EventModel participant : eventsWhereCreator) {
 
-            String id = participant.getNameOfEvent() +
-                    participant.getEventDateOfCreation() + participant.getNameOfEventCreator();
+            System.out.println("creator.getId(): " + participant.getId());
+            System.out.println("chatModel.getId(): " + chatModel.getId());
 
-            String chatId = eventModel.getNameOfEvent() +
-                    eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator();
 
-            participant.setId(id);
-            chatModel.setId(chatId);
-
-            if (participant.getId().equals(chatId)) {
+            if (Integer.toString(Integer.parseInt(participant.getId()) + 1).equals(chatModel.getId())) {
                  return chatController.openChat(model, principal, chatModel);
             }
         }
 
-            eventModel.setId(eventModel.getNameOfEvent() + eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator());
-            chatModel.setId(eventModel.getNameOfEvent() + eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator());
+
             api.add(eventModel);
             api.add(chatModel);
 

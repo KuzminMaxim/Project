@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RequestMapping
@@ -45,13 +46,11 @@ public class DeleteController {
             logger.info("User {} was deleting", registrationForm.getName());
         }
 
-        if (eventModel.getNameOfEvent() != null){
-            String eventId = eventModel.getNameOfEvent() + eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator();
-            eventModel.setId(eventId);
-            List<EventModel> check = api.readAllWhereSomething(EventModel.class, eventId, "event_id");
+        if (eventModel.getId() != null){
+            List<EventModel> check = api.readAllWhereSomething(EventModel.class, eventModel.getId(), "event_id");
             if (check.size() != 0){
                 for (EventModel value : check) {
-                    if (!value.getId().equals(eventId)) {
+                    if (!value.getId().equals(eventModel.getId())) {
                         return "redirect:/userInfo";
                     }
                 }
@@ -67,16 +66,16 @@ public class DeleteController {
     }
 
     @PostMapping(value = "/deleteParticipantFromEvent")
-    public String deleteParticipantFromEvent(EventModel eventModel) {
+    public String deleteParticipantFromEvent(EventModel eventModel, Principal principal) {
+
+        eventModel.setEventParticipant(principal.getName());
 
         logger.debug("Delete participant from event, method = POST");
 
         if (eventModel.getNameOfEvent() != null){
-            if (eventModel.getId() == null){
-                eventModel.setId(eventModel.getNameOfEvent() + eventModel.getEventDateOfCreation() + eventModel.getNameOfEventCreator());
-            }
+
             api.deleteOne(eventModel);
-            logger.info("User {} was deleting from event {}", eventModel.getEventParticipant(), eventModel.getNameOfEvent());
+            logger.info("User {} was deleting from event {}", eventModel.getEventParticipant(), eventModel.getId());
         }
 
         return "redirect:/userInfo";

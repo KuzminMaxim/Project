@@ -17,17 +17,13 @@
 <script type="text/javascript" th:src="@{/js/mapInitialization.js}"></script>
 <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initMap"
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfOlryc_A5QyGcHyOSE54lO6PVQVd1P0U&libraries=places&callback=initMap"
         async defer></script>
 
 <div class="login-popup">
     <div class="form-popup" id="popupForm">
         <form th:action="@{/createEvent}" th:object="${eventModel}" method="POST" class="form-container">
             <h2>Please enter the name and description of event</h2>
-
-            <input type="hidden" placeholder="Name of creator" th:name="nameOfEventCreator" th:value="*{#request.userPrincipal.name}" readonly/>
-
-            <input type="hidden" th:object="${chatModel}" th:name="chatNameOfCreator" th:value="*{#request.userPrincipal.name}" readonly/>
 
             <input type="hidden" placeholder="latitude" th:field="*{latitude}" id="lat" readonly/>
 
@@ -79,15 +75,9 @@
 
 <div class="login-popup">
     <div class="form-popup" id="popupFormForOldMarkers">
-        <form th:action="@{/joinToEvent}" th:object="${eventModel}" method="POST" class="form-container">
+        <form th:action="@{/joinToEvent}" method="POST" class="form-container">
             <h2>Do you want to join at this event?</h2>
-            <input type="hidden" id="eventNamesOfCreator" placeholder="Name of creator" th:field="*{nameOfEventCreator}" readonly/>
-            <input type="hidden" id="nameOfOldEvent" placeholder="Name of event" th:field="*{nameOfEvent}" readonly>
-            <input type="hidden" th:object="${chatModel}" id="nameOfOldChat" th:field="*{chatName}" readonly>
-            <input type="hidden" id="nameOfParticipant" placeholder="Name of you" th:name="eventParticipant" th:value="*{#request.userPrincipal.name}" readonly>
-            <input type="hidden" th:object="${chatModel}" id="nameOfChatParticipant" th:name="chatParticipant" th:value="*{#request.userPrincipal.name}" readonly>
-            <input type="hidden" id="descriptionOfThisEvent" placeholder="Description of event" th:field="*{descriptionOfEvent}" readonly>
-            <input type="hidden" id="dateOfCreation" th:name="eventDateOfCreation" th:value="*{eventDateOfCreation}" readonly>
+            <input type="hidden" th:object="${eventModel}" id="thisEventId" th:field="*{id}" readonly>
             <button type="submit" class="btn">Join to event</button>
             <button type="button" class="btn cancel" onclick="closeOldForm()">Cancel</button>
         </form>
@@ -119,6 +109,10 @@
     <tr th:each="dateOfCreation : ${dateOfCreation}">
         <td th:utext="${dateOfCreation}" class="eventDatesOfCreation">..</td>
     </tr>
+    <tr th:each="eventId : ${eventId}">
+        <td th:utext="${eventId}" class="eventAllId">..</td>
+    </tr>
+
 </table>
 </div>
 

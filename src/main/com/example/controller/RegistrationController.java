@@ -61,8 +61,6 @@ public class RegistrationController {
                              @ModelAttribute("registrationForm") @Validated UserModel registrationForm,
                              BindingResult result, HttpServletRequest request) {
 
-        String newIdForUser = registrationForm.getName() + registrationForm.getEmail();
-
         if (result.hasErrors()) {
             List<UserModel> username = api.readAll(UserModel.class);
             model.addAttribute("userInfo", username);
@@ -70,7 +68,6 @@ public class RegistrationController {
         }
         try {
 
-            registrationForm.setId(newIdForUser);
             api.save(registrationForm);
             registrationService.sendEmail(registrationForm);
 

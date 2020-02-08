@@ -10,6 +10,12 @@ public class NewMapperDB {
             "limit 1),\n" +
             "(select attributes.id from attributes where attributes.Attribute = ?), ?);\n";
 
+    public static final String INSERT_ID_SQL = "insert into params (object_id, attribute_id, value_text) \n" +
+            "value \n" +
+            "((select id from object order by id desc limit 1), " +
+            "(select attributes.id from attributes where attributes.Attribute = ?), " +
+            "(select id from object order by id desc limit 1))";
+
     public static final String CREATE_OBJECT_REFERENCES = "update params\n" +
             "Set params.object_references = (select id from object order by id desc\n" +
             "limit 1)\n" +

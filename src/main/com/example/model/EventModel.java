@@ -10,6 +10,8 @@ public class EventModel {
 
     private String countOfNewMessages;
 
+    private String chatId;
+
     @Attribute(id = "event_name")
     private String nameOfEvent;
 
@@ -149,5 +151,13 @@ public class EventModel {
 
     public void setEventStatus(String eventStatus) {
         this.eventStatus = eventStatus;
+    }
+
+    public String getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
     }
 }

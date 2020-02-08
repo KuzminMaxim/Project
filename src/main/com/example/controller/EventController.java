@@ -16,6 +16,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.List;
 
 @RequestMapping
@@ -50,7 +51,7 @@ public class EventController {
 
         eventService.preparingCompleteEvent(eventModel);
 
-        return "userInfoPage";
+        return "redirect:/userInfo";
     }
 
     @PostMapping(value = "/getLinkToEvent")
@@ -72,17 +73,17 @@ public class EventController {
     }
 
     @GetMapping(value = "/createEvent")
-    public String createEvent(Model model, @RequestParam(required = false) String latitude) {
+    public String createEvent(Model model, @RequestParam(required = false) String id) {
         logger.debug("Create event, method = GET");
 
-        eventService.preparingGetEvent(latitude, model);
+        eventService.preparingGetEvent(id, model);
 
         return "MyGoogleMap";
     }
 
     @PostMapping(value = "/createEvent")
     public String createNewEvent(Model model, @ModelAttribute("eventForm") @Validated EventModel eventModel,
-                             BindingResult result, ChatModel chatModel) {
+                                 BindingResult result, ChatModel chatModel, Principal principal) {
 
         if (fieldIsValid(eventModel.getNameOfEvent())){
             if (result.hasErrors()) {
@@ -90,7 +91,7 @@ public class EventController {
                 return "error";
             }
             try {
-                eventService.preparingPostEvent(eventModel, chatModel);
+                eventService.preparingPostEvent(eventModel, chatModel, principal);
             } catch (Exception e){
 
                 logger.error("Unknown error", e);
