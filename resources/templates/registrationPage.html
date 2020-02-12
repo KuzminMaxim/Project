@@ -43,6 +43,15 @@
         </tr>
         <tr>
             <td>
+                <label for="confirmPassword" class="nameLabel">
+                    Enter password
+                </label>
+                <input type="password" id="confirmPassword" placeholder="Confirm password" th:field="*{confirmPassword}" minlength="3"/>
+                <span th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}">...</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
                 <input type="submit" class="btn" value="Register" />
             </td>
         </tr>

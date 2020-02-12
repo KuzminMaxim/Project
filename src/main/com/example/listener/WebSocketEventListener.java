@@ -83,7 +83,6 @@ import java.util.Objects;
             String chatId = (String) headerAccessor.getSessionAttributes().get("chatId");
 
             Date date = new Date();
-            System.out.println(date);
             if(username != null) {
                 logger.info("User {} was disconnected from chat {}", username, chatId);
                 chatRatioWithUsers.remove(chatId, username);

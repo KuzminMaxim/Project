@@ -77,11 +77,11 @@ public class ChatController {
             List<EventModel> currentEvent =
                     api.readAllWhereSomething(EventModel.class, Integer.toString(Integer.parseInt(chatId) - 1), "event_id");
             for (EventModel current : currentEvent){
-                model.addAttribute("chatName", current.getNameOfEvent());
+                model.addAttribute("chatName", current.getNameOfEvent() + " (" + current.getEventStatus() + ")");
             }
         } else {
             for (ChatModel current : currentChat){
-                model.addAttribute("chatName", current.getChatName());
+                model.addAttribute("chatName", current.getChatName() + " (" + current.getChatStatus() + ")");
             }
         }
 

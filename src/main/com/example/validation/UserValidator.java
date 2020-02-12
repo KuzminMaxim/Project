@@ -65,6 +65,11 @@ public class UserValidator implements Validator {
                 errors.rejectValue("password","Pattern.registrationForm.length");
             }
 
+            if (!registrationForm.getDecryptedPassword().equals(registrationForm.getConfirmPassword())){
+                errors.rejectValue("password","Pattern.registrationForm.confirm");
+                errors.rejectValue("confirmPassword","Pattern.registrationForm.confirm");
+            }
+
         }
     }
 

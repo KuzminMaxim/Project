@@ -12,6 +12,8 @@ public class UserModel {
 
     private String decryptedPassword;
 
+    private String confirmPassword;
+
     @Attribute(id = "user_name")
     private String name;
 
@@ -118,4 +120,11 @@ public class UserModel {
         }
     }
 
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
 }

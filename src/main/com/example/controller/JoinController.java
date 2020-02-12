@@ -30,15 +30,23 @@ public class JoinController {
         chatModel.setChatParticipant(eventParticipant);
         chatModel.setId(Integer.toString(Integer.parseInt(eventModel.getId()) + 1));
 
-        System.out.println("!!! + chatModel.getId() + !!!:" + chatModel.getId());
+        List<EventModel> eventStatus = api.readAllWhereSomething(EventModel.class, eventModel.getId(), "event_id");
+
+        if (eventStatus.size() == 0){
+            model.addAttribute("eventInfo", "This event does not exist!");
+            return "error";
+        }
+
+        for (EventModel status : eventStatus){
+            if (!status.getEventStatus().equals("active")){
+                model.addAttribute("eventInfo", "This event does not active!");
+                return "error";
+            }
+        }
 
         List<EventModel> eventsWhereParticipant = api.readAllWhereSomething(EventModel.class, eventParticipant, "event_participant");
 
         for (EventModel participant : eventsWhereParticipant) {
-
-
-            System.out.println("participant.getId(): " + participant.getId());
-            System.out.println("chatModel.getId(): " + chatModel.getId());
 
             if (Integer.toString(Integer.parseInt(participant.getId()) + 1).equals(chatModel.getId())) {
                  return chatController.openChat(model, principal, chatModel);
@@ -48,10 +56,6 @@ public class JoinController {
         List<EventModel> eventsWhereCreator = api.readAllWhereSomething(EventModel.class, principal.getName(), "event_name_of_creator");
 
         for (EventModel participant : eventsWhereCreator) {
-
-            System.out.println("creator.getId(): " + participant.getId());
-            System.out.println("chatModel.getId(): " + chatModel.getId());
-
 
             if (Integer.toString(Integer.parseInt(participant.getId()) + 1).equals(chatModel.getId())) {
                  return chatController.openChat(model, principal, chatModel);

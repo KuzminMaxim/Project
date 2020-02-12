@@ -86,12 +86,31 @@ public class EventService {
         eventModel.setNameOfEventCreator(nameOfCreator);
         chatModel.setChatNameOfCreator(nameOfCreator);
 
-        saveEventInDB(eventModel, chatModel, dateOfCreation);
-    }
+        String nameOfEvent = eventModel.getNameOfEvent();
 
-    public void resultHasErrors(Model model){
-        List<EventModel> eventName = apiForInteractingWithTheDatabase.readAll(EventModel.class);
-        model.addAttribute("eventInfo", "Field contains invalid characters");
+        nameOfEvent = nameOfEvent
+                .replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\\", "&#92;")
+                .replace(" ", "&#8195;")
+                .replace("#","&#35;");
+
+        String content = eventModel.getDescriptionOfEvent();
+
+        content = content
+                .replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\\", "&#92;")
+                .replace(" ", "&#8195;")
+                .replace("#","&#35;");
+
+        eventModel.setDescriptionOfEvent(content);
+        eventModel.setNameOfEvent(nameOfEvent);
+        chatModel.setChatName(nameOfEvent);
+
+        saveEventInDB(eventModel, chatModel, dateOfCreation);
     }
 
     private void saveEventInDB(EventModel eventModel, ChatModel chatModel, String dateOfCreation){

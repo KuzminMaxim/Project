@@ -33,6 +33,17 @@ public class WebSocketController {
         Timestamp currentDate = new Timestamp(date.getTime());
         chatMessage.setCurrentDate(currentDate.toString());
 
+        String content = chatMessage.getContent();
+
+        content = content
+                .replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\\", "&#92;")
+                .replace("#","&#35;");;
+
+        chatMessage.setContent(content);
+
         api.save(chatMessage);
 
         return chatMessage;
