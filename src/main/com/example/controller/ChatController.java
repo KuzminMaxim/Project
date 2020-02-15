@@ -93,6 +93,7 @@ public class ChatController {
             }
         }
         if (!success){
+            logger.info("The user {} tried to access the chat {}, in which he does not participate.", username, chatId);
             return "redirect:/userInfo";
         }
 

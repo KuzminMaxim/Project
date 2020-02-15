@@ -6,8 +6,6 @@ function checkPassword() {
         return false;
     }
     if (fPassword !== 0){
-        alert("Password was changed! " +
-            "New password: "+fPassword);
         return true;
     }
 }

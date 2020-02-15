@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
@@ -83,12 +81,21 @@ public class EventController {
 
     @PostMapping(value = "/createEvent")
     public String createNewEvent(EventModel eventModel,
-                                 ChatModel chatModel, Principal principal) {
+                                 ChatModel chatModel, Principal principal, Model model) {
+
+        if (!validateNameOfEvent(eventModel.getNameOfEvent())){
+            model.addAttribute("eventInfo", "Name of event contains invalid characters");
+            return "error";
+        }
 
                 eventService.preparingPostEvent(eventModel, chatModel, principal);
 
 
         return "redirect:/userInfo";
+    }
+
+    private boolean validateNameOfEvent(String name){
+        return name.matches("^[A-Za-z]+(?:(?: +|, |-)[A-Za-z]+)*$");
     }
 
 }

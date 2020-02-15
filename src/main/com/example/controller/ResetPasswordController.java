@@ -32,6 +32,7 @@ public class ResetPasswordController {
     @Autowired
     public JavaMailSender emailSender;
 
+
     @GetMapping(value = "/forgot")
     public String displayForgotPasswordPage(Model model) {
         UserModel form = new UserModel();
@@ -109,33 +110,41 @@ public class ResetPasswordController {
     @PostMapping(value = "/reset")
     public String setNewPassword(UserModel userModel, Model model) {
 
-        if (userModel.getDecryptedPassword().isEmpty()){
-            model.addAttribute("errorMessage", "Password field is empty." +
+        if (!userModel.getDecryptedPassword().equals(userModel.getConfirmPassword())){
+            model.addAttribute("errorMessage", "Passwords entered do not match." +
                     "Please, follow the steps to reset your password again.");
             return "resetPasswordFromToken";
-        } else {
-            if (fieldIsValid(userModel.getDecryptedPassword())){
-                UserModel userFromToken = currentTokenMap.get(userModel.getResetToken());
-
-                if (userFromToken != null){
-                    currentTokenMap.remove(userModel.getResetToken());
-
-                    userModel.setId(userFromToken.getName() + userFromToken.getEmail());
-                    userModel.setEmail(userFromToken.getEmail());
-                    userModel.setRole(userFromToken.getRole());
-                    userModel.setName(userFromToken.getName());
-
-                    api.update(userModel);
-
-                    return "redirect:/login";
-                } else {
-                    model.addAttribute("errorMessage", "Oops!  This is an invalid password reset link.");
-                    return "resetPasswordFromToken";
-                }
-            }
-            model.addAttribute("errorMessage", "New password is invalid!");
-            return "resetPasswordFromToken";
         }
+
+            if (userModel.getDecryptedPassword().isEmpty()){
+                model.addAttribute("errorMessage", "Password field is empty." +
+                        "Please, follow the steps to reset your password again.");
+                return "resetPasswordFromToken";
+            } else {
+                if (fieldIsValid(userModel.getDecryptedPassword())){
+                    UserModel userFromToken = currentTokenMap.get(userModel.getResetToken());
+
+                    if (userFromToken != null){
+                        currentTokenMap.remove(userModel.getResetToken());
+
+                        userModel.setId(userFromToken.getName() + userFromToken.getEmail());
+                        userModel.setEmail(userFromToken.getEmail());
+                        userModel.setRole(userFromToken.getRole());
+                        userModel.setName(userFromToken.getName());
+
+                        api.update(userModel);
+
+                        return "redirect:/login";
+                    } else {
+                        model.addAttribute("errorMessage", "Oops!  This is an invalid password reset link.");
+                        return "resetPasswordFromToken";
+                    }
+                }
+                model.addAttribute("errorMessage", "New password is invalid!");
+                return "resetPasswordFromToken";
+            }
+
+
     }
 
     private boolean fieldIsValid(String name){

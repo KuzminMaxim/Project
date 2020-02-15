@@ -84,17 +84,9 @@ public class EventService {
         String nameOfCreator = principal.getName();
 
         eventModel.setNameOfEventCreator(nameOfCreator);
+        eventModel.setNameOfEvent(eventModel.getNameOfEvent().trim());
         chatModel.setChatNameOfCreator(nameOfCreator);
-
-        String nameOfEvent = eventModel.getNameOfEvent();
-
-        nameOfEvent = nameOfEvent
-                .replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("\\", "&#92;")
-                .replace(" ", "&#8195;")
-                .replace("#","&#35;");
+        chatModel.setChatName(chatModel.getChatName().trim());
 
         String content = eventModel.getDescriptionOfEvent();
 
@@ -103,12 +95,9 @@ public class EventService {
                 .replace("<", "&lt;")
                 .replace(">", "&gt;")
                 .replace("\\", "&#92;")
-                .replace(" ", "&#8195;")
-                .replace("#","&#35;");
+                .replace(" ", "&nbsp;");
 
         eventModel.setDescriptionOfEvent(content);
-        eventModel.setNameOfEvent(nameOfEvent);
-        chatModel.setChatName(nameOfEvent);
 
         saveEventInDB(eventModel, chatModel, dateOfCreation);
     }

@@ -3,14 +3,16 @@ package com.example.controller;
 import com.example.api.ApiForInteractingWithTheDatabase;
 import com.example.model.UserModel;
 import com.example.utils.WebUtils;
+import com.example.validation.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -21,6 +23,21 @@ public class UserChangesController {
 
     @Autowired
     private ApiForInteractingWithTheDatabase api;
+
+    @Autowired
+    private UserValidator userValidator;
+
+    @InitBinder
+    protected void initBinder(WebDataBinder dataBinder) {
+        Object target = dataBinder.getTarget();
+        if (target == null) {
+            return;
+        }
+
+        if (target.getClass() == UserModel.class) {
+            dataBinder.setValidator(userValidator);
+        }
+    }
 
     @GetMapping(value = "/changePassword")
     public String viewChangePasswordPage(Model model, Principal principal) {
@@ -38,21 +55,24 @@ public class UserChangesController {
 
 
     @PostMapping(value = "/changePassword")
-    public String changePassword(UserModel registrationForm, Principal principal, Model model) {
+    public String changePassword(@ModelAttribute("registrationForm") @Validated UserModel registrationForm,
+                                 BindingResult result, Principal principal, Model model) {
 
         if (registrationForm.getPassword().isEmpty()){
             model.addAttribute("error", "New password is empty");
-            System.out.println("Password for user: '"+ principal.getName() +"' was not changed.");
         } else {
             if (passwordIsValid(registrationForm.getDecryptedPassword())){
-                registrationForm.setName(principal.getName());
-                api.update(registrationForm);
-                System.out.println("Password for user: '"+ registrationForm.getName() +"' was changed.");
-                model.addAttribute("success", "Password was changed");
-                model.addAttribute("registrationForm", registrationForm);
-                return "changePasswordPage";
+                try {
+                    registrationForm.setName(principal.getName());
+                    api.update(registrationForm);
+                    model.addAttribute("success", "Password was changed");
+                    model.addAttribute("registrationForm", registrationForm);
+                    return "changePasswordPage";
+                } catch (Exception e){
+                    model.addAttribute("errorMessage", "Error: " + e.getMessage());
+                    return "changePasswordPage";
+                }
             } else {
-                System.out.println("New password is incorrect!");
                 model.addAttribute("error", "New password is incorrect");
             }
         }
